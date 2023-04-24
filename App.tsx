@@ -139,7 +139,7 @@ function App(): JSX.Element {
                 
               </View>
               
-              <Text style={styles.recuperarPass}> Restablecer contraseña </Text>
+              <Text style={styles.recuperarPass}> Reestablecer contraseña </Text>
               
               <Text style={styles.registrarme}> REGISTRARME </Text>
               
@@ -163,11 +163,16 @@ function App(): JSX.Element {
 const styles = StyleSheet.create({
   recuperarPass:{
     alignSelf: 'center',
-    top: 150,
-    width:180,
+    top: 200,
   },
   registrarme:{
-    
+   
+    top: '160%',
+    alignSelf: 'center',
+    color: 'black',
+    fontSize: 16,
+    textShadowColor: 'rgba(0, 0, 0, 0.75)', // Sombra negra con una opacidad del 75%
+    textShadowOffset: { width: 5, height: 5 }, // Desplazamiento de la sombra: 1 píxel a la derecha y 1 píxel hacia abajo
   },
   
   button: {
