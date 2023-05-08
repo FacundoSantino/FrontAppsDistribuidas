@@ -116,8 +116,6 @@ function App(): JSX.Element {
                     backgroundColor:'white'  }}
                     center
                     title='Recordarme'
-                    // checkedIcon={<Image source={fotoCheck} />}
-                    // uncheckedIcon={<Image source={fotoUnchecked}/>}
                     checkedIcon={
                       <Animated.View style={animatedIconStyle}><Image style={styles.iconoCheckBox} source={fotoCheck} /></Animated.View>
                     }
