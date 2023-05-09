@@ -57,14 +57,14 @@ function Login(): JSX.Element{
           
           <View style = {styles.loginBox}>
               <View style= {styles.inputTextLogin}>
-                <Image source={IconoContrasenia}
+                <Image source={IconoUsuario}
                   style = {styles.iconoLogin}/>
                 <TextInput placeholder="Ingrese su usuario" style={styles.contentInput}>
               
                 </TextInput>
               </View>
               <View style= {styles.inputTextLogin}>
-                <Image source={IconoUsuario}
+                <Image source={IconoContrasenia}
                   style = {styles.iconoLogin}/>
                 <TextInput placeholder="Ingrese su contraseña" secureTextEntry={true} style = {styles.contentInput}>
               
