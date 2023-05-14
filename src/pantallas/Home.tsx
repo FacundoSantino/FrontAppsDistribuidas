@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 
 import {View, Text, StyleSheet,Image,TextInput} from "react-native";
 import menuHamburguesaIcono from "../assets/menuHamburguesaIcono.png";
@@ -11,10 +11,14 @@ import TarjetaCategoria from "../componentes/TarjetaCategoria";
 import fotoMisRecetas from "../assets/mis_recetas.png";
 import fotoMiLista from "../assets/mi_lista.png";
 import fotoCategorias from "../assets/categorias.png";
+import SliderFotos from "../componentes/SliderFotos";
 
 
 function Home(): JSX.Element{
 
+    const [activeSlide, setActiveSlide]= useState(0)
+
+    const fotosPrueba=["https://i.blogs.es/d015e1/gambas/1024_2000.jpg","https://s3.abcstatics.com/media/gurmesevilla/2012/01/comida-rapida-casera.jpg"];
     return( 
         <View>
             <View style={style.bgHeaderPrincipal}>
@@ -84,8 +88,10 @@ function Home(): JSX.Element{
                         ancho={334}
                         paddingHorizontal={13}/>
 
+                        
                     </View>
                     
+                    <SliderFotos height={221} width={324} images={fotosPrueba} activeSlide={activeSlide} setActiveSlide={setActiveSlide} />
 
                 </View>
 
