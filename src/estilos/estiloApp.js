@@ -18,7 +18,7 @@ const estiloApp = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 30,
         height: 1000,
-        top: 70,
+        top: 350,
         left: 0,
         right: 0,
     },
@@ -56,6 +56,14 @@ const estiloApp = StyleSheet.create({
     elemento:{
         
     },
+
+    container: {
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 20
+
+      },
 
     
 

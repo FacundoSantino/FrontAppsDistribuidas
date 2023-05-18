@@ -16,7 +16,7 @@ export default function SliderFotos ({ images, height, width, activeSlide, setAc
             />
         )
     }
-
+    
     return(
 
         <ScrollView style={{backgroundColor:"#FFFDFD",paddingTop:5,
@@ -24,7 +24,7 @@ export default function SliderFotos ({ images, height, width, activeSlide, setAc
             paddingHorizontal:27, borderRadius:20, width:380,
             marginTop:20, paddingBottom:30}}>
             
-                <Carousel
+                {/* <Carousel
                     layout={"default"}
                     data={images}
                     sliderWidth={width}
@@ -35,7 +35,7 @@ export default function SliderFotos ({ images, height, width, activeSlide, setAc
                 
                 />
                
-               <MyPagination data={images} activeSlide={activeSlide}/>
+               <MyPagination data={images} activeSlide={activeSlide}/> */}
         </ScrollView>
     )
 }
