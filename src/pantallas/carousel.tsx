@@ -3,7 +3,7 @@ import { SafeAreaView, StyleSheet } from 'react-native';
 import CarouselCards from '../CarouselCards';
 import estiloApp from "../estilos/estiloApp";
 
-function carousel(): JSX.Element{
+function Carousel(): JSX.Element{
     return(
     <SafeAreaView style={style.container}>
       <CarouselCards />
@@ -13,4 +13,4 @@ function carousel(): JSX.Element{
 }
 const style=StyleSheet.create(estiloApp);
 
-export default carousel;
+export default Carousel;

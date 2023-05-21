@@ -1,28 +1,39 @@
-import { CheckBox } from 'react-native-elements';
 import React, { useRef, useState } from 'react';
 import {
   Image,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-import fotoCheck from '../assets/checkbox.png';
-import fotoUnchecked from '../assets/unchecked.png';
 import { Animated } from 'react-native';
 import estilos from '../estilos/estiloLogin';
 import { useNavigation } from '@react-navigation/native';
 import LogoSol from "../assets/Logo_Sol_Bueno.png";
-import IconoUsuario from "../assets/IconoUsuario.png";
-import IconoContrasenia from "../assets/IconoContrasenia.png";
+import LoginInicial from "./subpantallasLogin/LoginInicial";
+import RestablecerContrasenia from "./subpantallasLogin/RestablecerContrasenia"
+import Codigo from "./subpantallasLogin/Codigo"
 
 function Login(): JSX.Element{
-
+  let funcionDireccion = (direccion:string) => {
+    console.log(direccion);
+    switch(direccion){
+      case "ReestablecerContrasenia":
+        console.log("1")
+        setContenido(<RestablecerContrasenia funcionDireccion={funcionDireccion}/>)
+      case "Codigo":
+        console.log("2")
+        setContenido(<Codigo funcionDireccion={funcionDireccion}/>)
+    }
+    console.log(contenido);
+  };
     const navigation=useNavigation();
     const [checked,setChecked] = useState(false);
+    const [contenido, setContenido] = useState(<LoginInicial funcionDireccion={funcionDireccion} />);
     const animatedValue = useRef(new Animated.Value(0)).current;
-        
+
+
+    
     const interpolateColor = animatedValue.interpolate({
       inputRange: [0, 1],
       outputRange: ['#517fa4', '#00aced'],
@@ -44,6 +55,9 @@ function Login(): JSX.Element{
       </TouchableOpacity>
     );
 
+    
+        
+
     return(
         
           
@@ -54,59 +68,8 @@ function Login(): JSX.Element{
           <View style = {styles.bgPrincipal}>
           <Image source={LogoSol}
             style = {styles.imagen}/>
-            
-            <View style = {styles.loginBox}>
-                <View style= {styles.inputTextLogin}>
-                  <Image source={IconoUsuario}
-                    style = {styles.iconoLogin}/>
-                  <TextInput placeholder="Ingrese su usuario" style={styles.contentInput}>
-                
-                  </TextInput>
-                </View>
-                <View style= {styles.inputTextLogin}>
-                  <Image source={IconoContrasenia}
-                    style = {styles.iconoLogin}/>
-                  <TextInput placeholder="Ingrese su contraseña" secureTextEntry={true} style = {styles.contentInput}>
-                
-                  </TextInput>
-
-                    
-                  
-                </View>
-                <View style = {styles.containerCheckBox}>
-                  <CheckBox
-                      containerStyle={{ borderWidth: 0,
-                      backgroundColor:'white'  }}
-                      center
-                      title='Recordarme'
-                      checkedIcon={
-                        <Animated.View style={animatedIconStyle}><Image style={styles.iconoCheckBox} source={fotoCheck} /></Animated.View>
-                      }
-                      uncheckedIcon={<Image style={styles.iconoCheckBox} source={fotoUnchecked}/>}
-                      checked={checked}
-                      onPress={()=> {setChecked(!checked)}}
-                    />
-                </View>
-
-                <View style={styles.buttonViewContainer}>
-                
-                  <CustomButton
-                    title="Iniciar sesión"
-                    color="#D69D20"
-                    onPress={() => {
-                      console.log('Botón presionado');
-                      navigation.navigate("Home" as never);
-                    }}
-                  />
-                  
-                </View>
-                
-                <Text style={styles.recuperarPass}> Reestablecer contraseña </Text>
-                
-                <Text style={styles.registrarme}> REGISTRARME </Text>
-                
-                
-            </View>
+          
+          {contenido}
 
           </View>
         </View>

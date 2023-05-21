@@ -3,12 +3,20 @@ import React from "react";
 import { StyleSheet } from "react-native";
 
 const estiloLogin = StyleSheet.create ({
+
+  ingreseUsuarioTitulo:{
+    fontWeight:"bold",
+    textAlign:"center",
+    color:"#000000",
+    fontSize:20,
+  },
+
+
   recuperarPass:{
     alignSelf: 'center',
     top: 200,
   },
   registrarme:{
-   
     top: '160%',
     alignSelf: 'center',
     color: 'black',
@@ -38,6 +46,7 @@ const estiloLogin = StyleSheet.create ({
     width:180,
   },
   containerCheckBox:{
+    marginTop:60,
     position:'absolute',
     left: 180,
     top: 230,
@@ -55,7 +64,12 @@ const estiloLogin = StyleSheet.create ({
     backgroungColor:'red'
   },
   loginBox: {
-    
+    display:"flex",
+    height:"35%",
+    width:"100%",
+    flexDirection:"column",
+    justifyContent:"center",
+    alignItems:"center",
   },
   contentInput: {
     paddingLeft:30,
@@ -101,13 +115,13 @@ const estiloLogin = StyleSheet.create ({
   inputTextLogin: {
     position: 'relative',
     borderRadius: 45,
-    marginBottom: 30,
     paddingLeft: 20,
     top: 120,
     height: 40,
     width: 250,
     alignSelf: 'center',
-    backgroundColor: '#D9D9D9'
+    backgroundColor: '#D9D9D9',
+    marginBottom:20,
   },
   sectionContainer: {
     marginTop: 32,
@@ -118,7 +132,7 @@ const estiloLogin = StyleSheet.create ({
     fontWeight: '600',
   },
   sectionDescription: {
-    marginTop: 8,
+    Top: 8,
     fontSize: 18,
     fontWeight: '400',
   },
