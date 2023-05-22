@@ -15,7 +15,7 @@ import IconoContrasenia from "../../assets/IconoContrasenia.png";
 import { Animated } from 'react-native';
 import estilos from '../../estilos/estiloLogin';
 import { useNavigation } from '@react-navigation/native';
-import LogoSol from "../../assets/Logo_Sol_Bueno.png";
+
 interface LoginInicialProps {
   funcionDireccion: (direccion : string) => void;
 }
@@ -44,40 +44,41 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
     </TouchableOpacity>
   );
   return (
-    <View style={styles.loginBox}>
-      <View style={styles.inputTextLogin}>
-        <Image source={IconoUsuario} style={styles.iconoLogin} />
-        <TextInput placeholder="Ingrese su usuario" style={styles.contentInput}></TextInput>
+      <View style={styles.container}>
+        <View style={styles.inputTextLogin}>
+          <Image source={IconoUsuario} style={styles.iconoLogin} />
+          <TextInput placeholder="Ingrese su usuario" style={styles.contentInput}></TextInput>
+        </View>
+        <View style={styles.inputTextLogin}>
+          <Image source={IconoContrasenia} style={styles.iconoLogin} />
+          <TextInput placeholder="Ingrese su contraseña" secureTextEntry={true} style={styles.contentInput}></TextInput>
+        </View>
+        <View style={styles.containerCheckBox}>
+          <CheckBox
+            containerStyle={{ borderWidth: 0, backgroundColor: 'white' }}
+            center
+            title='Recordarme'
+            checkedIcon={
+              <Animated.View style={animatedIconStyle}><Image style={styles.iconoCheckBox} source={fotoCheck} /></Animated.View>
+            }
+            uncheckedIcon={<Image style={styles.iconoCheckBox} source={fotoUnchecked} />}
+            checked={checked}
+            onPress={() => { setChecked(!checked) }}
+          />
+        </View>
+        <View style={styles.buttonViewContainer}>
+          <CustomButton
+            title="Iniciar sesión"
+            color="#D69D20"
+            onPress={() => {
+              navigation.navigate("Home" as never);
+            }}
+          />
+        </View>
+        
+        <Text style={styles.recuperarPass} onPress={() =>(navigation.navigate("IngresarUsuarioRestablecer" as never))}>Restablecer contraseña</Text>
+        <Text style={styles.registrarme} onPress={() => (navigation.navigate("Registrar" as never))}>REGISTRARME</Text>
       </View>
-      <View style={styles.inputTextLogin}>
-        <Image source={IconoContrasenia} style={styles.iconoLogin} />
-        <TextInput placeholder="Ingrese su contraseña" secureTextEntry={true} style={styles.contentInput}></TextInput>
-      </View>
-      <View style={styles.containerCheckBox}>
-        <CheckBox
-          containerStyle={{ borderWidth: 0, backgroundColor: 'white' }}
-          center
-          title='Recordarme'
-          checkedIcon={
-            <Animated.View style={animatedIconStyle}><Image style={styles.iconoCheckBox} source={fotoCheck} /></Animated.View>
-          }
-          uncheckedIcon={<Image style={styles.iconoCheckBox} source={fotoUnchecked} />}
-          checked={checked}
-          onPress={() => { setChecked(!checked) }}
-        />
-      </View>
-      <View style={styles.buttonViewContainer}>
-        <CustomButton
-          title="Iniciar sesión"
-          color="#D69D20"
-          onPress={() => {
-            navigation.navigate("Home" as never);
-          }}
-        />
-      </View>
-      <Text style={styles.recuperarPass} onPress={() => (funcionDireccion("ReestablecerContrasenia"))}>Reestablecer contraseña</Text>
-      <Text style={styles.registrarme}>REGISTRARME</Text>
-    </View>
   )
 }
 

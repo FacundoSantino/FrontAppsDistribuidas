@@ -16,6 +16,7 @@ import { Animated } from 'react-native';
 import estilos from '../../estilos/estiloLogin';
 import { useNavigation } from '@react-navigation/native';
 import LogoSol from "../../assets/Logo_Sol_Bueno.png";
+import PantallaTipoLogin from '../../componentes/PantallaTipoLogin';
 interface LoginInicialProps {
   funcionDireccion: (direccion : string) => void;
 }
@@ -44,6 +45,7 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
     </TouchableOpacity>
   );
   return (
+    <PantallaTipoLogin contenido={
     <View style={styles.loginBox}>
 
         <Text style={styles.ingreseUsuarioTitulo}> INGRESE CODIGO DE VERIFICACION ENVIADO A SU MAIL </Text>
@@ -55,11 +57,12 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
                 <CustomButton
                 title="Verificar"
                 color="#D69D20"
-                onPress={()=> {funcionDireccion("")}}
+                onPress={()=> {navigation.navigate("RestablecerContrasenia" as never)}}
             />
         </View>
 
     </View>
+    }/>
   )
 }
 

@@ -14,13 +14,12 @@ const estiloApp = StyleSheet.create({
     },
 
     bgPrincipal: {
-        position: 'absolute',
         backgroundColor: 'white',
         borderRadius: 30,
-        height: 1000,
-        top: 350,
-        left: 0,
-        right: 0,
+        height:800,
+        paddingVertical: 20,
+        paddingHorizontal: 16,
+        marginTop: 70,
     },
 
     flexRow: {
@@ -33,6 +32,7 @@ const estiloApp = StyleSheet.create({
     flexColumn:{
         display:"flex",
         flexDirection:"column",
+        height:500,
         alignItems: "center",
         justifyContent: "center"
     },
@@ -43,7 +43,6 @@ const estiloApp = StyleSheet.create({
     },
 
     cajaBusqueda:{
-        
         paddingLeft:20,
         paddingRight:20,
         borderRadius:45,
@@ -64,6 +63,15 @@ const estiloApp = StyleSheet.create({
         padding: 20
 
       },
+      carouselContainer: {
+        display:'flex',
+        height:300,
+        width:360,
+        bottom: 0,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }
 
     
 

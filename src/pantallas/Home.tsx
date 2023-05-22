@@ -12,13 +12,13 @@ import fotoMisRecetas from "../assets/mis_recetas.png";
 import fotoMiLista from "../assets/mi_lista.png";
 import fotoCategorias from "../assets/categorias.png";
 import CarouselCards from "../CarouselCards";
-import { useNavigation } from '@react-navigation/native';
+import { createNavigatorFactory, useNavigation } from '@react-navigation/native';
 
 
 function Home(): JSX.Element{
     const navigation = useNavigation();
     return( 
-        <ScrollView contentContainerStyle={{flexGrow: 1}}>
+        <View>
             <View style={style.bgHeaderPrincipal}>
                 <View style={style.flexRow}>
                     <Image source={menuHamburguesaIcono}/>
@@ -32,10 +32,9 @@ function Home(): JSX.Element{
                         <Image source={lupa} style={style.elemento} />
                         <TextInput style={style.elemento} placeholder="Ingresá tu busqueda..." />
                     </View>
-                    <View style={style.flexColumn}>
                         <TarjetaCategoria 
                             nombre={"MIS RECETAS"} 
-                            onPress={() => navigation.navigate("MisRectas" as never)}
+                            onPress={() => navigation.navigate("MisRecetas" as never)}
                             sourceFoto={fotoMisRecetas} 
                             colorInterno={"#FCB826"} 
                             colorExterno={"#FFFDFD"} 
@@ -59,7 +58,8 @@ function Home(): JSX.Element{
                         <TarjetaCategoria 
                             nombre={"CATEGORIAS"} 
                             onPress={function (): void {
-                                console.log("Categorías");
+                                console.log("Apreto el boton");
+                                
                             } } 
                             sourceFoto={fotoCategorias} 
                             colorInterno={"#FCB826"} 
@@ -68,11 +68,14 @@ function Home(): JSX.Element{
                             paddingBottom={24}  
                             ancho={360}
                             paddingHorizontal={13}/>
-                    </View>
-                    <CarouselCards />
+                        </View>
+                    <View style={style.carouselContainer}>
+                        <CarouselCards />
+                    <View/>
+                
                 </View>
             </View>
-        </ScrollView>    
+        </View>
     )
 }
 

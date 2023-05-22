@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from "react-native"
+import { View ,ScrollView} from "react-native"
 import Carousel, { Pagination } from 'react-native-snap-carousel'
 import CarouselCardItem, { SLIDER_WIDTH, ITEM_WIDTH } from './CarouselCardItem'
 import data from './assets/data'
@@ -9,9 +9,10 @@ const CarouselCards = () => {
   const isCarousel = React.useRef(null)
 
   return (
+
     <View>
-      <Carousel
-        layout="tinder"
+      <Carousel 
+        layout="stack"
         layoutCardOffset={-20}
         ref={isCarousel}
         data={data}
@@ -37,7 +38,9 @@ const CarouselCards = () => {
         tappableDots={true}
       />
     </View>
+
   )
 }
+
 
 export default CarouselCards

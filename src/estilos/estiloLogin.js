@@ -11,15 +11,20 @@ const estiloLogin = StyleSheet.create ({
     fontSize:20,
   },
 
+  Restablecer:{
+    marginTop:100,
+  },
+
 
   recuperarPass:{
     alignSelf: 'center',
     top: 200,
   },
   registrarme:{
-    top: '160%',
+    top: '40%',
     alignSelf: 'center',
     color: 'black',
+    textAlign:"center",
     fontSize: 16,
     textShadowColor: 'rgba(0, 0, 0, 0.75)', // Sombra negra con una opacidad del 75%
     textShadowOffset: { width: 5, height: 5 }, // Desplazamiento de la sombra: 1 píxel a la derecha y 1 píxel hacia abajo
@@ -46,7 +51,6 @@ const estiloLogin = StyleSheet.create ({
     width:180,
   },
   containerCheckBox:{
-    marginTop:60,
     position:'absolute',
     left: 180,
     top: 230,
@@ -102,7 +106,7 @@ const estiloLogin = StyleSheet.create ({
     right: 0,
     backgroundColor: '#F0AF23',
     height: 200,
-  },
+  },  
   bgPrincipal: {
     position: 'absolute',
     backgroundColor: 'white',

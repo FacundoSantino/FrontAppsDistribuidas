@@ -1,4 +1,3 @@
-import { CheckBox } from 'react-native-elements';
 import React, { useRef, useState } from 'react';
 import {
   Image,
@@ -8,10 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import fotoCheck from '../../assets/checkbox.png';
-import fotoUnchecked from '../../assets/unchecked.png';
 import IconoUsuario from "../../assets/IconoUsuario.png";
-import IconoContrasenia from "../../assets/IconoContrasenia.png";
 import { Animated } from 'react-native';
 import estilos from '../../estilos/estiloLogin';
 import { useNavigation } from '@react-navigation/native';
@@ -45,28 +41,25 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
     </TouchableOpacity>
   );
   return (
-    <PantallaTipoLogin contenido={  
-      <View style={styles.container}>
-        <Text style={[styles.ingreseUsuarioTitulo,styles.Restablecer]}> RESTABLECER CONTRASEÑA </Text>
+    <PantallaTipoLogin contenido={
+    <View style={styles.loginBox}>
+
+        <Text style={styles.ingreseUsuarioTitulo}> INGRESE USUARIO </Text>
         <View style={styles.inputTextLogin}>
-          <Image source={IconoUsuario} style={styles.iconoLogin} />
-          <TextInput placeholder="Ingresar contraseña" style={styles.contentInput}></TextInput>
+            <Image source={IconoUsuario} style={styles.iconoLogin} />
+        <TextInput placeholder="Ingrese su usuario" style={styles.contentInput}></TextInput>
         </View>
-        <View style={styles.inputTextLogin}>
-          <Image source={IconoContrasenia} style={styles.iconoLogin} />
-          <TextInput placeholder="Ingresar contraseña" secureTextEntry={true} style={styles.contentInput}></TextInput>
+            <View style={styles.buttonViewContainer}>
+                <CustomButton
+                title="Verificar"
+                color="#D69D20"
+                onPress={()=> {navigation.navigate("Codigo" as never)}}
+            />
         </View>
-        <View style={styles.buttonViewContainer}>
-          <CustomButton
-            title="RESTABLECER"
-            color="#D69D20"
-            onPress={() => {
-              navigation.navigate("Login" as never);
-            }}
-          />
-        </View>
-      </View>
-    }/>
+
+    </View>
+    }
+    />
   )
 }
 

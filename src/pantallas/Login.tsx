@@ -11,19 +11,18 @@ import estilos from '../estilos/estiloLogin';
 import { useNavigation } from '@react-navigation/native';
 import LogoSol from "../assets/Logo_Sol_Bueno.png";
 import LoginInicial from "./subpantallasLogin/LoginInicial";
-import RestablecerContrasenia from "./subpantallasLogin/RestablecerContrasenia"
+import RestablecerContrasenia from "./subpantallasLogin/IngresarUsuarioRestablecer"
 import Codigo from "./subpantallasLogin/Codigo"
+import PantallaTipoLogin from '../componentes/PantallaTipoLogin';
 
 function Login(): JSX.Element{
   let funcionDireccion = (direccion:string) => {
     console.log(direccion);
     switch(direccion){
-      case "ReestablecerContrasenia":
-        console.log("1")
-        setContenido(<RestablecerContrasenia funcionDireccion={funcionDireccion}/>)
-      case "Codigo":
-        console.log("2")
-        setContenido(<Codigo funcionDireccion={funcionDireccion}/>)
+      case "SinConexion":
+        console.log("Sin conexion")
+      case "ConConexion":
+        console.log("Con conexion")
     }
     console.log(contenido);
   };
@@ -60,22 +59,8 @@ function Login(): JSX.Element{
 
     return(
         
-          
-      <View style = {styles.container}>
-        
-        <View style = {styles.bgHeaderPrincipal}>
-        
-          <View style = {styles.bgPrincipal}>
-          <Image source={LogoSol}
-            style = {styles.imagen}/>
-          
-          {contenido}
-
-          </View>
-        </View>
-
-    </View>
-
+      <PantallaTipoLogin contenido={contenido}/>    
+      
       );
 }
 

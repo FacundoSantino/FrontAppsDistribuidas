@@ -45,26 +45,27 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
     </TouchableOpacity>
   );
   return (
-    <PantallaTipoLogin contenido={  
+    <PantallaTipoLogin contenido={
       <View style={styles.container}>
-        <Text style={[styles.ingreseUsuarioTitulo,styles.Restablecer]}> RESTABLECER CONTRASEÑA </Text>
+        <Text style={[styles.ingreseUsuarioTitulo,styles.Restablecer]}> REGISTRARSE </Text>
         <View style={styles.inputTextLogin}>
           <Image source={IconoUsuario} style={styles.iconoLogin} />
-          <TextInput placeholder="Ingresar contraseña" style={styles.contentInput}></TextInput>
+          <TextInput placeholder="Ingrese su mail" style={styles.contentInput}></TextInput>
         </View>
         <View style={styles.inputTextLogin}>
           <Image source={IconoContrasenia} style={styles.iconoLogin} />
-          <TextInput placeholder="Ingresar contraseña" secureTextEntry={true} style={styles.contentInput}></TextInput>
+          <TextInput placeholder="Ingrese su contraseña" secureTextEntry={true} style={styles.contentInput}></TextInput>
         </View>
         <View style={styles.buttonViewContainer}>
           <CustomButton
-            title="RESTABLECER"
+            title="Registrarme"
             color="#D69D20"
             onPress={() => {
               navigation.navigate("Login" as never);
             }}
           />
         </View>
+    
       </View>
     }/>
   )
