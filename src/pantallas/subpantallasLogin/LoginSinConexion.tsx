@@ -23,7 +23,6 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
   const navigation = useNavigation();
   const [checked, setChecked] = useState(false);
   const animatedValue = useRef(new Animated.Value(0)).current;
-  const [texto,setTexto]=useState("Internet?")
   const interpolateColor = animatedValue.interpolate({
     inputRange: [0, 1],
     outputRange: ['#517fa4', '#00aced'],
@@ -44,20 +43,9 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
   );
-
-  const isInternetReachable = async () => {
-    try {
-      const response = await fetch('https://www.google.com/');
-      return response.status === 200;
-    } catch (error) {
-      return false;
-    }
-  };
-
-  const intervalo =setInterval( () => console.log("Chequeo 10segundos"),10000);
-  clearInterval(intervalo);
   return (
       <View style={styles.container}>
+        <Text style={styles.textoRojo}> Usted se encuentra sin conexion </Text>
         <View style={styles.inputTextLogin}>
           <Image source={IconoUsuario} style={styles.iconoLogin} />
           <TextInput placeholder="Ingrese su usuario" style={styles.contentInput}></TextInput>
@@ -88,25 +76,9 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
             }}
           />
         </View>
-        <Text> {texto} </Text>
-        <View style={styles.buttonViewContainer}>
-          <CustomButton
-            title="Hay internet?"
-            color="#D69D20"
-            onPress={async () => {
-              if(await isInternetReachable()){
-                setTexto("Si, hay internet")
-              }
-              else{
-                setTexto("No, no hay internet");
-              }
-            }}
-          />
-        </View>
         
         <Text style={styles.recuperarPass} onPress={() =>(navigation.navigate("IngresarUsuarioRestablecer" as never))}>Restablecer contraseña</Text>
         <Text style={styles.registrarme} onPress={() => (navigation.navigate("Registrar" as never))}>REGISTRARME</Text>
-      
       </View>
   )
 }

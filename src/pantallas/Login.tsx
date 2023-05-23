@@ -13,6 +13,7 @@ import LogoSol from "../assets/Logo_Sol_Bueno.png";
 import LoginInicial from "./subpantallasLogin/LoginInicial";
 import RestablecerContrasenia from "./subpantallasLogin/IngresarUsuarioRestablecer"
 import Codigo from "./subpantallasLogin/Codigo"
+import LoginSinConexion from './subpantallasLogin/LoginSinConexion';
 import PantallaTipoLogin from '../componentes/PantallaTipoLogin';
 
 function Login(): JSX.Element{
@@ -26,9 +27,20 @@ function Login(): JSX.Element{
     }
     console.log(contenido);
   };
+
+  const isInternetReachable = async () => {
+    try {
+      const response = await fetch('https://www.google.com/');
+      return response.status === 200;
+    } catch (error) {
+      return false;
+    }
+  };
+
     const navigation=useNavigation();
     const [checked,setChecked] = useState(false);
     const [contenido, setContenido] = useState(<LoginInicial funcionDireccion={funcionDireccion} />);
+    const [tieneConexion,setTieneConexion]=useState(true);
     const animatedValue = useRef(new Animated.Value(0)).current;
 
 
@@ -54,8 +66,23 @@ function Login(): JSX.Element{
       </TouchableOpacity>
     );
 
-    
-        
+    async function chequeoInternet() {
+      const isOnline = await isInternetReachable();
+      if (!isOnline && tieneConexion) {
+        setContenido(<LoginSinConexion funcionDireccion={funcionDireccion} />);
+        setTieneConexion(false) 
+      }
+      else if(isOnline && !tieneConexion){
+        setContenido(<LoginInicial funcionDireccion={funcionDireccion} />);
+        setTieneConexion(true);
+      }
+    };
+
+    chequeoInternet();
+
+    if(!tieneConexion){
+      setInterval(() => chequeoInternet(),10000);
+    }
 
     return(
         

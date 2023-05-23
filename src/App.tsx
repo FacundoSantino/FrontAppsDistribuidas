@@ -13,7 +13,9 @@ import MisRecetas from './pantallas/MisRecetas'
 import Codigo from './pantallas/subpantallasLogin/Codigo'
 import IngresarUsuarioRestablecer from './pantallas/subpantallasLogin/IngresarUsuarioRestablecer'
 import RestablecerContrasenia from './pantallas/subpantallasLogin/RestablecerContrasenia'
+import misGuardadas from './pantallas/subpantallasLogin/misGuardadas'
 import Registrar from './pantallas/subpantallasLogin/Registrar'
+import MisCategorias from './pantallas/subpantallasLogin/MisCategorias'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 const Stack =createStackNavigator();
@@ -42,6 +44,8 @@ function App(): JSX.Element {
         <Stack.Screen name="MisRecetas" component={MisRecetas}/>
         <Stack.Screen name="RestablecerContrasenia" component={RestablecerContrasenia}/>
         <Stack.Screen name="Registrar" component={Registrar}/>
+        <Stack.Screen name="misGuardadas" component={misGuardadas}/>
+        <Stack.Screen name="MisCategorias" component={MisCategorias}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

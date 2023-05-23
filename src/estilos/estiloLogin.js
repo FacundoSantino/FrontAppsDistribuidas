@@ -94,6 +94,9 @@ const estiloLogin = StyleSheet.create ({
     width: 28,
     height: 28,
   },
+  textoRojo:{
+    color: "red",
+  },
   container: {
     flex: 1,
     borderRadius: 0,
@@ -142,8 +145,9 @@ const estiloLogin = StyleSheet.create ({
   },
   highlight: {
     fontWeight: '700',
-  }
+  },
 
+ 
 });
 
 

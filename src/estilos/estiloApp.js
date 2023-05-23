@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 
 const estiloApp = StyleSheet.create({
@@ -32,7 +32,7 @@ const estiloApp = StyleSheet.create({
     flexColumn:{
         display:"flex",
         flexDirection:"column",
-        height:500,
+        height: "auto",
         alignItems: "center",
         justifyContent: "center"
     },
@@ -71,10 +71,24 @@ const estiloApp = StyleSheet.create({
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
-      }
-
+      },
+      centrar:{
+        display:'flex',
+        flexDirection:'column',
+        width:300,
+        height:700,
+        alignItems:'center',
+        justifyContent:'space-around'
+      },
     
-
+      flexColumnCat:{
+            display:"flex",
+            flexDirection:"column",
+            height:700,
+            alignItems: "center",
+            justifyContent: "center"
+        },
+    
 })
 
 

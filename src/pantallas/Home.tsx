@@ -12,70 +12,59 @@ import fotoMisRecetas from "../assets/mis_recetas.png";
 import fotoMiLista from "../assets/mi_lista.png";
 import fotoCategorias from "../assets/categorias.png";
 import CarouselCards from "../CarouselCards";
+import PantallaTipoHome from "../componentes/PantallaTipoHome";
 import { createNavigatorFactory, useNavigation } from '@react-navigation/native';
 
 
 function Home(): JSX.Element{
     const navigation = useNavigation();
     return( 
-        <View>
-            <View style={style.bgHeaderPrincipal}>
-                <View style={style.flexRow}>
-                    <Image source={menuHamburguesaIcono}/>
-                    <Image source={MorfAr} style={style.morfar}/>
-                    <Image source={LogoSol}/>
-                </View>
-            </View>
-            <View style={style.bgPrincipal}>
-                <View style={style.flexColumn}>
+        <PantallaTipoHome contenido={
+            <View style={style.flexColumn}>
+                <View>
                     <View style={[style.cajaBusqueda, style.flexRow]}>
                         <Image source={lupa} style={style.elemento} />
                         <TextInput style={style.elemento} placeholder="Ingresá tu busqueda..." />
                     </View>
-                        <TarjetaCategoria 
-                            nombre={"MIS RECETAS"} 
-                            onPress={() => navigation.navigate("MisRecetas" as never)}
-                            sourceFoto={fotoMisRecetas} 
-                            colorInterno={"#FCB826"} 
-                            colorExterno={"#FFFDFD"} 
-                            paddingTop={10}
-                            paddingBottom={24} 
-                            ancho={360}
-                            paddingHorizontal={13}
-                            />
-                        <TarjetaCategoria 
-                            nombre={"MI LISTA"} 
-                            onPress={function (): void {
-                                console.log("Mi lista");
-                            } } 
-                            sourceFoto={fotoMiLista} 
-                            colorInterno={"#FCB826"} 
-                            colorExterno={"#FFFDFD"} 
-                            paddingTop={10}
-                            paddingBottom={24}  
-                            ancho={360}
-                            paddingHorizontal={13}/>
-                        <TarjetaCategoria 
-                            nombre={"CATEGORIAS"} 
-                            onPress={function (): void {
-                                console.log("Apreto el boton");
-                                
-                            } } 
-                            sourceFoto={fotoCategorias} 
-                            colorInterno={"#FCB826"} 
-                            colorExterno={"#FFFDFD"} 
-                            paddingTop={10}
-                            paddingBottom={24}  
-                            ancho={360}
-                            paddingHorizontal={13}/>
-                        </View>
-                    <View style={style.carouselContainer}>
-                        <CarouselCards />
-                    <View/>
-                
+                    <TarjetaCategoria 
+                        nombre={"MIS RECETAS"} 
+                        onPress={() => navigation.navigate("MisRecetas" as never)}
+                        sourceFoto={fotoMisRecetas} 
+                        colorInterno={"#FCB826"} 
+                        colorExterno={"#FFFDFD"} 
+                        paddingTop={10}
+                        paddingBottom={24} 
+                        ancho={360}
+                        paddingHorizontal={13}
+                        />
+                    <TarjetaCategoria 
+                        nombre={"MI LISTA"} 
+                        onPress={() => navigation.navigate("misGuardadas" as never)
+                        } 
+                        sourceFoto={fotoMiLista} 
+                        colorInterno={"#FCB826"} 
+                        colorExterno={"#FFFDFD"} 
+                        paddingTop={10}
+                        paddingBottom={24}  
+                        ancho={360}
+                        paddingHorizontal={13}/>
+
+                    <TarjetaCategoria 
+                        nombre={"CATEGORIAS"} 
+                        onPress={() => navigation.navigate("MisCategorias" as never) } 
+                        sourceFoto={fotoCategorias} 
+                        colorInterno={"#FCB826"} 
+                        colorExterno={"#FFFDFD"} 
+                        paddingTop={10}
+                        paddingBottom={24}  
+                        ancho={360}
+                        paddingHorizontal={13}/>
+                </View>
+                <View style={style.carouselContainer}>
+                    <CarouselCards />
                 </View>
             </View>
-        </View>
+        }/>
     )
 }
 
