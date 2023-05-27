@@ -6,12 +6,14 @@ import menuHamburguesaIcono from "../assets/menuHamburguesaIcono.png";
 import MorfAr from "../assets/MorfAR.png";
 import lupa from "../assets/lupa.png";
 import LogoSol from "../assets/Logo_Sol_Chico.png";
-import estiloApp from "../estilos/estiloApp";
+import estiloApp from "../../estilos/estiloApp";
 import fotoMisRecetas from "../assets/mis_recetas.png";
 import fotoMiLista from "../assets/mi_lista.png";
 import fotoCategorias from "../assets/categorias.png";
 
 import { createNavigatorFactory, useNavigation } from '@react-navigation/native';
+import TarjetaCategoria from "../../componentes/TarjetaCategoria";
+import CarouselCards from "../../CarouselCards";
 
 
 function Home(): JSX.Element{

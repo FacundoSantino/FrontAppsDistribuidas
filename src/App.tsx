@@ -18,6 +18,7 @@ import Registrar from './pantallas/subpantallasLogin/Registrar'
 import MisCategorias from './pantallas/subpantallasLogin/MisCategorias'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import LoginSinConexion from './pantallas/subpantallasLogin/LoginSinConexion';
 const Stack =createStackNavigator();
 
 
@@ -44,6 +45,7 @@ function App(): JSX.Element {
         <Stack.Screen name="MisRecetas" component={MisRecetas}/>
         <Stack.Screen name="RestablecerContrasenia" component={RestablecerContrasenia}/>
         <Stack.Screen name="Registrar" component={Registrar}/>
+        <Stack.Screen name="LoginSinConexion" component={LoginSinConexion}/>
         <Stack.Screen name="misGuardadas" component={misGuardadas}/>
         <Stack.Screen name="MisCategorias" component={MisCategorias}/>
       </Stack.Navigator>

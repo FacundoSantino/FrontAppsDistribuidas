@@ -15,11 +15,12 @@ import IconoContrasenia from "../../assets/IconoContrasenia.png";
 import { Animated } from 'react-native';
 import estilos from '../../estilos/estiloLogin';
 import { useNavigation } from '@react-navigation/native';
+import PantallaTipoLogin from '../../componentes/PantallaTipoLogin';
 
-interface LoginInicialProps {
+interface LoginSinConexionProps {
   funcionDireccion: (direccion : string) => void;
 }
-export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
+export default function LoginSinConexion({ funcionDireccion }: LoginSinConexionProps) {
   const navigation = useNavigation();
   const [checked, setChecked] = useState(false);
   const animatedValue = useRef(new Animated.Value(0)).current;
@@ -43,9 +44,20 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
   );
+
+  const isInternetReachable = async () => {
+    try {
+      const response = await fetch('https://www.google.com/');
+      return response.status === 200;
+    } catch (error) {
+      return false;
+    }
+  };
+
   return (
+    <PantallaTipoLogin contenido={
       <View style={styles.container}>
-        <Text style={styles.textoRojo}> Usted se encuentra sin conexion </Text>
+        
         <View style={styles.inputTextLogin}>
           <Image source={IconoUsuario} style={styles.iconoLogin} />
           <TextInput placeholder="Ingrese su usuario" style={styles.contentInput}></TextInput>
@@ -54,6 +66,7 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
           <Image source={IconoContrasenia} style={styles.iconoLogin} />
           <TextInput placeholder="Ingrese su contraseña" secureTextEntry={true} style={styles.contentInput}></TextInput>
         </View>
+        <Text style={styles.textoRojo}> Usted se encuentra sin conexion </Text>
         <View style={styles.containerCheckBox}>
           <CheckBox
             containerStyle={{ borderWidth: 0, backgroundColor: 'white' }}
@@ -71,15 +84,15 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
           <CustomButton
             title="Iniciar sesión"
             color="#D69D20"
-            onPress={() => {
-              navigation.navigate("Home" as never);
-            }}
+            onPress={async () =>{if(await isInternetReachable()){navigation.navigate("Home" as never)};}}
           />
         </View>
         
-        <Text style={styles.recuperarPass} onPress={() =>(navigation.navigate("IngresarUsuarioRestablecer" as never))}>Restablecer contraseña</Text>
-        <Text style={styles.registrarme} onPress={() => (navigation.navigate("Registrar" as never))}>REGISTRARME</Text>
+        <Text style={styles.recuperarPass} onPress={async () =>{if(await isInternetReachable()){navigation.navigate("IngresarUsuarioRestablecer" as never)};}}>Restablecer contraseña</Text>
+        <Text style={styles.registrarme} onPress={async () =>{if(await isInternetReachable()){navigation.navigate("Registrar" as never)};}}>REGISTRARME</Text>
+      
       </View>
+    }/>
   )
 }
 

@@ -49,7 +49,6 @@ const estiloApp = StyleSheet.create({
         borderColor:'#D0D0D0',
         borderWidth:1,
         marginTop:20,
-
     },
 
     elemento:{
@@ -88,6 +87,18 @@ const estiloApp = StyleSheet.create({
             alignItems: "center",
             justifyContent: "center"
         },
+
+        recetas:{
+            display:'flex',
+            height:900,
+            alignItems:'center',
+            justifyContent:'space-around'
+        },
+        filtros:{
+            display:'flex',
+            flexColumn:'row',
+            justifyContent:'space-around'
+        }
     
 })
 

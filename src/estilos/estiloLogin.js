@@ -95,7 +95,13 @@ const estiloLogin = StyleSheet.create ({
     height: 28,
   },
   textoRojo:{
+    position: 'absolute',
     color: "red",
+    fontWeight:"bold",
+    textAlign:"center",
+    fontSize:20,
+    top:88,
+    left:52,
   },
   container: {
     flex: 1,

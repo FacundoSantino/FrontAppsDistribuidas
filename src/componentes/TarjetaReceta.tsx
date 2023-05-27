@@ -1,5 +1,6 @@
+import { useState } from "react";
 import {Image, ImageSourcePropType, View, Text} from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 
 type TarjetaRecetaProps={
     nombre:String,
@@ -17,6 +18,7 @@ type HEX = `#${string}`;
 
 type Color = RGB | RGBA | HEX;
 
+
 const TarjetaReceta = (props:TarjetaRecetaProps) =>{
     return(
         <TouchableOpacity style={{ backgroundColor:props.color, borderRadius:20,borderColor:"#000000",borderWidth:1,width:props.ancho,height:props.alto}} onPress={(props.onPress)}>
@@ -25,7 +27,7 @@ const TarjetaReceta = (props:TarjetaRecetaProps) =>{
                 <View style={{display:'flex',flexDirection:'column',height:props.alto,alignItems:'center',justifyContent:'space-around'}}>
                     <Text>{props.nombre}</Text>
                      <View style={{display:'flex',flexDirection:'row',justifyContent:'space-around'}}>
-                        <Text>{props.cantPorciones} porciones</Text>
+                        <Text>{props.cantPorciones} porciones     </Text>
                         <Text>{props.tiempo} de elaboracion</Text>
                     </View>   
                 </View>
