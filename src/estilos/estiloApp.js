@@ -98,6 +98,14 @@ const estiloApp = StyleSheet.create({
             display:'flex',
             flexColumn:'row',
             justifyContent:'space-around'
+        },
+        chef:{
+            display:'flex',
+            flexDirection:'column',
+            width:300,
+            height:'auto',
+            alignItems:'center',
+            justifyContent:'space-around'
         }
     
 })

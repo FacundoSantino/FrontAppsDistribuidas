@@ -50,6 +50,10 @@ const estiloLogin = StyleSheet.create ({
     top: 180,
     width:180,
   },
+  botonVisualizarRecetas:{
+    position: 'absolute',
+    top: 500,
+  },
   containerCheckBox:{
     position:'absolute',
     left: 180,

@@ -89,6 +89,15 @@ export default function LoginSinConexion({ funcionDireccion }: LoginSinConexionP
         </View>
         
         <Text style={styles.recuperarPass} onPress={async () =>{if(await isInternetReachable()){navigation.navigate("IngresarUsuarioRestablecer" as never)};}}>Restablecer contraseña</Text>
+
+        <View style={styles.botonVisualizarRecetas}>
+        <CustomButton
+            title="Visualizar recetas"
+            color="#D69D20"
+            onPress={async () =>{if(await !isInternetReachable()){navigation.navigate("RecetasOffline" as never)};}}
+          />
+        </View>
+
         <Text style={styles.registrarme} onPress={async () =>{if(await isInternetReachable()){navigation.navigate("Registrar" as never)};}}>REGISTRARME</Text>
       
       </View>

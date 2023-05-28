@@ -8,6 +8,7 @@ function MisRecetas(): JSX.Element{
     const recetas = [];
     for (let i = 0; i < 100; i++) {
       recetas.push(<TarjetaReceta
+        key={i}
         nombre={'titulo'}
         cantPorciones={2}
         tiempo={60}

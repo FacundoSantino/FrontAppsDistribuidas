@@ -19,6 +19,7 @@ import MisCategorias from './pantallas/subpantallasLogin/MisCategorias'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginSinConexion from './pantallas/subpantallasLogin/LoginSinConexion';
+import RecetasXChef from './pantallas/subpantallasLogin/RecetasXChef';
 const Stack =createStackNavigator();
 
 
@@ -48,6 +49,7 @@ function App(): JSX.Element {
         <Stack.Screen name="LoginSinConexion" component={LoginSinConexion}/>
         <Stack.Screen name="misGuardadas" component={misGuardadas}/>
         <Stack.Screen name="MisCategorias" component={MisCategorias}/>
+        <Stack.Screen name="RecetasXChef" component={RecetasXChef}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -21,7 +21,7 @@ type Color = RGB | RGBA | HEX;
 
 const TarjetaReceta = (props:TarjetaRecetaProps) =>{
     return(
-        <TouchableOpacity style={{ backgroundColor:props.color, borderRadius:20,borderColor:"#000000",borderWidth:1,width:props.ancho,height:props.alto}} onPress={(props.onPress)}>
+        <TouchableOpacity style={{ backgroundColor:props.color, borderRadius:20,borderColor:"#000000",borderWidth:1,width:props.ancho,height:props.alto, marginBottom:20}} onPress={(props.onPress)}>
             <View style={{display:'flex',flexDirection:'row',alignItems:'center', justifyContent:'space-around',width:props.ancho,height:props.alto}}>
                 <Image source={props.sourceFoto}/>
                 <View style={{display:'flex',flexDirection:'column',height:props.alto,alignItems:'center',justifyContent:'space-around'}}>

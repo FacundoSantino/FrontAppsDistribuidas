@@ -46,7 +46,7 @@ function Home(): JSX.Element{
                                 />
                             <TarjetaCategoria 
                                 nombre={"AUTOR"} 
-                                onPress={() => navigation.navigate("misGuardadas" as never)}
+                                onPress={() => {navigation.navigate("RecetasXChef" as never)}}
                                 sourceFoto={fotoMiLista} 
                                 colorInterno={"#FCB826"} 
                                 colorExterno={"#FFFDFD"} 
