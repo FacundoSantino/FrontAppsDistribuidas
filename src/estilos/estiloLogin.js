@@ -54,10 +54,18 @@ const estiloLogin = StyleSheet.create ({
     position: 'absolute',
     top: 500,
   },
+  textoErrorLogin:{
+    color:"red",
+    alignSelf:"flex-end",
+    left:-20,
+    fontSize:15,
+    top:100,
+  },
+
   containerCheckBox:{
     position:'absolute',
     left: 180,
-    top: 230,
+    top: 240,
     width:180
   },
   iconoCheckBox:{

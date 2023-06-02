@@ -21,13 +21,17 @@ import IconoUsuario from "../assets/IconoUsuario.png";
 import IconoContrasenia from "../assets/IconoContrasenia.png";
 import { CheckBox } from 'react-native-elements';
 
+
+
 function Login(): JSX.Element{
 
     const navigation=useNavigation();
     const [checked,setChecked] = useState(false);
     const [tieneConexion,setTieneConexion]=useState(true);
     const animatedValue = useRef(new Animated.Value(0)).current;
-
+    const [usuario, setUsuario]=useState("");
+    const [contra, setContra]=useState("");
+    const [error, setError] = useState("");
     const interpolateColor = animatedValue.interpolate({
       inputRange: [0, 1],
       outputRange: ['#517fa4', '#00aced'],
@@ -61,18 +65,63 @@ function Login(): JSX.Element{
       }
     };
     const intervalo =setInterval( () => isInternetReachable(),10000);
+
+    const urlLogin = 'http://192.168.0.9:8080/api/rest/morfar/login';
+    const loginDTO = {
+      user: usuario,
+      password: contra
+    };
+
+    const loginFetch= async () =>{
+      try{
+        const respuesta= await fetch(urlLogin, {     
+          method: 'POST',
+          body: JSON.stringify(loginDTO),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        const status = await respuesta.status;
+        return status;
+      } catch(err){
+        console.log(err);
+      }
+      
+    }
+
+    const handleLogin = () => {
+      console.log("Manejando login");
+      loginFetch()
+        .then(data => {
+          setError("");
+          if (data == 200) {
+            navigation.navigate("Home" as never);
+          } else {
+            if(data == 0){
+              navigation.navigate("LoginSinConexion" as never);
+            }
+            else{
+              if (data == 400){
+                setError("El usuario o la contraseña son incorrectos.")
+              }
+            }
+          }
+        }).catch(error => console.log(error));
+    };
+
     return(
         
       <PantallaTipoLogin contenido={
         <View style={styles.container}>
         <View style={styles.inputTextLogin}>
           <Image source={IconoUsuario} style={styles.iconoLogin} />
-          <TextInput placeholder="Ingrese su usuario" style={styles.contentInput}></TextInput>
+          <TextInput defaultValue='Juanito' value={usuario} onChange={e => setUsuario(e.nativeEvent.text)} placeholder="Ingrese su usuario" style={styles.contentInput}></TextInput>
         </View>
         <View style={styles.inputTextLogin}>
           <Image source={IconoContrasenia} style={styles.iconoLogin} />
-          <TextInput placeholder="Ingrese su contraseña" secureTextEntry={true} style={styles.contentInput}></TextInput>
+          <TextInput defaultValue="123" value={contra} placeholder="Ingrese su contraseña" onChange={e => setContra(e.nativeEvent.text)} secureTextEntry={true} style={styles.contentInput}></TextInput>
         </View>
+        <Text style={styles.textoErrorLogin}>{error}</Text>
         <View style={styles.containerCheckBox}>
           <CheckBox
             containerStyle={{ borderWidth: 0, backgroundColor: 'white' }}
@@ -90,13 +139,13 @@ function Login(): JSX.Element{
           <CustomButton
             title="Iniciar sesión"
             color="#D69D20"
-            onPress={async () =>{if(await isInternetReachable()){navigation.navigate("Home" as never)};}}
+            onPress={async () =>{if(await isInternetReachable()){handleLogin()};}}
           />
         </View>
         
         <Text style={styles.recuperarPass} onPress={async () =>{if(await isInternetReachable()){navigation.navigate("IngresarUsuarioRestablecer" as never)};}}>Restablecer contraseña</Text>
         <Text style={styles.registrarme} onPress={async () =>{if(await isInternetReachable()){navigation.navigate("Registrar" as never)};}}>REGISTRARME</Text>
-      
+        
       </View>
       }/>    
       

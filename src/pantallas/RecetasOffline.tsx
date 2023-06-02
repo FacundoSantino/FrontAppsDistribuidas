@@ -6,16 +6,14 @@ import TarjetaCategoria from "../componentes/TarjetaCategoria";
 import { useNavigation } from "@react-navigation/native";
 import fotoFavoritas from "../assets/RecetasFavoritas.png"
 import fotoModificadas from "../assets/RecetasModificadas.png"
+import BarraDeBusqueda from "../componentes/BarraDeBusqueda";
 
 export default function RecetasOffline(): JSX.Element{
     const navigation= useNavigation();
     return(
         <PantallaTipoHome contenido={
             <View>
-                    <View style={[style.cajaBusqueda, style.flexRow]}>
-                        <Image source={lupa} style={style.elemento} />
-                        <TextInput style={style.elemento} placeholder="Ingresá tu busqueda..." />
-                    </View>
+                    <BarraDeBusqueda/>
                     <TarjetaCategoria 
                         nombre={"RECETAS FAVORITAS"} 
                         onPress={() => navigation.navigate("RecetasFavoritasOffline" as never)

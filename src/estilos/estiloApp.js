@@ -4,6 +4,12 @@ import { StyleSheet, View } from "react-native";
 
 const estiloApp = StyleSheet.create({
 
+    titulo:{
+        fontSize:32,
+        color:"#000000",
+        alignSelf:"center"
+    },
+
     bgHeaderPrincipal:{
         position: 'absolute',
         top: 0,
@@ -100,12 +106,11 @@ const estiloApp = StyleSheet.create({
             justifyContent:'space-around'
         },
         chef:{
+            marginTop:10,
             display:'flex',
             flexDirection:'column',
-            width:300,
+            width:400,
             height:'auto',
-            alignItems:'center',
-            justifyContent:'space-around'
         }
     
 })

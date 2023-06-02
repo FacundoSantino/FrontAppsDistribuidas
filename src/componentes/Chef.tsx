@@ -18,7 +18,7 @@ type Color = RGB | RGBA | HEX;
 
 const ChefProps= (props:ChefProps) =>{
     return(
-        <TouchableOpacity style={{backgroundColor:props.color,borderRadius:20,borderColor:"#000000",borderWidth:1,width:props.ancho,height:props.alto,marginBottom:20}}>
+        <TouchableOpacity onPress={props.onPress} style={{backgroundColor:props.color,borderRadius:20,borderColor:"#000000",borderWidth:1,width:props.ancho,height:props.alto,marginBottom:20}}>
             <View style={{display:'flex',flexDirection:'row',alignItems:'center', justifyContent:'space-around',width:props.ancho,height:props.alto}}>
                 <Image source={props.imagen} style={{width:110,height:100, borderRadius:20}}/>
                 <Text style={{fontWeight:'bold',fontSize:15}}>{props.nombre}</Text>

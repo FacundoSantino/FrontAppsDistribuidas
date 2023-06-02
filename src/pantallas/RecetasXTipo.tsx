@@ -1,66 +1,61 @@
-import React, { useState } from "react";
+import { Image, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import PantallaTipoHome from "../componentes/PantallaTipoHome";
+import estiloApp from "../estilos/estiloApp";
+import Chef from "../componentes/Chef";
+import { useNavigation } from "@react-navigation/native";
+import lupa from "../assets/lupa.png";
+import BarraDeBusqueda from "../componentes/BarraDeBusqueda";
+import fotoPizza from "../assets/pizza.png";
+import fotoSopa from "../assets/sopa.png";
+import fotoHamburguesa from "../assets/hamburguesa.png";
+import fotoMedialuna from "../assets/medialunas.png";
+import fotoPastas from "../assets/pastas.jpg";
 
-import {View, Text, StyleSheet,Image,TextInput,SafeAreaView,ScrollView} from "react-native";
-import menuHamburguesaIcono from "../../assets/menuHamburguesaIcono.png";
-import MorfAr from "../../assets/MorfAR.png";
-import lupa from "../../assets/lupa.png";
-import LogoSol from "../../assets/Logo_Sol_Chico.png";
-import estiloApp from "../../estilos/estiloApp";
-import TarjetaCategoria from "../../componentes/Chef";
-import fotoMiLista from "../../assets/mi_lista.png";
-import fotoCategorias from "../../assets/categorias.png";
-import CarouselCards from "../../CarouselCards";
-import { createNavigatorFactory, useNavigation } from '@react-navigation/native';
-import Chef from "../../componentes/Chef";
-import PantallaTipoHome from "../../componentes/PantallaTipoHome";
-import chef1 from '../../assets/chef1.jpg';
-import chef2 from '../../assets/chef2.jpg';
-import chef3 from '../../assets/chef3.jpg';
-import BarraDeBusqueda from "../../componentes/BarraDeBusqueda";
+function RecetasXTipo() : JSX.Element {
 
-function RecetasXChef(): JSX.Element{
-    const navigation = useNavigation();
-    return(
+    const navigation=useNavigation();
+
+    return (
         <PantallaTipoHome contenido={
-                <View style={style.flexColumnCat}>
+            <View style={style.flexColumnCat}>
                     <View style={style.centrar}>
                         <BarraDeBusqueda/>
                         <ScrollView contentContainerStyle={{alignItems:"center",justifyContent:"space-around"}} style={style.chef}>
                             <Chef
-                                nombre={"Agustin Ferrentino"}
-                                imagen={chef1}
+                                nombre={"Pizzas"}
+                                imagen={fotoPizza}
                                 onPress={() => navigation.navigate("MisRecetas" as never)}
                                 ancho={360}
                                 alto={130}
                                 color={"#FFFDFD"}
                             />
                             <Chef
-                                nombre={"Agustina Lopez"}
-                                imagen={chef2}
+                                nombre={"Sopas"}
+                                imagen={fotoSopa}
                                 onPress={() => navigation.navigate("MisRecetas" as never)}
                                 ancho={360}
                                 alto={130}
                                 color={"#FFFDFD"}
                             />
                             <Chef
-                                nombre={"Facundo Sanchez"}
-                                imagen={chef2}
+                                nombre={"Hamburguesas"}
+                                imagen={fotoHamburguesa}
                                 onPress={() => navigation.navigate("MisRecetas" as never)}
                                 ancho={360}
                                 alto={130}
                                 color={"#FFFDFD"}
                             />
                             <Chef
-                                nombre={"Nahuel Santillan"}
-                                imagen={chef3}
+                                nombre={"Medialuna"}
+                                imagen={fotoMedialuna}
                                 onPress={() => navigation.navigate("MisRecetas" as never)}
                                 ancho={360}
                                 alto={130}
                                 color={"#FFFDFD"}
                             />
                             <Chef
-                                nombre={"Manuel di Marco"}
-                                imagen={chef3}
+                                nombre={"Pastas"}
+                                imagen={fotoPastas}
                                 onPress={() => navigation.navigate("MisRecetas" as never)}
                                 ancho={360}
                                 alto={130}
@@ -72,11 +67,11 @@ function RecetasXChef(): JSX.Element{
                             
                     </View>
                 </View>
-        }/>
+        }
+        />
     )
-
 }
 
 const style=StyleSheet.create(estiloApp);
 
-export default RecetasXChef;
+export default RecetasXTipo;

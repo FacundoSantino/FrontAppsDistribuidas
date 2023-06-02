@@ -6,35 +6,88 @@
  */
 
 import React, { useRef, useState } from 'react';
-import Login from './pantallas/Login'
-import Home from './pantallas/Home'
-import Carousel from './pantallas/Carousel'
-import MisRecetas from './pantallas/MisRecetas'
-import Codigo from './pantallas/subpantallasLogin/Codigo'
-import IngresarUsuarioRestablecer from './pantallas/subpantallasLogin/IngresarUsuarioRestablecer'
-import RestablecerContrasenia from './pantallas/subpantallasLogin/RestablecerContrasenia'
-import misGuardadas from './pantallas/subpantallasLogin/misGuardadas'
-import Registrar from './pantallas/subpantallasLogin/Registrar'
+import Login from './pantallas/Login';
+import Home from './pantallas/Home';
+import Carousel from './pantallas/Carousel';
+import MisRecetas from './pantallas/MisRecetas';
+import Codigo from './pantallas/subpantallasLogin/Codigo';
+import IngresarUsuarioRestablecer from './pantallas/subpantallasLogin/IngresarUsuarioRestablecer';
+import RestablecerContrasenia from './pantallas/subpantallasLogin/RestablecerContrasenia';
+import MisGuardadas from './pantallas/subpantallasLogin/MisGuardadas';
+import Registrar from './pantallas/subpantallasLogin/Registrar';
 import MisCategorias from './pantallas/subpantallasLogin/MisCategorias'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginSinConexion from './pantallas/subpantallasLogin/LoginSinConexion';
 import RecetasXChef from './pantallas/subpantallasLogin/RecetasXChef';
-const Stack =createStackNavigator();
+import RecetasOffline from './pantallas/RecetasOffline';
+import RecetasXTipo from './pantallas/RecetasXTipo';
+import PantallaReceta from './pantallas/PantallaReceta';
+import { ImageSourcePropType } from 'react-native';
+
+export enum TipoItem{
+  RECETA,
+  TIPO,
+  TIPORECETA
+}
+
+export type TipoParametros = {
+  PantallaReceta: {  
+    tipo: TipoItem,
+    verIngredientes: Boolean,
+    permitirEliminacion: Boolean,
+    permitirAgregacion: Boolean,
+    titulo: String,
+    contenido: Autor[] | Receta[] | Tipo[] ,
+    ingredientes?: Ingrediente[]
+  }
+}
+
+
+export interface Autor {
+  idUsuario: number,
+  mail:String,
+  nickname:String,
+  habilitado:String,
+  nombre:String,
+  avatar: string,
+  tipo_usuario: String
+}
+
+export interface Foto {
+  idFoto:number,
+  urlFoto:string,
+  extension:String
+}
+
+export interface Tipo {
+  idTipo: number,
+  descripcion:String
+}
+
+export interface Receta {
+  idReceta:number,
+  usuario:Autor,
+  nombre:String,
+  descripcion:String,
+  fotos:Foto[],
+  porciones:number,
+  cantidadPersonas:number,
+  tipo: Tipo
+}
+
+export interface Ingrediente{
+  idIngrediente:number,
+  nombre:String
+}
+
+
+
+const Stack =createStackNavigator<TipoParametros>();
 
 
 
 function App(): JSX.Element {
-  function funcionDireccion(direccion:string){
-    console.log(direccion);
-    let content = null;
-    switch(direccion){
-      case "Home":
-        console.log("Es el caso");
-        content = <Home/>;
-    }
-    return content;
-  };
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown:false}}  initialRouteName={"Login"}>
@@ -47,9 +100,12 @@ function App(): JSX.Element {
         <Stack.Screen name="RestablecerContrasenia" component={RestablecerContrasenia}/>
         <Stack.Screen name="Registrar" component={Registrar}/>
         <Stack.Screen name="LoginSinConexion" component={LoginSinConexion}/>
-        <Stack.Screen name="misGuardadas" component={misGuardadas}/>
+        <Stack.Screen name="MisGuardadas" component={MisGuardadas}/>
         <Stack.Screen name="MisCategorias" component={MisCategorias}/>
         <Stack.Screen name="RecetasXChef" component={RecetasXChef}/>
+        <Stack.Screen name="RecetasOffline" component={RecetasOffline}/>
+        <Stack.Screen name="RecetasXTipo" component={RecetasXTipo}/>
+        <Stack.Screen name="PantallaReceta" component={PantallaReceta} initialParams={{titulo:"Hola"}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

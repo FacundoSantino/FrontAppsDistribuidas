@@ -48,11 +48,15 @@ export default function LoginSinConexion({ funcionDireccion }: LoginSinConexionP
   const isInternetReachable = async () => {
     try {
       const response = await fetch('https://www.google.com/');
-      return response.status === 200;
+      navigation.navigate("Login" as never);
+      navigation.reset;
+      clearInterval(intervalo);
+      return true;
     } catch (error) {
       return false;
     }
   };
+  const intervalo =setInterval( () => isInternetReachable(),10000);
 
   return (
     <PantallaTipoLogin contenido={
@@ -94,7 +98,7 @@ export default function LoginSinConexion({ funcionDireccion }: LoginSinConexionP
         <CustomButton
             title="Visualizar recetas"
             color="#D69D20"
-            onPress={async () =>{if(await !isInternetReachable()){navigation.navigate("RecetasOffline" as never)};}}
+            onPress={async () =>{{navigation.navigate("misGuardadas" as never)};}}
           />
         </View>
 

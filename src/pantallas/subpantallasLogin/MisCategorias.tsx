@@ -1,6 +1,5 @@
 
 import React, { useState } from "react";
-
 import {View, Text, StyleSheet,Image,TextInput,SafeAreaView,ScrollView} from "react-native";
 import menuHamburguesaIcono from "../../assets/menuHamburguesaIcono.png";
 import MorfAr from "../../assets/MorfAR.png";
@@ -13,29 +12,95 @@ import fotoMiLista from "../../assets/mi_lista.png";
 import fotoCategorias from "../../assets/categorias.png";
 import CarouselCards from "../../CarouselCards";
 import { createNavigatorFactory, useNavigation } from '@react-navigation/native';
+import BarraDeBusqueda from "../../componentes/BarraDeBusqueda";
+import PantallaTipoHome from "../../componentes/PantallaTipoHome";
+import { TipoItem } from "../../App";
 
 
-function Home(): JSX.Element{
+function MisCategorias(): JSX.Element{
     const navigation = useNavigation();
+
+    
+const urlFetchUsuarios="http://192.168.0.9:8080/api/rest/morfar/getUsers";
+const urlFetchTodasLasRecetas="http://192.168.0.9:8080/api/rest/morfar/getAllRecipes"
+const [contenidoAMostrar, setContenidoAMostrar]=useState([]);
+
+const autoresFetch= async () =>{
+    console.log("intentando fetch");
+    try{
+      const respuesta= await fetch(urlFetchUsuarios, {     
+        method: 'GET',
+      }).then((data) => data.json()).then(content => setContenidoAMostrar(content));
+      return 0;
+    } catch(err){
+      console.log(err);
+      return 1;
+    }
+  }
+
+  const handleAutores = () => {
+    console.log("Manejando fetch");
+    autoresFetch()
+      .then(data => {
+        if(data==0){
+            //bien
+            navigation.navigate("PantallaReceta" as never, 
+                                {tipo: TipoItem.TIPO,
+                                    verIngredientes:false,
+                                    permitirEliminacion:false,
+                                    permitirAgregacion:false,
+                                    titulo: "Recetas por Autor",
+                                    contenido: contenidoAMostrar
+                                } as never)
+        }
+        else{
+            //mal
+            console.log("Salio mal el fetch de autores");
+        }
+        }
+      );
+  };
+
+  const recetasFetch= async () => {
+    try{
+        const respuesta= await fetch(urlFetchTodasLasRecetas, {
+            method: 'GET'
+        }).then((data) => data.json()).then(content=>setContenidoAMostrar(content));
+        return 0;
+    }
+    catch(err){
+        console.log(err);
+        return 1;
+    }
+  }
+
+  const handleRecetas = () =>{
+    console.log("Manejando recetas");
+    recetasFetch()
+    .then(data =>{
+        if(data==0){
+            navigation.navigate("PantallaReceta" as never, 
+            {tipo: TipoItem.RECETA,
+                verIngredientes:false,
+                permitirEliminacion:false,
+                permitirAgregacion:false,
+                titulo: "Todas las Recetas",
+                contenido: contenidoAMostrar
+            } as never)
+        }
+        else{
+            console.log("Salio mal el fetch de todas las recetas");
+        }
+    })
+  }
+
     return( 
-        <View>
-            <View style={style.bgHeaderPrincipal}>
-                <View style={style.flexRow}>
-                    <Image source={menuHamburguesaIcono}/>
-                    <Image source={MorfAr} style={style.morfar}/>
-                    <Image source={LogoSol}/>
-                </View>
-            </View>
-            <View style={style.bgPrincipal}>
-                <View style={style.flexColumnCat}>
-                    <View style={style.centrar}>
-                        <View style={[style.cajaBusqueda, style.flexRow]}>
-                            <Image source={lupa} style={style.elemento} />
-                            <TextInput style={style.elemento} placeholder="Ingresá tu busqueda..." />
-                        </View>
+        <PantallaTipoHome contenido={
+            <View style={style.flexColumn}>
+                        <BarraDeBusqueda/>
                             <TarjetaCategoria 
                                 nombre={"TODAS LAS RECETAS"} 
-                                onPress={() => navigation.navigate("MisRecetas" as never)}
+                                onPress={() => handleRecetas()}
                                 sourceFoto={fotoMisRecetas} 
                                 colorInterno={"#FCB826"} 
                                 colorExterno={"#FFFDFD"} 
@@ -46,7 +111,7 @@ function Home(): JSX.Element{
                                 />
                             <TarjetaCategoria 
                                 nombre={"AUTOR"} 
-                                onPress={() => {navigation.navigate("RecetasXChef" as never)}}
+                                onPress={() => {handleAutores()}}
                                 sourceFoto={fotoMiLista} 
                                 colorInterno={"#FCB826"} 
                                 colorExterno={"#FFFDFD"} 
@@ -56,10 +121,7 @@ function Home(): JSX.Element{
                                 paddingHorizontal={13}/>
                             <TarjetaCategoria 
                                 nombre={"TIPO"} 
-                                onPress={function (): void {
-                                    console.log("Apreto el boton");
-                                    
-                                } } 
+                                onPress={() => {navigation.navigate("RecetasXTipo" as never)}}
                                 sourceFoto={fotoCategorias} 
                                 colorInterno={"#FCB826"} 
                                 colorExterno={"#FFFDFD"} 
@@ -96,14 +158,11 @@ function Home(): JSX.Element{
                                 paddingBottom={24}  
                                 ancho={360}
                                 paddingHorizontal={13}/>
-                            </View>
-                    </View>
-                </View>
-            </View>
+                            </View>}/>
     )
 }
 
 
 const style=StyleSheet.create(estiloApp);
 
-export default Home;
+export default MisCategorias;

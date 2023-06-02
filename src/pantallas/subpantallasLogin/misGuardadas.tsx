@@ -12,25 +12,16 @@ import fotoMiLista from "../../assets/mi_lista.png";
 import fotoCategorias from "../../assets/categorias.png";
 import TarjetaCategoria from "../../componentes/TarjetaCategoria";
 import { createNavigatorFactory, useNavigation } from '@react-navigation/native';
+import BarraDeBusqueda from "../../componentes/BarraDeBusqueda";
+import PantallaTipoHome from "../../componentes/PantallaTipoHome";
 
 
-function Home(): JSX.Element{
+function MisGuardadas(): JSX.Element{
     const navigation = useNavigation();
     return( 
+        <PantallaTipoHome contenido={
         <View>
-            <View style={style.bgHeaderPrincipal}>
-                <View style={style.flexRow}>
-                    <Image source={menuHamburguesaIcono}/>
-                    <Image source={MorfAr} style={style.morfar}/>
-                    <Image source={LogoSol}/>
-                </View>
-            </View>
-            <View style={style.bgPrincipal}>
-                <View style={style.flexColumn}>
-                    <View style={[style.cajaBusqueda, style.flexRow]}>
-                        <Image source={lupa} style={style.elemento} />
-                        <TextInput style={style.elemento} placeholder="Ingresá tu busqueda..." />
-                    </View>
+                    <BarraDeBusqueda/>
                         <TarjetaCategoria 
                             nombre={"RECETAS FAVORITAS"} 
                             onPress={() => navigation.navigate("RecetasFavoritas" as never)}
@@ -53,13 +44,11 @@ function Home(): JSX.Element{
                             ancho={380}
                             paddingHorizontal={13}/>
                     
-                    </View>
-                </View>
-            </View>
+                    </View>}/>
     )
 }
 
 
 const style=StyleSheet.create(estiloApp);
 
-export default Home;
+export default MisGuardadas;
