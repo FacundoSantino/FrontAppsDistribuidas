@@ -20,9 +20,9 @@ import { TipoItem } from "../../App";
 function MisCategorias(): JSX.Element{
     const navigation = useNavigation();
 
-    
-const urlFetchUsuarios="http://192.168.0.9:8080/api/rest/morfar/getUsers";
-const urlFetchTodasLasRecetas="http://192.168.0.9:8080/api/rest/morfar/getAllRecipes"
+const urlBase="http://192.168.0.9:8080/api/rest/morfar";
+const urlFetchUsuarios=urlBase+"/getUsers";
+const urlFetchTodasLasRecetas=urlBase+"/getAllRecipes"
 const [contenidoAMostrar, setContenidoAMostrar]=useState([]);
 
 const autoresFetch= async () =>{
@@ -30,19 +30,19 @@ const autoresFetch= async () =>{
     try{
       const respuesta= await fetch(urlFetchUsuarios, {     
         method: 'GET',
-      }).then((data) => data.json()).then(content => setContenidoAMostrar(content));
-      return 0;
+      }).then((data) => {return data.json();});
+
     } catch(err){
       console.log(err);
-      return 1;
+
     }
+
   }
 
   const handleAutores = () => {
     console.log("Manejando fetch");
     autoresFetch()
       .then(data => {
-        if(data==0){
             //bien
             navigation.navigate("PantallaReceta" as never, 
                                 {tipo: TipoItem.TIPO,
@@ -50,13 +50,8 @@ const autoresFetch= async () =>{
                                     permitirEliminacion:false,
                                     permitirAgregacion:false,
                                     titulo: "Recetas por Autor",
-                                    contenido: contenidoAMostrar
+                                    contenido: data
                                 } as never)
-        }
-        else{
-            //mal
-            console.log("Salio mal el fetch de autores");
-        }
         }
       );
   };
@@ -65,33 +60,100 @@ const autoresFetch= async () =>{
     try{
         const respuesta= await fetch(urlFetchTodasLasRecetas, {
             method: 'GET'
-        }).then((data) => data.json()).then(content=>setContenidoAMostrar(content));
-        return 0;
+        }).then((data) => {return data.json();});
     }
     catch(err){
         console.log(err);
-        return 1;
     }
+
   }
 
   const handleRecetas = () =>{
     console.log("Manejando recetas");
     recetasFetch()
     .then(data =>{
-        if(data==0){
+
             navigation.navigate("PantallaReceta" as never, 
             {tipo: TipoItem.RECETA,
                 verIngredientes:false,
                 permitirEliminacion:false,
                 permitirAgregacion:false,
                 titulo: "Todas las Recetas",
-                contenido: contenidoAMostrar
+                contenido: data
             } as never)
-        }
-        else{
-            console.log("Salio mal el fetch de todas las recetas");
-        }
     })
+  }
+
+  const handleTipos= async () =>{
+    let cositas= await tiposFetch();
+        navigation.navigate("PantallaReceta" as never,
+        {tipo: TipoItem.TIPO,
+            verIngredientes:false,
+            permitirEliminacion:false,
+            permitirAgregacion:false,
+            titulo: "",
+            contenido: cositas
+        } as never)
+  }
+
+  const tiposFetch = async () =>{
+    try{
+        let url=urlBase+"/getRecipeTypes";
+        await fetch(url,{
+            method:"GET"
+        }).then((data) => data.json()).then((devolver) => {console.log("DEVOLVER");console.log(devolver);return devolver;});
+    }
+    catch(error){
+        console.log(error);
+
+    }
+
+  }
+
+  const handleIngrediente= () =>{
+
+  }
+
+  const ingredienteFetch = async () =>{
+    try{
+        let url= urlBase+"/getIngredients";
+        await fetch(url,{
+            method:"GET"
+        }).then((data) => {return data.json();});
+    }
+    catch(error){
+        console.log(error);
+    }
+  }
+
+
+  const handleNombre= () =>{
+    tiposFetch().then(
+        (datos) =>{
+            if(datos==0){
+                navigation.navigate("PantallaReceta" as never, {
+                    
+                } as never)
+            }
+            else{
+                console.log("El fetch de nombres salio mal");
+            }
+        }
+        
+    )
+  }
+
+  const nombresFetch = async () =>{
+    try{
+        let url=urlBase+"";
+        return await fetch(url,{
+            method:"GET"
+        }).then(data => data.json());
+    }
+    catch(error){
+        console.log(error);
+        return null;
+    }
   }
 
     return( 
@@ -121,7 +183,7 @@ const autoresFetch= async () =>{
                                 paddingHorizontal={13}/>
                             <TarjetaCategoria 
                                 nombre={"TIPO"} 
-                                onPress={() => {navigation.navigate("RecetasXTipo" as never)}}
+                                onPress={() => {handleTipos()}}
                                 sourceFoto={fotoCategorias} 
                                 colorInterno={"#FCB826"} 
                                 colorExterno={"#FFFDFD"} 
@@ -133,10 +195,7 @@ const autoresFetch= async () =>{
 
                             <TarjetaCategoria 
                                 nombre={"INGREDIENTE"} 
-                                onPress={function (): void {
-                                    console.log("Apreto el boton");
-                                    
-                                } } 
+                                onPress={ () => {handleIngrediente()}    }  
                                 sourceFoto={fotoCategorias} 
                                 colorInterno={"#FCB826"} 
                                 colorExterno={"#FFFDFD"} 
@@ -147,10 +206,7 @@ const autoresFetch= async () =>{
 
                             <TarjetaCategoria 
                                 nombre={"NOMBRE"} 
-                                onPress={function (): void {
-                                    console.log("Apreto el boton");
-                                    
-                                } } 
+                                onPress={ () => {handleNombre()} } 
                                 sourceFoto={fotoCategorias} 
                                 colorInterno={"#FCB826"} 
                                 colorExterno={"#FFFDFD"} 

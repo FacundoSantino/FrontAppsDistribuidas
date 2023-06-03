@@ -28,7 +28,9 @@ import { ImageSourcePropType } from 'react-native';
 export enum TipoItem{
   RECETA,
   TIPO,
-  TIPORECETA
+  RECETANOMBRE,
+  AUTOR,
+  INGREDIENTE
 }
 
 export type TipoParametros = {
@@ -62,7 +64,8 @@ export interface Foto {
 
 export interface Tipo {
   idTipo: number,
-  descripcion:String
+  descripcion:String,
+  urlFoto: string
 }
 
 export interface Receta {
