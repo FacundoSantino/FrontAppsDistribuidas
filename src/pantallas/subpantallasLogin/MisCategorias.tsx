@@ -14,13 +14,13 @@ import CarouselCards from "../../CarouselCards";
 import { createNavigatorFactory, useNavigation } from '@react-navigation/native';
 import BarraDeBusqueda from "../../componentes/BarraDeBusqueda";
 import PantallaTipoHome from "../../componentes/PantallaTipoHome";
-import { TipoItem } from "../../App";
+import { TipoItem, localip } from "../../App";
 
 
 function MisCategorias(): JSX.Element{
     const navigation = useNavigation();
 
-const urlBase="http://192.168.0.9:8080/api/rest/morfar";
+const urlBase="http://"+localip+":8080/api/rest/morfar";
 const urlFetchUsuarios=urlBase+"/getUsers";
 const urlFetchTodasLasRecetas=urlBase+"/getAllRecipes"
 const [contenidoAMostrar, setContenidoAMostrar]=useState([]);
@@ -58,9 +58,9 @@ const autoresFetch= async () =>{
 
   const recetasFetch= async () => {
     try{
-        const respuesta= await fetch(urlFetchTodasLasRecetas, {
-            method: 'GET'
-        }).then((data) => {return data.json();});
+        const respuesta= await fetch(urlFetchTodasLasRecetas);
+        const data = await respuesta.json();
+        return data;
     }
     catch(err){
         console.log(err);
@@ -68,11 +68,10 @@ const autoresFetch= async () =>{
 
   }
 
-  const handleRecetas = () =>{
+  const handleRecetas = async () =>{
     console.log("Manejando recetas");
-    recetasFetch()
-    .then(data =>{
-
+    await recetasFetch().then(
+        (data)=>{
             navigation.navigate("PantallaReceta" as never, 
             {tipo: TipoItem.RECETA,
                 verIngredientes:false,
@@ -80,28 +79,33 @@ const autoresFetch= async () =>{
                 permitirAgregacion:false,
                 titulo: "Todas las Recetas",
                 contenido: data
-            } as never)
-    })
+            } as never);
+        }
+    );
+    
+    
   }
 
   const handleTipos= async () =>{
-    let cositas= await tiposFetch();
+    await tiposFetch().then((data)=>{
         navigation.navigate("PantallaReceta" as never,
         {tipo: TipoItem.TIPO,
             verIngredientes:false,
             permitirEliminacion:false,
             permitirAgregacion:false,
             titulo: "",
-            contenido: cositas
+            contenido: data
         } as never)
+    });
+       
   }
 
   const tiposFetch = async () =>{
     try{
         let url=urlBase+"/getRecipeTypes";
-        await fetch(url,{
-            method:"GET"
-        }).then((data) => data.json()).then((devolver) => {console.log("DEVOLVER");console.log(devolver);return devolver;});
+        const respuesta = await fetch(url);
+        const datos = await respuesta.json();
+        return datos;
     }
     catch(error){
         console.log(error);
@@ -162,7 +166,7 @@ const autoresFetch= async () =>{
                         <BarraDeBusqueda/>
                             <TarjetaCategoria 
                                 nombre={"TODAS LAS RECETAS"} 
-                                onPress={() => handleRecetas()}
+                                onPress={async () => {handleRecetas()} }
                                 sourceFoto={fotoMisRecetas} 
                                 colorInterno={"#FCB826"} 
                                 colorExterno={"#FFFDFD"} 

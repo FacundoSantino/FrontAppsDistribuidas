@@ -20,6 +20,7 @@ import fotoUnchecked from '../assets/unchecked.png';
 import IconoUsuario from "../assets/IconoUsuario.png";
 import IconoContrasenia from "../assets/IconoContrasenia.png";
 import { CheckBox } from 'react-native-elements';
+import { localip } from '../App';
 
 
 
@@ -66,7 +67,7 @@ function Login(): JSX.Element{
     };
     const intervalo =setInterval( () => isInternetReachable(),10000);
 
-    const urlLogin = 'http://192.168.0.9:8080/api/rest/morfar/login';
+    const urlLogin = 'http://' + localip + ':8080/api/rest/morfar/login';
     const loginDTO = {
       user: usuario,
       password: contra

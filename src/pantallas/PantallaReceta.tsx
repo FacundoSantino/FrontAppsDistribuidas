@@ -28,7 +28,7 @@ export default function PantallaReceta() : JSX.Element{
     const route=useRoute<PantallaRecetaRouteProps>();
     const [tituloSacable,setTituloSacable]=useState(<Text style={[styles.titulo]}> {route.params.titulo} </Text>);
     const [noCambieElTitulo,setNoCambieElTitulo]=useState(true);
-    const [cargoPantalla,setCargoPantalla]=useState(false);
+    const [cargoPantalla,setCargoPantalla]=useState(true);
 
     let listaBotones: JSX.Element[]  = [];
 
@@ -37,10 +37,6 @@ export default function PantallaReceta() : JSX.Element{
     }
 
     //route.params.contenido siempre es undefined, hay que ver como arreglarlo
-    const intervalo=setInterval( () =>{
-        console.log("Chequeo");
-    if(route.params.contenido!=undefined){
-        console.log("chequeobien");
     if(route.params.tipo==TipoItem.AUTOR){
         const contenidoMapeado: Autor[]= [];
 
@@ -129,27 +125,23 @@ export default function PantallaReceta() : JSX.Element{
         ));
 
     }
-    setCargoPantalla(true);
-}
-},100)
     
     if(cargoPantalla){
-        clearInterval(intervalo);
-    return( 
-        <PantallaTipoHome contenido={
-            <View>
-                {tituloSacable}
-                <BarraDeBusqueda/>
-                <View style={[styles.flexRow,{marginTop:20}]}>
-                    <BotonFiltrar/>
-                    <BotonOrdenar/>
+        return( 
+            <PantallaTipoHome contenido={
+                <View>
+                    {tituloSacable}
+                    <BarraDeBusqueda/>
+                    <View style={[styles.flexRow,{marginTop:20}]}>
+                        <BotonFiltrar/>
+                        <BotonOrdenar/>
+                    </View>
+                    <ScrollView style= {{marginTop:20}} contentContainerStyle={{justifyContent:"center"}}>
+                        {listaBotones}                    
+                    </ScrollView>
                 </View>
-                <ScrollView style= {{marginTop:20}} contentContainerStyle={{justifyContent:"center"}}>
-                    {listaBotones}                    
-                </ScrollView>
-            </View>
-    }/>
-    )}
+        }/>
+        )}
     else{
         return(
             <Text> Cargando... </Text>

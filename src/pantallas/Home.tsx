@@ -15,10 +15,12 @@ import CarouselCards from "../CarouselCards";
 import PantallaTipoHome from "../componentes/PantallaTipoHome";
 import {createNavigatorFactory, useNavigation } from '@react-navigation/native';
 import BarraDeBusqueda from "../componentes/BarraDeBusqueda";
+import { localip } from "../App";
 
 
 
 function Home(): JSX.Element{
+    var p: any[] = [];
     const navigation = useNavigation();
     const [dato, setDato] = useState<any[]>([]);
     const [loaded, setLoaded] = useState(false);
@@ -26,91 +28,88 @@ function Home(): JSX.Element{
 
     const getHomeData = async () => {
         try {
-        const response = await fetch("http://192.168.0.9:8080/api/rest/morfar/getHomeCommonInfo");
+        const response = await fetch('http://' + localip + ':8080/api/rest/morfar/getHomeCommonInfo');
         const json = await response.json();
-        datoProcesado(); // Llama a datoProcesado con los datos recibidos
+        
         return json;
         } catch (err) {
         console.log(err);
         }
     }
     
-    React.useEffect(() => {
+    const handleCarrouselData = ()=>{
+        
+
         getHomeData()
         .then(data => {
-            setDato(data);
-            setLoaded(true);
+            
+            data.forEach((d: any) => {
+                p.push({
+                "title": d.nombre,
+                "body": d.descripcion,
+                "imgUrl": d.fotos[0].urlFoto
+                });
+            });
+            
         })
         .catch(error => console.error(error));
-    }, []);
-    
-    const datoProcesado = () => {
-        if (dato.length !== 0) {
-        console.log("entroaca");
-        var p: any[] = [];
-        dato.forEach((d: any) => {
-            p.push({
-            "title": d.nombre,
-            "body": d.descripcion,
-            "imgUrl": d.fotos[0].urlFoto
-            });
-        });
-        setProcesado(p);
-        
-        }
-    };
+        return p;
+    }
+    const GetCarrouselCards = ()=>{
+        var data = handleCarrouselData();
+        return (
+            <>
+            <CarouselCards procesado={data} />
+            </>
+        );
+    }
 
-    
-    if(loaded){
-        return( 
-            <PantallaTipoHome contenido={
-                <View style={style.flexColumn}>
-                    <View>
-                        <BarraDeBusqueda/>
-                        <TarjetaCategoria 
-                            nombre={"MIS RECETAS"} 
-                            onPress={() => navigation.navigate("MisRecetas" as never)}
-                            sourceFoto={fotoMisRecetas} 
-                            colorInterno={"#FCB826"} 
-                            colorExterno={"#FFFDFD"} 
-                            paddingTop={10}
-                            paddingBottom={24} 
-                            ancho={360}
-                            paddingHorizontal={13}
-                            />
-                        <TarjetaCategoria 
-                            nombre={"MI LISTA"} 
-                            onPress={() => navigation.navigate("misGuardadas" as never)
-                            } 
-                            sourceFoto={fotoMiLista} 
-                            colorInterno={"#FCB826"} 
-                            colorExterno={"#FFFDFD"} 
-                            paddingTop={10}
-                            paddingBottom={24}  
-                            ancho={360}
-                            paddingHorizontal={13}/>
-    
-                        <TarjetaCategoria 
-                            nombre={"CATEGORIAS"} 
-                            onPress={() => navigation.navigate("MisCategorias" as never) } 
-                            sourceFoto={fotoCategorias} 
-                            colorInterno={"#FCB826"} 
-                            colorExterno={"#FFFDFD"} 
-                            paddingTop={10}
-                            paddingBottom={24}  
-                            ancho={360}
-                            paddingHorizontal={13}/>
-                    </View>
-                    <View style={style.carouselContainer}>
-                        
-                        <CarouselCards procesado={procesado} />
-                    </View>
+    return( 
+        <PantallaTipoHome contenido={
+            <View style={style.flexColumn}>
+                <View>
+                    <BarraDeBusqueda/>
+                    <TarjetaCategoria 
+                        nombre={"MIS RECETAS"} 
+                        onPress={() => navigation.navigate("MisRecetas" as never)}
+                        sourceFoto={fotoMisRecetas} 
+                        colorInterno={"#FCB826"} 
+                        colorExterno={"#FFFDFD"} 
+                        paddingTop={10}
+                        paddingBottom={24} 
+                        ancho={360}
+                        paddingHorizontal={13}
+                        />
+                    <TarjetaCategoria 
+                        nombre={"MI LISTA"} 
+                        onPress={() => navigation.navigate("misGuardadas" as never)
+                        } 
+                        sourceFoto={fotoMiLista} 
+                        colorInterno={"#FCB826"} 
+                        colorExterno={"#FFFDFD"} 
+                        paddingTop={10}
+                        paddingBottom={24}  
+                        ancho={360}
+                        paddingHorizontal={13}/>
+
+                    <TarjetaCategoria 
+                        nombre={"CATEGORIAS"} 
+                        onPress={() => navigation.navigate("MisCategorias" as never) } 
+                        sourceFoto={fotoCategorias} 
+                        colorInterno={"#FCB826"} 
+                        colorExterno={"#FFFDFD"} 
+                        paddingTop={10}
+                        paddingBottom={24}  
+                        ancho={360}
+                        paddingHorizontal={13}/>
                 </View>
-            }/>);
-    }
-    else{
-        return(<Text>Cargando</Text>);
-    }
+                <View style={style.carouselContainer}>
+                    
+                    <GetCarrouselCards></GetCarrouselCards>
+                </View>
+            </View>
+        }/>);
+    
 }
 
 
