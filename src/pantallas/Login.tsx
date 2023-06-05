@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { Animated} from 'react-native';
 import estilos from '../estilos/estiloLogin';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import LogoSol from "../assets/Logo_Sol_Bueno.png";
 import RestablecerContrasenia from "./subpantallasLogin/IngresarUsuarioRestablecer"
 import Codigo from "./subpantallasLogin/Codigo"
@@ -20,7 +20,7 @@ import fotoUnchecked from '../assets/unchecked.png';
 import IconoUsuario from "../assets/IconoUsuario.png";
 import IconoContrasenia from "../assets/IconoContrasenia.png";
 import { CheckBox } from 'react-native-elements';
-import { localip } from '../App';
+import { TipoParametros, localip } from '../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -35,6 +35,7 @@ function Login(): JSX.Element{
     const [usuario, setUsuario]=useState("");
     const [contra, setContra]=useState("");
     const [error, setError] = useState("");
+   
     const interpolateColor = animatedValue.interpolate({
       inputRange: [0, 1],
       outputRange: ['#517fa4', '#00aced'],
@@ -100,7 +101,7 @@ function Login(): JSX.Element{
           if (data == 200) {
             
 
-            navigation.navigate("Home" as never);
+            navigation.navigate("Home" as never,{user:usuario} as never);
           } else {
             if(data == 0){
               navigation.navigate("LoginSinConexion" as never);

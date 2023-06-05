@@ -20,6 +20,7 @@ import PantallaTipoLogin from '../../componentes/PantallaTipoLogin';
 interface LoginInicialProps {
   funcionDireccion: (direccion : string) => void;
 }
+
 export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
   const navigation = useNavigation();
   const [checked, setChecked] = useState(false);

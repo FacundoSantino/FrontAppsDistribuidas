@@ -25,7 +25,7 @@ import RecetasXTipo from './pantallas/RecetasXTipo';
 import PantallaReceta from './pantallas/PantallaReceta';
 import { ImageSourcePropType } from 'react-native';
 
-export var localip = "192.168.1.37"
+export var localip = "192.168.0.238"
 export enum TipoItem{
   RECETA,
   TIPO,
@@ -43,6 +43,12 @@ export type TipoParametros = {
     titulo: String,
     contenido: Autor[] | Receta[] | Tipo[] ,
     ingredientes?: Ingrediente[]
+  },
+  Home : {
+    user:String
+  },
+  Contra:{
+    idUser:number
   }
 }
 
