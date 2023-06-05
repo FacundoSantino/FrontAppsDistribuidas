@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 
-import {View, Text, StyleSheet,Image,TextInput,SafeAreaView,ScrollView, ActivityIndicator} from "react-native";
+import {View, Text, StyleSheet,Image,TextInput,SafeAreaView,ScrollView, ActivityIndicator, TouchableOpacity} from "react-native";
 import menuHamburguesaIcono from "../assets/menuHamburguesaIcono.png";
 import MorfAr from "../assets/MorfAR.png";
 import lupa from "../assets/lupa.png";
@@ -13,22 +13,26 @@ import fotoMiLista from "../assets/mi_lista.png";
 import fotoCategorias from "../assets/categorias.png";
 import CarouselCards from "../CarouselCards";
 import PantallaTipoHome from "../componentes/PantallaTipoHome";
-import {createNavigatorFactory, useNavigation } from '@react-navigation/native';
+import {RouteProp, createNavigatorFactory, useNavigation, useRoute } from '@react-navigation/native';
 import BarraDeBusqueda from "../componentes/BarraDeBusqueda";
-import { TipoItem, localip } from "../App";
+import { TipoItem, TipoParametros, localip } from "../App";
+import Modal from "react-native-modal";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
-
-
+import estilosLogin from '../estilos/estiloLogin';
+type HomeProps = RouteProp<TipoParametros,'Home'>;
 function Home(): JSX.Element{
     var p: any[] = [];
     const navigation = useNavigation();
     const [dato, setDato] = useState<any[]>([]);
     const [procesado, setProcesado] = useState<String[]>([]);
-
+    const route = useRoute<HomeProps>()  
     const urlFetchMisRecetas="http://"+localip+":8080/api/rest/morfar/getMyRecipes/Juanito";
-
+    const [userData, setUserData] = useState({});
+    const [cargado,setCargado] = useState(false);
+    //nombre,password,avatar
+    const [nombre,setNombre] = useState("");
+    const [password,setPassword] = useState("");
+    const [avatar,setAvatar] = useState("");
     const getHomeData = async () => {
         try {
         const response = await fetch('http://' + localip + ':8080/api/rest/morfar/getHomeCommonInfo');
@@ -39,9 +43,15 @@ function Home(): JSX.Element{
         }
     }
     React.useEffect(()=>{
+        setCargado(false);
         handleCarrouselData();
+        fetch("http://"+localip+":8080/api/rest/morfar/getUsers/"+route.params.user)
+        .then((r) => r.json())
+        .then((d) => setUserData(d))
+        .finally(()=>setCargado(true));
+        //NombreDefault
     },[])
-
+    
     const handleCarrouselData = () => {
         getHomeData()
         .then(data => {
@@ -86,12 +96,35 @@ function Home(): JSX.Element{
         
         
       }
-    
+    const handleUpdateUser = ()=>{
+        var dto = {
+            "nickname" : route.params.user,
+            "nombre" : nombre,
+            "password":password,
+            "avatar" : avatar
+        }
+        fetch("http://"+localip+":8080/api/rest/morfar/updateUserAfterRegister",
+        {method:'POST',
+    body: JSON.stringify(dto),
+    headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }}).then((r)=>{
+        if (r.status == 200){
+            setCargado(false);
+        } else{
+            setCargado(true);
+        }
 
+      })
+    }
+      console.log(userData.nombre);
     return( 
         <PantallaTipoHome contenido={
             <View style={style.flexColumn}>
                 <View>
+                    {(cargado)?
+                    <Text style={{alignSelf:'center'}}>¡Bienvenido nuevamente {userData.nombre}!</Text>
+                    :null}
                     <BarraDeBusqueda/>
                     <TarjetaCategoria 
                         nombre={"MIS RECETAS"} 
@@ -99,8 +132,8 @@ function Home(): JSX.Element{
                         sourceFoto={fotoMisRecetas} 
                         colorInterno={"#FCB826"} 
                         colorExterno={"#FFFDFD"} 
-                        paddingTop={10}
-                        paddingBottom={24} 
+                        paddingTop={8}
+                        paddingBottom={20} 
                         ancho={360}
                         paddingHorizontal={13}
                         />
@@ -111,8 +144,8 @@ function Home(): JSX.Element{
                         sourceFoto={fotoMiLista} 
                         colorInterno={"#FCB826"} 
                         colorExterno={"#FFFDFD"} 
-                        paddingTop={10}
-                        paddingBottom={24}  
+                        paddingTop={8}
+                        paddingBottom={20}  
                         ancho={360}
                         paddingHorizontal={13}/>
 
@@ -122,14 +155,37 @@ function Home(): JSX.Element{
                         sourceFoto={fotoCategorias} 
                         colorInterno={"#FCB826"} 
                         colorExterno={"#FFFDFD"} 
-                        paddingTop={10}
-                        paddingBottom={24}  
+                        paddingTop={8}
+                        paddingBottom={20}  
                         ancho={360}
                         paddingHorizontal={13}/>
                 </View>
                 <View style={style.carouselContainer}>
                     {(procesado.length>0)?<CarouselCards procesado={procesado} />:null}
                 </View>
+                {(cargado && userData.nombre == 'NombreDefault')?
+                <Modal
+                isVisible ={cargado}>
+                <View style={{backgroundColor:'#FCB826', width: '100%',height:500,borderRadius:15}}
+                >
+                 <Text style={[style.titulo,{alignSelf:'center'}]}> Bienvenido a MorfAR! </Text>
+                 <Text style={{alignSelf:'center'}}> Debe completar sus datos para poder acceder a la aplicación. </Text>
+
+                 
+                <TextInput style={[loginStyle.inputTextLogin]} value={nombre} placeholder="Ingrese su nombre" onChange={e => setNombre(e.nativeEvent.text)}></TextInput>
+                 
+                <TextInput style={[loginStyle.inputTextLogin]} value={password} placeholder="Ingrese su nueva contraseña" onChange={e => setPassword(e.nativeEvent.text)}></TextInput>
+                 
+                <TextInput style={[loginStyle.inputTextLogin,{display:'flex'}]} value={avatar} placeholder="Ingrese su avatar" onChange={e => setAvatar(e.nativeEvent.text)}></TextInput>
+                 <TouchableOpacity style={[{alignSelf:'center',position:'absolute',bottom:50}]}
+                 onPress={()=>handleUpdateUser()}
+                 >
+                    <Text style={[{alignSelf:'center',backgroundColor:'white'},{borderRadius:16, padding:10}]}>Guardar</Text>
+                 </TouchableOpacity>
+                </View>
+               </Modal>
+                :null}
+                
             </View>
         }/>);
     
@@ -137,5 +193,5 @@ function Home(): JSX.Element{
 
 
 const style=StyleSheet.create(estiloApp);
-
+const loginStyle = StyleSheet.create(estilosLogin);
 export default Home;

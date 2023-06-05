@@ -55,7 +55,13 @@ export type TipoParametros = {
   ,
   Ingredientes:{
     ingredientes: Ingrediente[]
-  }
+  
+  },
+  Home : {
+    user:String
+  },
+  Contra:{
+    idUser:number
 }
 
 export interface Paso{

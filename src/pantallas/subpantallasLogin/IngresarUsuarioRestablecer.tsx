@@ -12,6 +12,7 @@ import { Animated } from 'react-native';
 import estilos from '../../estilos/estiloLogin';
 import { useNavigation } from '@react-navigation/native';
 import PantallaTipoLogin from '../../componentes/PantallaTipoLogin';
+import { localip } from '../../App';
 
 interface LoginInicialProps {
   funcionDireccion: (direccion : string) => void;
@@ -20,6 +21,8 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
   const navigation = useNavigation();
   const [checked, setChecked] = useState(false);
   const animatedValue = useRef(new Animated.Value(0)).current;
+  const [user, setUser] = useState("");
+  const [error,setError] = useState("");
   const interpolateColor = animatedValue.interpolate({
     inputRange: [0, 1],
     outputRange: ['#517fa4', '#00aced'],
@@ -40,6 +43,23 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
   );
+  const verifyUserFetch = async ()=>{
+      const respuesta = await fetch("http://"+localip+":8080/api/rest/morfar/getUsers/"+user);
+      const estado = await respuesta.status;
+      return(estado==200);
+  }
+  const handleVerifyUser = async () => {
+    console.log("Manejando verify user");
+    verifyUserFetch()
+      .then(async verdadero => {
+        setError("");
+        if (verdadero) {
+          navigation.navigate("Codigo" as never);
+        } else {
+          setError("El mail o el usuario no existe.")
+        }
+      }).catch(error => console.log(error));
+  };
   return (
     <PantallaTipoLogin contenido={
     <View style={styles.loginBox}>
@@ -47,13 +67,14 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
         <Text style={styles.ingreseUsuarioTitulo}> INGRESE USUARIO </Text>
         <View style={styles.inputTextLogin}>
             <Image source={IconoUsuario} style={styles.iconoLogin} />
-        <TextInput placeholder="Ingrese su usuario" style={styles.contentInput}></TextInput>
+        <TextInput placeholder="Ingrese su usuario" value={user} onChange={e=>setUser(e.nativeEvent.text)} style={styles.contentInput}></TextInput>
         </View>
+        <Text>{error}</Text>
             <View style={styles.buttonViewContainer}>
                 <CustomButton
                 title="Verificar"
                 color="#D69D20"
-                onPress={()=> {navigation.navigate("Codigo" as never)}}
+                onPress={()=> {handleVerifyUser()}}
             />
         </View>
 
