@@ -18,7 +18,6 @@ import React from "react";
 type RecetaRouteProps= RouteProp<TipoParametros, "Receta">;
 
 export default function Receta(): JSX.Element {
-
     var p: any[] = [];
     const [fotoEstrella,setFotoEstrella]=useState(fotoEstrellaVacia);
     const urlBase="http://"+localip+":8080/api/rest/morfar";
@@ -50,7 +49,8 @@ export default function Receta(): JSX.Element {
                     p.push({
                     "title": "titulo",
                     "body": "body",
-                    "imgUrl": d.urlFoto
+                    "imgUrl": d.urlFoto,
+                    key:i
                     });
                 });
                 setProcesado(p);
@@ -72,7 +72,7 @@ export default function Receta(): JSX.Element {
     }
 
     function irAIngredientes() {
-        navigation.navigate("Ingredientes" as never,{ingredientes:ingredientes} as never);
+        navigation.navigate("Ingredientes" as never,{ingredientes:ingredientes,idReceta:route.params.contenido.idReceta,nombreReceta:route.params.contenido.nombre} as never);
     }
     
 
@@ -106,11 +106,13 @@ export default function Receta(): JSX.Element {
 
                 <ScrollView style={{borderRadius:10,minHeight:10,height:"auto", maxHeight:90, width:390,borderColor:'black',borderWidth:2.3}}>
 
-                    {route.params.pasos.map((paso) => (
-                        <Text>
-                            {paso.nroPaso+". "+paso.texto}
-                        </Text>
-    ))}
+                    {route.params.pasos.map((paso,i) => (
+                                <Text key={i}>
+                                    {paso.nroPaso+". "+paso.texto}
+                                </Text>
+                            )
+                        )
+                    }
 
                 </ScrollView>
                 
@@ -134,6 +136,7 @@ export default function Receta(): JSX.Element {
             <Text> Cargando... </Text>
         )
     }
+
 }
 
 const style=StyleSheet.create(estiloApp);
