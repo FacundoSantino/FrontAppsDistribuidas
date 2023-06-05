@@ -13,7 +13,9 @@ import estilos from '../../estilos/estiloLogin';
 import { useNavigation } from '@react-navigation/native';
 import PantallaTipoLogin from '../../componentes/PantallaTipoLogin';
 import { localip } from '../../App';
-
+import IconoCruz from '../../assets/cruz.png';
+import Modal from "react-native-modal";
+import Lupa from '../../assets/lupa.png';
 interface LoginInicialProps {
   funcionDireccion: (direccion : string) => void;
 }
@@ -23,6 +25,7 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
   const animatedValue = useRef(new Animated.Value(0)).current;
   const [user, setUser] = useState("");
   const [error,setError] = useState("");
+  const [levantada, setLevantada] = useState(false);
   const interpolateColor = animatedValue.interpolate({
     inputRange: [0, 1],
     outputRange: ['#517fa4', '#00aced'],
@@ -54,8 +57,9 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
       .then(async verdadero => {
         setError("");
         if (verdadero) {
-          navigation.navigate("Codigo" as never);
+          navigation.navigate("Codigo" as never,{user:user} as never );
         } else {
+          setLevantada(true);
           setError("El mail o el usuario no existe.")
         }
       }).catch(error => console.log(error));
@@ -69,7 +73,6 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
             <Image source={IconoUsuario} style={styles.iconoLogin} />
         <TextInput placeholder="Ingrese su usuario" value={user} onChange={e=>setUser(e.nativeEvent.text)} style={styles.contentInput}></TextInput>
         </View>
-        <Text>{error}</Text>
             <View style={styles.buttonViewContainer}>
                 <CustomButton
                 title="Verificar"
@@ -77,6 +80,18 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
                 onPress={()=> {handleVerifyUser()}}
             />
         </View>
+        <Modal isVisible = {levantada}>
+          <View style={{display:'flex',flexDirection:'column',width:370,height:200,backgroundColor:'#FCB826',borderRadius:20}}>
+            <TouchableOpacity onPress={()=>setLevantada(false)} style={{display:'flex',justifyContent:'center',alignItems:'flex-start',height:30,width:340}}>
+              <Image source={IconoCruz} style={{width:20,height:20,marginLeft:10}}/>
+            </TouchableOpacity>
+            <View style={{display:'flex',flexDirection:'column',width:370,height:150,justifyContent:'center',alignItems:'center'}}>
+            <Image source={Lupa} style={{width:40,height:40}}/>
+              <Text style={{fontSize:20,color:'black'}}>Ups!</Text>
+              <Text style={{fontSize:16,color:'black'}}>El usuario ingresado es inexistente, por favor intentelo nuevamente.</Text>
+            </View>
+          </View>
+        </Modal>
 
     </View>
     }
