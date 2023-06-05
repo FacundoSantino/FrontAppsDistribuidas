@@ -25,7 +25,8 @@ function MisCategorias(): JSX.Element{
     const urlBase="http://"+localip+":8080/api/rest/morfar";
     const urlFetchUsuarios=urlBase+"/getUsers";
     const urlFetchTodasLasRecetas=urlBase+"/getAllRecipes"
-    const [contenidoAMostrar, setContenidoAMostrar]=useState([]);
+    
+    
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
       };

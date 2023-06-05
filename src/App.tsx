@@ -8,12 +8,12 @@
 import React, { useRef, useState } from 'react';
 import Login from './pantallas/Login';
 import Home from './pantallas/Home';
-import Carousel from './pantallas/carousel';
+import Carousel from './pantallas/Carousel';
 import MisRecetas from './pantallas/MisRecetas';
 import Codigo from './pantallas/subpantallasLogin/Codigo';
 import IngresarUsuarioRestablecer from './pantallas/subpantallasLogin/IngresarUsuarioRestablecer';
 import RestablecerContrasenia from './pantallas/subpantallasLogin/RestablecerContrasenia';
-import MisGuardadas from './pantallas/subpantallasLogin/misGuardadas';
+import MisGuardadas from './pantallas/subpantallasLogin/MisGuardadas';
 import Registrar from './pantallas/subpantallasLogin/Registrar';
 import MisCategorias from './pantallas/subpantallasLogin/MisCategorias'
 import { NavigationContainer } from '@react-navigation/native';
@@ -24,8 +24,10 @@ import RecetasOffline from './pantallas/RecetasOffline';
 import RecetasXTipo from './pantallas/RecetasXTipo';
 import PantallaReceta from './pantallas/PantallaReceta';
 import { ImageSourcePropType } from 'react-native';
+import Receta from './componentes/Receta';
+import Ingredientes from './componentes/Ingredientes';
 
-export var localip = "192.168.1.37"
+export var localip = "192.168.0.9"
 export enum TipoItem{
   RECETA,
   TIPO,
@@ -43,8 +45,39 @@ export type TipoParametros = {
     titulo: String,
     contenido: Autor[] | Receta[] | Tipo[] ,
     ingredientes?: Ingrediente[]
+  },
+  Receta:{
+    tipoPantalla:TipoPantalla,
+    titulo:String,
+    contenido: Receta,
+    pasos: Paso[]
+  }
+  ,
+  Ingredientes:{
+    ingredientes: Ingrediente[]
   }
 }
+
+export interface Paso{
+  idPaso:number,
+  idReceta: Receta,
+  nroPaso:number,
+  multimedia: Multimedia | null,
+  texto: string,
+}
+
+export interface Multimedia{
+  idContenido: number,
+  tipo_contenido:string,
+  extension:string,
+  urlContenido:string
+}
+
+export enum TipoPantalla{
+  MILISTA,
+  NOMILISTA
+}
+
 
 
 export interface Autor {
@@ -110,6 +143,8 @@ function App(): JSX.Element {
         <Stack.Screen name="RecetasOffline" component={RecetasOffline}/>
         <Stack.Screen name="RecetasXTipo" component={RecetasXTipo}/>
         <Stack.Screen name="PantallaReceta" component={PantallaReceta} initialParams={{titulo:"Hola"}}/>
+        <Stack.Screen name="Receta" component={Receta}/>
+        <Stack.Screen name="Ingredientes" component={Ingredientes}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

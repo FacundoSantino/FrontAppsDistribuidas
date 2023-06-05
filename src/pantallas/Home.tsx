@@ -106,7 +106,7 @@ function Home(): JSX.Element{
                         />
                     <TarjetaCategoria 
                         nombre={"MI LISTA"} 
-                        onPress={() => navigation.navigate("misGuardadas" as never)
+                        onPress={() => navigation.navigate("MisGuardadas" as never)
                         } 
                         sourceFoto={fotoMiLista} 
                         colorInterno={"#FCB826"} 

@@ -38,8 +38,8 @@ const CajaIngrediente= (props:CajaIngredienteProps) =>{
         <TouchableOpacity 
         style={{backgroundColor:props.colorExterno,paddingTop:props.paddingTop,
             paddingBottom:props.paddingBottom,borderColor:"#000000", borderWidth:1,
-            paddingHorizontal:props.paddingHorizontal, borderRadius:20, width:props.ancho,
-            marginTop:17,
+            paddingHorizontal:props.paddingHorizontal, borderRadius:10, width:props.ancho,
+            marginTop:17,marginLeft:25,
             }} 
             onPress={()=>{
                 if( estado == Estado.VACIO){
@@ -60,17 +60,17 @@ const CajaIngrediente= (props:CajaIngredienteProps) =>{
             <View style={{backgroundColor:props.colorInterno,        
                 display:"flex",
                 flexDirection: "row",
-                alignItems:"center",
-                borderRadius:15,
-                padding:10,
-                
+                alignItems:'center',
+                borderRadius:10,
+                height:60,
+                justifyContent:"space-around"
                 }}>
                 
                 <Image source={props.sourceFoto} style={{justifyContent:"flex-start"}} />
 
                 <Text style={{fontSize:24}}> {props.nombre} </Text>
                 
-                <Image source={fotoCheck} style={{width:48,height:48}}/>
+                <Image source={fotoCheck} style={{width:48,height:48,marginLeft:10}}/>
 
             </View>
             

@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import PantallaTipoHome from "../componentes/PantallaTipoHome"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
-import { Autor, Ingrediente, Receta, Tipo, TipoParametros } from "../App";
+import { Autor, Ingrediente, Receta, Tipo, TipoPantalla, TipoParametros, localip } from "../App";
 import BarraDeBusqueda from "../componentes/BarraDeBusqueda";
 import BotonFiltrar from "../componentes/BotonFiltrar";
 import BotonOrdenar from "../componentes/BotonOrdenar";
@@ -27,6 +27,8 @@ export default function PantallaReceta() : JSX.Element{
 
     const navigation=useNavigation();
     const route=useRoute<PantallaRecetaRouteProps>();
+    const urlBase="http://"+localip+":8080/api/rest/morfar";
+    const urlFetchPasos=urlBase+'/getPasos/';
     const [tituloSacable,setTituloSacable]=useState(<Text style={[styles.titulo]}> {route.params.titulo} </Text>);
     const [noCambieElTitulo,setNoCambieElTitulo]=useState(true);
     const [cargoPantalla,setCargoPantalla]=useState(true);
@@ -37,6 +39,31 @@ export default function PantallaReceta() : JSX.Element{
 
     function handleFetchTipoReceta(idTipo: number): void {
         console.log("Fetch recetas del tipo "+idTipo);
+    }
+
+    const pasosFetch= async (idReceta: number) => {
+        try{
+            const respuesta= await fetch(urlFetchPasos+idReceta);
+            const data = await respuesta.json();
+            return data;
+        }
+        catch(err){
+            console.log(err);
+        }
+    
+    }
+
+    async function handleReceta(item: Receta){
+        await pasosFetch(item.idReceta).then((data) =>{
+            navigation.navigate("Receta" as never,
+            {
+                tipoPantalla:TipoPantalla.NOMILISTA,
+                titulo:item.nombre,
+                contenido: item,
+                pasos: data
+            } as never)
+        });
+    
     }
 
     //route.params.contenido siempre es undefined, hay que ver como arreglarlo
@@ -100,7 +127,7 @@ export default function PantallaReceta() : JSX.Element{
             tiempo={60}
             sourceFoto={{uri:item.fotos[0].urlFoto}}
             color={"#FFFDFD"}
-            onPress={() => console.log( "Apretaste la receta de " + item.nombre)}
+            onPress={() => handleReceta(item)}
             ancho={380}
             alto={83.06}
           />
@@ -154,7 +181,7 @@ export default function PantallaReceta() : JSX.Element{
                 onPress={() => {
                     console.log("Apretaste ingrediente " + item.nombre);
                 } } 
-                ancho={360}
+                ancho={320}
                 colorInterno="#FFFFFF"
                 colorExterno="#FFFFFF"
                 key={item.idIngrediente} 
@@ -232,5 +259,7 @@ export default function PantallaReceta() : JSX.Element{
 }
 
 const styles=StyleSheet.create(estiloApp);
+
+
 
 
