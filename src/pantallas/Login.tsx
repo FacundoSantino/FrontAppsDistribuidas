@@ -99,8 +99,6 @@ function Login(): JSX.Element{
         .then(async data => {
           setError("");
           if (data == 200) {
-            
-
             navigation.navigate("Home" as never,{user:usuario} as never);
           } else {
             if(data == 0){

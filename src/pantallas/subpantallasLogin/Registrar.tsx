@@ -17,6 +17,10 @@ import estilos from '../../estilos/estiloLogin';
 import { useNavigation } from '@react-navigation/native';
 import PantallaTipoLogin from '../../componentes/PantallaTipoLogin';
 import { localip } from '../../App';
+import Modal from "react-native-modal";
+import Lupa from '../../assets/lupa.png';
+import IconoCruz from '../../assets/cruz.png';
+import Check from '../../assets/check-mark.png';
 
 interface LoginInicialProps {
   funcionDireccion: (direccion : string) => void;
@@ -27,6 +31,7 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
   const [user, setUser]=useState("");
   const navigation = useNavigation();
   const [checked, setChecked] = useState(false);
+  const [levantada, setLevantada] = useState(false);
   const animatedValue = useRef(new Animated.Value(0)).current;
   const interpolateColor = animatedValue.interpolate({
     inputRange: [0, 1],
@@ -82,7 +87,10 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
       .then(async data => {
         setError("");
         if (data == 200) {
-          navigation.navigate("Login" as never);
+          setLevantada(true);
+          setTimeout(()=>{
+            navigation.navigate("Login" as never);
+          },5000)
         } else {
           if(data == 0){
             navigation.navigate("LoginSinConexion" as never);
@@ -122,6 +130,18 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
             }}
           />
         </View>
+        <Modal isVisible = {levantada}>
+          <View style={{display:'flex',flexDirection:'column',width:370,height:200,backgroundColor:'#FCB826',borderRadius:20}}>
+          <TouchableOpacity onPress={()=>setLevantada(false)} style={{display:'flex',justifyContent:'center',alignItems:'flex-start',height:30,width:340}}>
+              <Image source={IconoCruz} style={{width:20,height:20,marginLeft:10}}/>
+            </TouchableOpacity>
+            <View style={{display:'flex',flexDirection:'column',width:370,height:150,justifyContent:'center',alignItems:'center'}}>
+            <Image source={Check} style={{width:40,height:40}}/>
+              <Text style={{fontSize:20,color:'black'}}>¡Felicitaciones!</Text>
+              <Text style={{fontSize:16,color:'black',width:300,textAlign:'center'}}>Se le ha enviado una contrasaña autogenerada a su mail. En caso de no encontrarla, revise la sección de spam.</Text>
+            </View>
+          </View>
+        </Modal>
     
       </View>
     }/>

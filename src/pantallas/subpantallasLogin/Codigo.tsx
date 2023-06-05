@@ -14,15 +14,17 @@ import IconoUsuario from "../../assets/IconoUsuario.png";
 import IconoContrasenia from "../../assets/IconoContrasenia.png";
 import { Animated } from 'react-native';
 import estilos from '../../estilos/estiloLogin';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import LogoSol from "../../assets/Logo_Sol_Bueno.png";
 import PantallaTipoLogin from '../../componentes/PantallaTipoLogin';
+import { TipoParametros } from '../../App';
 interface LoginInicialProps {
   funcionDireccion: (direccion : string) => void;
 }
-
+type ContraProps = RouteProp<TipoParametros,'Contra'>;
 export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
   const navigation = useNavigation();
+  const route = useRoute<ContraProps>();
   const [checked, setChecked] = useState(false);
   const animatedValue = useRef(new Animated.Value(0)).current;
   const interpolateColor = animatedValue.interpolate({
@@ -58,7 +60,7 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
                 <CustomButton
                 title="Verificar"
                 color="#D69D20"
-                onPress={()=> {navigation.navigate("RestablecerContrasenia" as never)}}
+                onPress={()=> {navigation.navigate("RestablecerContrasenia" as never, {user: route.params.user} as never)}}
             />
         </View>
 
