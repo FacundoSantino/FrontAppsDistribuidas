@@ -62,6 +62,7 @@ export type TipoParametros = {
   },
   Contra:{
     idUser:number
+  }
 }
 
 export interface Paso{
