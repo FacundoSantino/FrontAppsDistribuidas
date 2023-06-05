@@ -25,8 +25,6 @@ import RecetasXTipo from './pantallas/RecetasXTipo';
 import PantallaReceta from './pantallas/PantallaReceta';
 import { ImageSourcePropType } from 'react-native';
 
-
-
 export var localip = "192.168.1.37"
 export enum TipoItem{
   RECETA,
@@ -120,3 +118,7 @@ function App(): JSX.Element {
 
 
 export default App;
+function componentWillMount() {
+  throw new Error('Function not implemented.');
+}
+

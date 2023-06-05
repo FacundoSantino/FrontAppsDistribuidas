@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Animated } from 'react-native';
+import { Animated} from 'react-native';
 import estilos from '../estilos/estiloLogin';
 import { useNavigation } from '@react-navigation/native';
 import LogoSol from "../assets/Logo_Sol_Bueno.png";
@@ -21,6 +21,8 @@ import IconoUsuario from "../assets/IconoUsuario.png";
 import IconoContrasenia from "../assets/IconoContrasenia.png";
 import { CheckBox } from 'react-native-elements';
 import { localip } from '../App';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 
@@ -90,12 +92,14 @@ function Login(): JSX.Element{
       
     }
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
       console.log("Manejando login");
       loginFetch()
-        .then(data => {
+        .then(async data => {
           setError("");
           if (data == 200) {
+            
+
             navigation.navigate("Home" as never);
           } else {
             if(data == 0){

@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import {View, Text, StyleSheet,Image,TextInput,SafeAreaView,ScrollView} from "react-native";
+import {View, Text, StyleSheet,Image,TextInput,SafeAreaView,ScrollView, Button} from "react-native";
 import menuHamburguesaIcono from "../../assets/menuHamburguesaIcono.png";
 import MorfAr from "../../assets/MorfAR.png";
 import lupa from "../../assets/lupa.png";
@@ -15,29 +15,33 @@ import { createNavigatorFactory, useNavigation } from '@react-navigation/native'
 import BarraDeBusqueda from "../../componentes/BarraDeBusqueda";
 import PantallaTipoHome from "../../componentes/PantallaTipoHome";
 import { TipoItem, localip } from "../../App";
-
+import Modal from "react-native-modal";
+import fotoNombre from '../../assets/comer.png';
+import fotoIngrediente from '../../assets/harvest.png';
 
 function MisCategorias(): JSX.Element{
     const navigation = useNavigation();
+    const [isModalVisible, setModalVisible] = useState(false);
+    const urlBase="http://"+localip+":8080/api/rest/morfar";
+    const urlFetchUsuarios=urlBase+"/getUsers";
+    const urlFetchTodasLasRecetas=urlBase+"/getAllRecipes"
+    const [contenidoAMostrar, setContenidoAMostrar]=useState([]);
+    const toggleModal = () => {
+        setModalVisible(!isModalVisible);
+      };
+    const autoresFetch= async () =>{
+        console.log("intentando fetch");
+        try{
+        const respuesta= await fetch(urlFetchUsuarios);
+        const datos = await respuesta.json();
+        return datos;
 
-const urlBase="http://"+localip+":8080/api/rest/morfar";
-const urlFetchUsuarios=urlBase+"/getUsers";
-const urlFetchTodasLasRecetas=urlBase+"/getAllRecipes"
-const [contenidoAMostrar, setContenidoAMostrar]=useState([]);
+        } catch(err){
+        console.log(err);
 
-const autoresFetch= async () =>{
-    console.log("intentando fetch");
-    try{
-      const respuesta= await fetch(urlFetchUsuarios, {     
-        method: 'GET',
-      }).then((data) => {return data.json();});
-
-    } catch(err){
-      console.log(err);
+        }
 
     }
-
-  }
 
   const handleAutores = () => {
     console.log("Manejando fetch");
@@ -45,7 +49,7 @@ const autoresFetch= async () =>{
       .then(data => {
             //bien
             navigation.navigate("PantallaReceta" as never, 
-                                {tipo: TipoItem.TIPO,
+                                {tipo: TipoItem.AUTOR,
                                     verIngredientes:false,
                                     permitirEliminacion:false,
                                     permitirAgregacion:false,
@@ -115,15 +119,25 @@ const autoresFetch= async () =>{
   }
 
   const handleIngrediente= () =>{
-
+    ingredienteFetch()
+    .then(data=>{
+        navigation.navigate("PantallaReceta" as never,
+        {tipo: TipoItem.INGREDIENTE,
+            verIngredientes:false,
+            permitirEliminacion:false,
+            permitirAgregacion:false,
+            titulo: "Ingredientes",
+            contenido: data
+        } as never)
+    });
   }
 
   const ingredienteFetch = async () =>{
     try{
-        let url= urlBase+"/getIngredients";
-        await fetch(url,{
-            method:"GET"
-        }).then((data) => {return data.json();});
+        let url= urlBase+"/ingredients";
+        const respuesta = await fetch(url);
+        const data = await respuesta.json();
+        return data;
     }
     catch(error){
         console.log(error);
@@ -132,16 +146,18 @@ const autoresFetch= async () =>{
 
 
   const handleNombre= () =>{
-    tiposFetch().then(
+    nombresFetch().then(
         (datos) =>{
-            if(datos==0){
-                navigation.navigate("PantallaReceta" as never, {
-                    
-                } as never)
-            }
-            else{
-                console.log("El fetch de nombres salio mal");
-            }
+            
+            navigation.navigate("PantallaReceta" as never, {
+                tipo: TipoItem.RECETANOMBRE,
+                verIngredientes:false,
+                permitirEliminacion:false,
+                permitirAgregacion:false,
+                titulo: "",
+                contenido: datos
+            } as never)
+            
         }
         
     )
@@ -149,10 +165,10 @@ const autoresFetch= async () =>{
 
   const nombresFetch = async () =>{
     try{
-        let url=urlBase+"";
-        return await fetch(url,{
-            method:"GET"
-        }).then(data => data.json());
+        let url=urlBase+"/getAllRecipeNames";
+        const respuesta = await fetch(url);
+        const datos = await respuesta.json();
+        return datos;
     }
     catch(error){
         console.log(error);
@@ -171,18 +187,18 @@ const autoresFetch= async () =>{
                                 colorInterno={"#FCB826"} 
                                 colorExterno={"#FFFDFD"} 
                                 paddingTop={10}
-                                paddingBottom={24} 
+                                paddingBottom={20} 
                                 ancho={360}
                                 paddingHorizontal={13}
                                 />
                             <TarjetaCategoria 
                                 nombre={"AUTOR"} 
-                                onPress={() => {handleAutores()}}
+                                onPress={async () => {handleAutores()}}
                                 sourceFoto={fotoMiLista} 
                                 colorInterno={"#FCB826"} 
                                 colorExterno={"#FFFDFD"} 
                                 paddingTop={10}
-                                paddingBottom={24}  
+                                paddingBottom={20}  
                                 ancho={360}
                                 paddingHorizontal={13}/>
                             <TarjetaCategoria 
@@ -192,30 +208,39 @@ const autoresFetch= async () =>{
                                 colorInterno={"#FCB826"} 
                                 colorExterno={"#FFFDFD"} 
                                 paddingTop={10}
-                                paddingBottom={24}  
+                                paddingBottom={20}  
                                 ancho={360}
                                 paddingHorizontal={13}/>
 
 
                             <TarjetaCategoria 
                                 nombre={"INGREDIENTE"} 
-                                onPress={ () => {handleIngrediente()}    }  
-                                sourceFoto={fotoCategorias} 
+                                onPress={async () =>{handleIngrediente()}  }  
+                                sourceFoto={fotoIngrediente} 
                                 colorInterno={"#FCB826"} 
                                 colorExterno={"#FFFDFD"} 
                                 paddingTop={10}
-                                paddingBottom={24}  
+                                paddingBottom={20}  
                                 ancho={360}
                                 paddingHorizontal={13}/>
-
+                            <Modal 
+                            isVisible = {isModalVisible}
+                            animationIn="jello"
+                            animationInTiming = {4000}
+                            >
+                                <Text style={{color:'white', alignSelf:'center'}}>
+                                    Modal Test
+                                </Text>
+                                <Button title="CERRAR" onPress={toggleModal}></Button>
+                            </Modal>
                             <TarjetaCategoria 
                                 nombre={"NOMBRE"} 
-                                onPress={ () => {handleNombre()} } 
-                                sourceFoto={fotoCategorias} 
+                                onPress={async () => {handleNombre()} } 
+                                sourceFoto={fotoNombre} 
                                 colorInterno={"#FCB826"} 
                                 colorExterno={"#FFFDFD"} 
                                 paddingTop={10}
-                                paddingBottom={24}  
+                                paddingBottom={20}  
                                 ancho={360}
                                 paddingHorizontal={13}/>
                             </View>}/>

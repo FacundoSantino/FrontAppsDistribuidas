@@ -24,7 +24,7 @@ const TarjetaCategoria= (props:TarjetaCategoriaProps) =>{
         <TouchableOpacity style={{backgroundColor:props.colorExterno,paddingTop:props.paddingTop,
             paddingBottom:props.paddingBottom,borderColor:"#000000", borderWidth:1,
             paddingHorizontal:props.paddingHorizontal, borderRadius:20, width:props.ancho,
-            marginTop:20,
+            marginTop:8,
             }} onPress={(props.onPress)}>
 
             <View style={{backgroundColor:props.colorInterno,        
@@ -36,7 +36,7 @@ const TarjetaCategoria= (props:TarjetaCategoriaProps) =>{
                 
                 }}>
                 
-                <Image source={props.sourceFoto} style={{justifyContent:"flex-start"}} />
+                <Image source={props.sourceFoto} style={{justifyContent:"flex-start",width:72,height:72}} />
 
                 <Text style={{fontSize:24}}> {props.nombre} </Text>
 

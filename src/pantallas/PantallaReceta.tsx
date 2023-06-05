@@ -1,7 +1,7 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native"
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import PantallaTipoHome from "../componentes/PantallaTipoHome"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
-import { Autor, Receta, Tipo, TipoParametros } from "../App";
+import { Autor, Ingrediente, Receta, Tipo, TipoParametros } from "../App";
 import BarraDeBusqueda from "../componentes/BarraDeBusqueda";
 import BotonFiltrar from "../componentes/BotonFiltrar";
 import BotonOrdenar from "../componentes/BotonOrdenar";
@@ -10,6 +10,7 @@ import { TipoItem } from "../App";
 import Chef from "../componentes/Chef";
 import TarjetaReceta from "../componentes/TarjetaReceta";
 import { useEffect, useState } from "react";
+import CajaIngrediente from "../componentes/CajaIngrediente";
 
 
 //Variantes: 
@@ -29,6 +30,8 @@ export default function PantallaReceta() : JSX.Element{
     const [tituloSacable,setTituloSacable]=useState(<Text style={[styles.titulo]}> {route.params.titulo} </Text>);
     const [noCambieElTitulo,setNoCambieElTitulo]=useState(true);
     const [cargoPantalla,setCargoPantalla]=useState(true);
+    const [botonAgregacion,setBotonAgregacion]=useState(<View></View>);
+    const [seteado,setSeteado]=useState(false);
 
     let listaBotones: JSX.Element[]  = [];
 
@@ -37,7 +40,7 @@ export default function PantallaReceta() : JSX.Element{
     }
 
     //route.params.contenido siempre es undefined, hay que ver como arreglarlo
-    if(route.params.tipo==TipoItem.AUTOR){
+    if(route.params.tipo==TipoItem.AUTOR && typeof route.params.tipo != 'undefined'){
         const contenidoMapeado: Autor[]= [];
 
         route.params.contenido.forEach((item: any) => (
@@ -56,7 +59,7 @@ export default function PantallaReceta() : JSX.Element{
         console.log(contenidoMapeado);
         listaBotones=contenidoMapeado.map((item, i) => (
         <Chef
-            nombre={item.nickname}
+            nombre={item.nombre}
             imagen={{uri: item.avatar}}
             onPress={() => navigation.navigate("MisRecetas" as never)}
             ancho={360}
@@ -65,8 +68,13 @@ export default function PantallaReceta() : JSX.Element{
             key={i}
         />));
     }
-    else if(route.params.tipo==TipoItem.RECETA){
+    else if(route.params.tipo==TipoItem.RECETA && typeof route.params.tipo != 'undefined'){
         const contenidoMapeado: Receta[]= [];
+
+        if(route.params.permitirAgregacion && !seteado){
+            
+            setSeteado(true);
+        }
 
         route.params.contenido.forEach((item: any) => (
             contenidoMapeado.push(
@@ -82,8 +90,9 @@ export default function PantallaReceta() : JSX.Element{
             }
         )));
 
-        console.log(contenidoMapeado);
+        
         listaBotones=contenidoMapeado.map((item, i) => (
+            
         <TarjetaReceta
             key={i}
             nombre={item.nombre}
@@ -97,7 +106,7 @@ export default function PantallaReceta() : JSX.Element{
           />
             ));
     }
-    else if(route.params.tipo==TipoItem.TIPO){
+    else if(route.params.tipo==TipoItem.TIPO && typeof route.params.tipo != 'undefined'){
         const contenidoMapeado: Tipo[] =[];
         if(noCambieElTitulo){
             if(route.params.titulo==""){
@@ -116,7 +125,7 @@ export default function PantallaReceta() : JSX.Element{
             <Chef
             nombre={item.descripcion}
             imagen={{uri: item.urlFoto}}
-            onPress={() => handleFetchTipoReceta(item.idTipo)}
+            onPress={() => console.log("Apretaste el nombre "+item.descripcion)}
             ancho={360}
             alto={130}
             color={"#FFFDFD"}
@@ -125,6 +134,72 @@ export default function PantallaReceta() : JSX.Element{
         ));
 
     }
+    else if(route.params.tipo==TipoItem.INGREDIENTE && typeof route.params.tipo != 'undefined'){
+        const contenidoMapeado: Ingrediente[]= [];
+        // idIngrediente:number,
+        // nombre:String
+        console.log(route.params.contenido);
+        route.params.contenido.forEach((item: any) => (
+            contenidoMapeado.push(
+            {
+                idIngrediente:item.idIngrediente,
+                nombre:item.nombre
+            }
+        )));
+
+        listaBotones=contenidoMapeado.map((item,i) =>(
+            <CajaIngrediente
+                nombre={item.nombre}
+                sourceFoto={{ uri: 'https://cdn.discordapp.com/attachments/1086019817926045728/1114650034965860443/dinner_1.png' }}
+                onPress={() => {
+                    console.log("Apretaste ingrediente " + item.nombre);
+                } } 
+                ancho={360}
+                colorInterno="#FFFFFF"
+                colorExterno="#FFFFFF"
+                key={item.idIngrediente} 
+                paddingTop={0} 
+                paddingBottom={0} 
+                paddingHorizontal={0} 
+           />
+        ));
+    }
+    else if(route.params.tipo==TipoItem.RECETANOMBRE && typeof route.params.tipo != 'undefined' ){
+        const contenidoMapeado: Tipo[]= [];
+        if(noCambieElTitulo){
+            if(route.params.titulo==""){
+                setTituloSacable(<View></View>);
+            }
+            setNoCambieElTitulo(false);
+        }
+        console.log(route.params.contenido);
+        route.params.contenido.forEach((item: any) => (
+            contenidoMapeado.push(
+            {
+                idTipo: item.idTipo,
+                descripcion:item.descripcion,
+                urlFoto: item.foto
+                
+            }
+        )));
+
+        
+        listaBotones=contenidoMapeado.map((item, i) => (
+
+            <Chef 
+            nombre={item.descripcion} 
+            imagen={{uri:item.urlFoto}} 
+            onPress={function (): void 
+                {console.log("Apretaste el boton de las recetas de nombre "+ item.descripcion)   } 
+            } 
+            ancho={360} 
+            alto={130} 
+            color={"#FFFFFF"}            
+            />
+            ));
+    }
+
+    
     
     if(cargoPantalla){
         return( 
@@ -136,9 +211,16 @@ export default function PantallaReceta() : JSX.Element{
                         <BotonFiltrar/>
                         <BotonOrdenar/>
                     </View>
-                    <ScrollView style= {{marginTop:20}} contentContainerStyle={{justifyContent:"center"}}>
-                        {listaBotones}                    
+                    <ScrollView style= {{marginTop:8, height:'75%'}} contentContainerStyle={{justifyContent:"center"}}>
+                        {listaBotones}           
                     </ScrollView>
+                    {(route.params.permitirAgregacion)?
+                    <View style={{backgroundColor:'white',width:'100%', position:'absolute', height:65, bottom:0,alignSelf:'center',zIndex:80}}>
+                        <TouchableOpacity style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:'100%',width:335,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
+                            <Text style={{alignSelf:"center",fontSize:20,borderRadius:25, justifyContent:"center"}}>AGREGAR</Text>
+                        </TouchableOpacity>
+                    </View>
+                    :null}  
                 </View>
         }/>
         )}

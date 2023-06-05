@@ -15,7 +15,9 @@ import CarouselCards from "../CarouselCards";
 import PantallaTipoHome from "../componentes/PantallaTipoHome";
 import {createNavigatorFactory, useNavigation } from '@react-navigation/native';
 import BarraDeBusqueda from "../componentes/BarraDeBusqueda";
-import { localip } from "../App";
+import { TipoItem, localip } from "../App";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 
@@ -23,26 +25,26 @@ function Home(): JSX.Element{
     var p: any[] = [];
     const navigation = useNavigation();
     const [dato, setDato] = useState<any[]>([]);
-    const [loaded, setLoaded] = useState(false);
     const [procesado, setProcesado] = useState<String[]>([]);
+
+    const urlFetchMisRecetas="http://"+localip+":8080/api/rest/morfar/getMyRecipes/Juanito";
 
     const getHomeData = async () => {
         try {
         const response = await fetch('http://' + localip + ':8080/api/rest/morfar/getHomeCommonInfo');
         const json = await response.json();
-        
         return json;
         } catch (err) {
         console.log(err);
         }
     }
-    
-    const handleCarrouselData = ()=>{
-        
+    React.useEffect(()=>{
+        handleCarrouselData();
+    },[])
 
+    const handleCarrouselData = () => {
         getHomeData()
         .then(data => {
-            
             data.forEach((d: any) => {
                 p.push({
                 "title": d.nombre,
@@ -50,19 +52,41 @@ function Home(): JSX.Element{
                 "imgUrl": d.fotos[0].urlFoto
                 });
             });
-            
+            setProcesado(p);
         })
         .catch(error => console.error(error));
-        return p;
     }
-    const GetCarrouselCards = ()=>{
-        var data = handleCarrouselData();
-        return (
-            <>
-            <CarouselCards procesado={data} />
-            </>
+
+    const recetasFetch= async () => {
+        try{
+            const respuesta= await fetch(urlFetchMisRecetas);
+            const data = await respuesta.json();
+            return data;
+        }
+        catch(err){
+            console.log(err);
+        }
+    
+      }
+    
+      const handleRecetas = async () =>{
+        console.log("Manejando recetas");
+        await recetasFetch().then(
+            (data)=>{
+                navigation.navigate("PantallaReceta" as never, 
+                {tipo: TipoItem.RECETA,
+                    verIngredientes:false,
+                    permitirEliminacion:false,
+                    permitirAgregacion:true,
+                    titulo: "Mis recetas",
+                    contenido: data
+                } as never);
+            }
         );
-    }
+        
+        
+      }
+    
 
     return( 
         <PantallaTipoHome contenido={
@@ -71,7 +95,7 @@ function Home(): JSX.Element{
                     <BarraDeBusqueda/>
                     <TarjetaCategoria 
                         nombre={"MIS RECETAS"} 
-                        onPress={() => navigation.navigate("MisRecetas" as never)}
+                        onPress={async ()=>handleRecetas()}
                         sourceFoto={fotoMisRecetas} 
                         colorInterno={"#FCB826"} 
                         colorExterno={"#FFFDFD"} 
@@ -104,8 +128,7 @@ function Home(): JSX.Element{
                         paddingHorizontal={13}/>
                 </View>
                 <View style={style.carouselContainer}>
-                    
-                    <GetCarrouselCards></GetCarrouselCards>
+                    {(procesado.length>0)?<CarouselCards procesado={procesado} />:null}
                 </View>
             </View>
         }/>);
