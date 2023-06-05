@@ -54,8 +54,9 @@ export type TipoParametros = {
   }
   ,
   Ingredientes:{
-    ingredientes: Ingrediente[]
-  
+    ingredientes: Ingrediente[],
+    idReceta:number,
+    nombreReceta:string
   },
   Home : {
     user:String
@@ -125,6 +126,19 @@ export interface Ingrediente{
   nombre:String
 }
 
+export interface Utilizado{
+  idUtilizado:number,
+  receta:Receta,
+  idIngrediente:Ingrediente,
+  cantidad:number,
+  unidad: Unidad,
+  observaciones: String
+}
+
+export interface Unidad{
+  idUnidad: number,
+  descripcion: String
+}
 
 
 const Stack =createStackNavigator<TipoParametros>();
@@ -160,7 +174,5 @@ function App(): JSX.Element {
 
 
 export default App;
-function componentWillMount() {
-  throw new Error('Function not implemented.');
-}
+
 
