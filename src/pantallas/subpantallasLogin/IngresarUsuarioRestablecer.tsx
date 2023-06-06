@@ -26,6 +26,7 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
   const [user, setUser] = useState("");
   const [error,setError] = useState("");
   const [levantada, setLevantada] = useState(false);
+  
   const interpolateColor = animatedValue.interpolate({
     inputRange: [0, 1],
     outputRange: ['#517fa4', '#00aced'],

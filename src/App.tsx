@@ -26,8 +26,7 @@ import PantallaReceta from './pantallas/PantallaReceta';
 import { ImageSourcePropType } from 'react-native';
 import Receta from './componentes/Receta';
 import Ingredientes from './componentes/Ingredientes';
-
-export var localip = "192.168.0.238"
+import Cruz from './assets/cruz.png';export var localip = "192.168.0.238"
 export enum TipoItem{
   RECETA,
   TIPO,

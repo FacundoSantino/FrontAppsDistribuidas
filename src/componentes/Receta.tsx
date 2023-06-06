@@ -11,6 +11,9 @@ import { useState } from "react";
 import { Foto, TipoParametros, localip } from "../App";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import React from "react";
+import Modal from "react-native-modal";
+import Lupa from '../../assets/lupa.png';
+import IconoCruz from '../../assets/cruz.png';
 
 //http://localhost:8080/api/rest/morfar/ingredients/1
 
@@ -26,6 +29,7 @@ export default function Receta(): JSX.Element {
     const urlFetchIngredientes=urlBase+'/ingredients/';
     const [procesado, setProcesado] = useState<String[]>([]);
     const [ingredientes,setIngredientes]=useState([]);
+    const [levantada, setLevantada] = useState(false);
     const route=useRoute<RecetaRouteProps>();
     const navigation=useNavigation();
 
@@ -125,6 +129,21 @@ export default function Receta(): JSX.Element {
                             <Text style={{alignSelf:"center",fontSize:20,borderRadius:25, justifyContent:"center"}}>AGREGAR A MI LISTA</Text>
                         </TouchableOpacity>
                 </View>
+
+                <Modal isVisible = {levantada}>
+                    <View style={{display:'flex',flexDirection:'column',width:370,height:200,backgroundColor:'#FCB826',borderRadius:20}}>
+                        <TouchableOpacity onPress={()=>setLevantada(false)} style={{display:'flex',flexDirection:'row',justifyContent:'center',alignItems:'center',height:30,width:340}}>
+                            <Image source={fotoEstrellaVacia} style={{width:20,height:20}}/>
+                            <Image source={fotoEstrellaVacia} style={{width:20,height:20}}/>
+                            <Image source={fotoEstrellaVacia} style={{width:20,height:20}}/>
+                            <Image source={fotoEstrellaVacia} style={{width:20,height:20}}/>
+                            <Image source={fotoEstrellaVacia} style={{width:20,height:20}}/>
+                        </TouchableOpacity>
+                        <ScrollView style={{borderRadius:10,minHeight:10,height:"auto",backgroundColor:'white', maxHeight:90, width:390,borderColor:'black',borderWidth:2.3}}>
+
+                        </ScrollView>
+                    </View>
+                </Modal>
             </View>
         }/>
     )
