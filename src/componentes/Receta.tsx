@@ -72,16 +72,20 @@ export default function Receta(): JSX.Element {
     }
 
     function irAComentarios() {
-        console.log(route.params.contenido);
+        navigation.navigate("Comentarios" as never,{idReceta:route.params.contenido.idReceta} as never);
     }
 
     function irAIngredientes() {
         navigation.navigate("Ingredientes" as never,{ingredientes:ingredientes,idReceta:route.params.contenido.idReceta,nombreReceta:route.params.contenido.nombre} as never);
     }
     
+    function irAPasos(): void {
+        navigation.navigate("Pasos" as never);
+    }
+    
 
     if(cargoPantalla){
-        
+    
 
     return(
         <PantallaTipoHome contenido={
@@ -106,7 +110,7 @@ export default function Receta(): JSX.Element {
                     </Text>
                 </ScrollView>
 
-                <Text style={{textAlign:'center',color:'black',fontSize:15}}>Pasos:</Text>
+                {/* <Text style={{textAlign:'center',color:'black',fontSize:15}}>Pasos:</Text>
 
                 <ScrollView style={{borderRadius:10,minHeight:10,height:"auto", maxHeight:90, width:390,borderColor:'black',borderWidth:2.3}}>
 
@@ -117,9 +121,13 @@ export default function Receta(): JSX.Element {
                             )
                         )
                     }
-
-                </ScrollView>
+                </ScrollView> */}
                 
+                <View style={{backgroundColor:'white',width:'100%', height:30, bottom:0,alignSelf:'center',zIndex:50,marginTop:20,marginBottom:50}}>
+                        <TouchableOpacity onPress={() => irAPasos()} style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:'100%',width:200,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
+                            <Text style={{alignSelf:"center",fontSize:15,borderRadius:25, justifyContent:"center"}}>VER PASOS</Text>
+                        </TouchableOpacity>
+                </View>
                 <View style={{backgroundColor:'white',width:'100%', height:30, bottom:0,alignSelf:'center',zIndex:50,marginTop:20,marginBottom:90}}>
                         <TouchableOpacity onPress={() => irAIngredientes()} style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:'100%',width:200,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
                             <Text style={{alignSelf:"center",fontSize:15,borderRadius:25, justifyContent:"center"}}>VER INGREDIENTES</Text>
