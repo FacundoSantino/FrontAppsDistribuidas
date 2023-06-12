@@ -2,7 +2,7 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import PantallaTipoHome from "./PantallaTipoHome";
 import estiloApp from "../estilos/estiloApp";
 import CarouselCards from "../CarouselCards";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native";
 import { Image } from "react-native-elements";
 import fotoCruz from '../assets/cruz.png';
 import fotoEstrellaLlena from '../assets/estrellaLlena.png';
@@ -12,8 +12,9 @@ import { Foto, TipoParametros, localip } from "../App";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import React from "react";
 import Modal from "react-native-modal";
-import Lupa from '../../assets/lupa.png';
-import IconoCruz from '../../assets/cruz.png';
+import Lupa from '../assets/lupa.png';
+import IconoCruz from '../assets/cruz.png';
+
 
 //http://localhost:8080/api/rest/morfar/ingredients/1
 
@@ -29,6 +30,7 @@ export default function Receta(): JSX.Element {
     const [procesado, setProcesado] = useState<String[]>([]);
     const [ingredientes,setIngredientes]=useState([]);
     const [levantada, setLevantada] = useState(false);
+    const [enviada, setEnviada] = useState(false);
     const route=useRoute<RecetaRouteProps>();
     const navigation=useNavigation();
 
@@ -62,13 +64,19 @@ export default function Receta(): JSX.Element {
             setCargoPantalla(true);});
     },[]
     )
-    function handlePressEstrella() {
-        if(fotoEstrella==fotoEstrellaLlena){
+    const handlePressEstrella = () => {
+        if(levantada || enviada){
             setFotoEstrella(fotoEstrellaVacia);
         }
         else{
             setFotoEstrella(fotoEstrellaLlena);
+            setLevantada(!levantada);
         }
+    }
+
+    const levantarEnviar = ()=> {
+        setLevantada(!levantada);
+        setEnviada(enviada);
     }
 
     function irAComentarios() {
@@ -83,10 +91,12 @@ export default function Receta(): JSX.Element {
         navigation.navigate("Pasos" as never);
     }
     
-
+    const handleModal = (estado: boolean) =>{
+        console.log(estado);
+    }
     if(cargoPantalla){
     
-
+    console.log(levantada);
     return(
         <PantallaTipoHome contenido={
 
@@ -139,21 +149,48 @@ export default function Receta(): JSX.Element {
                             <Text style={{alignSelf:"center",fontSize:20,borderRadius:25, justifyContent:"center"}}>AGREGAR A MI LISTA</Text>
                         </TouchableOpacity>
                 </View>
-
+                
                 <Modal isVisible = {levantada}>
-                    <View style={{display:'flex',flexDirection:'column',width:370,height:200,backgroundColor:'#FCB826',borderRadius:20}}>
-                        <TouchableOpacity onPress={()=>setLevantada(false)} style={{display:'flex',flexDirection:'row',justifyContent:'center',alignItems:'center',height:30,width:340}}>
-                            <Image source={fotoEstrellaVacia} style={{width:20,height:20}}/>
-                            <Image source={fotoEstrellaVacia} style={{width:20,height:20}}/>
-                            <Image source={fotoEstrellaVacia} style={{width:20,height:20}}/>
-                            <Image source={fotoEstrellaVacia} style={{width:20,height:20}}/>
-                            <Image source={fotoEstrellaVacia} style={{width:20,height:20}}/>
+                    <TouchableOpacity onPress={() => setLevantada(!levantada)} style={{display:'flex',justifyContent:'center',alignItems:'flex-start',height:30,width:340}}>
+                        <Image source={IconoCruz} style={{width:20,height:20,marginLeft:10,marginTop:30}}/>
+                    </TouchableOpacity>
+                    <View style={{display:'flex',flexDirection:'column',width:370,height:300,backgroundColor:'#FCB826',borderRadius:20,alignItems:'center',justifyContent:'space-around'}}>
+                        <TouchableOpacity onPress={()=>setLevantada(!levantada)} style={{display:'flex',justifyContent:'center',alignItems:'flex-start',height:30,width:340}}>
+                            <Image source={IconoCruz} style={{width:20,height:20,marginLeft:10}}/>
                         </TouchableOpacity>
-                        <ScrollView style={{borderRadius:10,minHeight:10,height:"auto",backgroundColor:'white', maxHeight:90, width:390,borderColor:'black',borderWidth:2.3}}>
+                        <TouchableOpacity onPress={()=>{console.log("hola")}} style={{display:'flex',flexDirection:'row',justifyContent:'center',alignItems:'center',height:30,width:340}}>
+                            <Image source={fotoEstrellaVacia} style={{width:25,height:25}}/>
+                            <Image source={fotoEstrellaVacia} style={{width:25,height:25}}/>
+                            <Image source={fotoEstrellaVacia} style={{width:25,height:25}}/>
+                            <Image source={fotoEstrellaVacia} style={{width:25,height:25}}/>
+                            <Image source={fotoEstrellaVacia} style={{width:25,height:25}}/>
+                        </TouchableOpacity>
+                        <Text style={{textAlign:'center',fontWeight:'bold', fontSize:17}}>Valora la receta!</Text>
 
+                        <ScrollView style={{borderRadius:10,minHeight:10,height:100,backgroundColor:'white', maxHeight:130, width:350,borderColor:'black',borderWidth:2.3}}>
                         </ScrollView>
+                        <TouchableOpacity onPress={() => {setLevantada(!levantada); setEnviada(!enviada); }} style={{marginTop:3,display:"flex", backgroundColor:'white',width:100,alignSelf:"center", justifyContent:'center', borderRadius: 20,height:35}}>
+                            <Text style={{alignSelf:"center",fontSize:15,borderRadius:25, justifyContent:"center"}}>Enviar</Text>
+                        </TouchableOpacity>
+
                     </View>
                 </Modal>
+
+                <Modal isVisible = {enviada}>
+                    
+                    <View style={{display:'flex',flexDirection:'column',width:370,height:200,backgroundColor:'#FCB826',borderRadius:20,alignItems:'center',justifyContent:'space-around'}}>
+                        <View style={{display:'flex',height:30,width:350,justifyContent:'flex-start'}}>
+                        <TouchableOpacity onPress={()=>setEnviada(!enviada)} style={{display:'flex',justifyContent:'center',alignItems:'flex-start',height:30,width:340}}>
+                            <Image source={IconoCruz} style={{width:20,height:20,marginLeft:10}}/>
+                        </TouchableOpacity>
+                        </View>
+
+                        <Text style={{textAlign:'center',fontWeight:'bold', fontSize:17,height:110,marginTop:40}}>Su valoración ha sido enviada exitosamente y está esperando la moderación</Text>
+                    </View>
+                </Modal>
+
+             
+
             </View>
         }/>
     )
