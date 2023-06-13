@@ -44,7 +44,7 @@ function MisCategorias(): JSX.Element{
 
     }
 
-  const handleAutores = () => {
+  const handleAutores =async () => {
     console.log("Manejando fetch");
     autoresFetch()
       .then(data => {
@@ -119,7 +119,7 @@ function MisCategorias(): JSX.Element{
 
   }
 
-  const handleIngrediente= () =>{
+  const handleIngrediente=async () =>{
     ingredienteFetch()
     .then(data=>{
         navigation.navigate("PantallaReceta" as never,
@@ -146,7 +146,7 @@ function MisCategorias(): JSX.Element{
   }
 
 
-  const handleNombre= () =>{
+  const handleNombre=async () =>{
     nombresFetch().then(
         (datos) =>{
             

@@ -28,7 +28,8 @@ import Receta from './componentes/Receta';
 import Ingredientes from './componentes/Ingredientes';
 import Cruz from './assets/cruz.png';import Comentarios from './pantallas/Comentarios';
 import Pasos from './pantallas/Pasos';
-export var localip = "192.168.145.1"
+import PantallaRecetaClon from './pantallas/PantallaRecetaClon';
+export var localip = "192.168.0.9"
 export enum TipoItem{
   RECETA,
   TIPO,
@@ -66,6 +67,15 @@ export type TipoParametros = {
   },
   Comentarios:{
     idReceta:number
+  },
+  PantallaRecetaClon:{
+    tipo: TipoItem,
+    verIngredientes: Boolean,
+    permitirEliminacion: Boolean,
+    permitirAgregacion: Boolean,
+    titulo: String,
+    contenido: Autor[] | Receta[] | Tipo[] ,
+    ingredientes?: Ingrediente[]
   }
 }
 
@@ -170,6 +180,7 @@ function App(): JSX.Element {
         <Stack.Screen name="Receta" component={Receta}/>
         <Stack.Screen name="Ingredientes" component={Ingredientes}/>
         <Stack.Screen name="Comentarios" component={Comentarios}/>
+        <Stack.Screen name="PantallaRecetaClon" component={PantallaRecetaClon}/>
         <Stack.Screen name="Pasos" component={Pasos}/>
       </Stack.Navigator>
     </NavigationContainer>

@@ -14,17 +14,14 @@ type CajaComentariosProps ={
 export default function CajaComentarios (props:CajaComentariosProps): JSX.Element{
     var p: number[] = [1,2,3,4,5];
     const numeroEstrellasLlenas=Math.round(props.valoracion);
-    const numeroVacias=5-numeroEstrellasLlenas;
     const [estrellas,setEstrellas]=useState<any[]>([]);
     const [cargoEstrellas,setCargoEstrellas]=useState(false);
 
 
     function setearEstrellas():void{
         setEstrellas(p.map((i) => (
-            <Image style={{height:13,width:14}} source={i<numeroEstrellasLlenas?estrellaLlena:estrellaVacia} key={i}/>
+            <Image style={{height:13,width:14}} source={i<=numeroEstrellasLlenas?estrellaLlena:estrellaVacia} key={i}/>
         )))
-        console.log("Estrellas");
-        console.log(estrellas);
         setCargoEstrellas(true);
     }
 

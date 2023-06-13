@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import estiloApp from "../estilos/estiloApp";
 import PantallaTipoHome from "../componentes/PantallaTipoHome";
 import { ScrollView } from "react-native-gesture-handler";
@@ -31,29 +31,34 @@ export default function Comentarios(){
     
     }
 
-    React.useEffect( () =>{
-        setCargoPantalla(false);
+    if(!cargoPantalla){
         ingredientesFetch().then((data) => setComentarios(data)).then(() => {
             if(typeof route.params.idReceta != 'undefined'){
-                setP(comentarios.map( (item:any, i:number) => (
-                    <CajaComentarios valoracion={item.valoracion} comentario={item.comentario} usuario={item.usuario}/>
-                )
-                ))
+                setP(comentarios);
         };
             console.log(p);
             console.log(route.params.idReceta);
             }).finally(() => {setCargoPantalla(true);});
-    },[]
-    )
+    }
     
+    // comentarios 24 bold centrado
     if(cargoPantalla){
         return(
             <PantallaTipoHome contenido={
-                <View>
-                    <Text style={{fontWeight:"bold"}}> Comentarios</Text>
-                    <ScrollView>
-                        {p}
+                <View style={{display:"flex"}}>
+                    <Text style={{fontWeight:"bold",fontSize:24,alignSelf:"center",marginBottom:10,color:"black"}}> Comentarios</Text>
+                    <ScrollView style={{minHeight:640}}>
+                        {p.map( (item:any, i:number) => (
+                    <CajaComentarios valoracion={item.valoracion} comentario={item.comentario} usuario={item.usuario} key={i}/>
+                        )
+                    )}
                     </ScrollView>
+
+                    <TouchableOpacity style={{display:"flex",backgroundColor:"#FCB826",borderRadius:45, width:200,marginVertical:10,paddingVertical:5,alignSelf:"center",justifyContent:"center",height:41}}>
+                        <Text style={{alignSelf:"center", justifyContent:"center",fontSize:16,color:"black",fontWeight:"bold"}}>
+                            AGREGAR COMENTARIO
+                        </Text>
+                    </TouchableOpacity>
                 </View>
             }
             />

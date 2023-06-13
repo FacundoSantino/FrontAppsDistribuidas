@@ -21,12 +21,12 @@ import CajaIngrediente from "../componentes/CajaIngrediente";
 //Titulo
 //Contenido
 
-type PantallaRecetaRouteProps= RouteProp<TipoParametros, "PantallaReceta">;
+type PantallaRecetaClonRouteProps= RouteProp<TipoParametros, "PantallaRecetaClon">;
 
-export default function PantallaReceta() : JSX.Element{
+export default function PantallaRecetaClon() : JSX.Element{
 
     const navigation=useNavigation();
-    const route=useRoute<PantallaRecetaRouteProps>();
+    const route=useRoute<PantallaRecetaClonRouteProps>();
     const urlBase="http://"+localip+":8080/api/rest/morfar";
     const urlFetchPasos=urlBase+'/getPasos/';
     const [tituloSacable,setTituloSacable]=useState(<Text style={[styles.titulo]}> {route.params.titulo} </Text>);
@@ -82,8 +82,8 @@ export default function PantallaReceta() : JSX.Element{
         console.log("------------------------FETCH---------------------");
         fetchRecetasAutor(idUsuario).then(
             async (data) =>{
-                console.log("-----------ESTOY INTENTANDO NAVEGAR--------------- al clon");
-                navigation.navigate("PantallaRecetaClon" as never, 
+                console.log("-----------ESTOY INTENTANDO NAVEGAR---------------");
+                navigation.navigate("PantallaReceta" as never, 
                 {tipo: TipoItem.RECETA,
                     verIngredientes:false,
                     permitirEliminacion:false,
