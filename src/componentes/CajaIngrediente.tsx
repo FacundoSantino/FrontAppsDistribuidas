@@ -13,7 +13,7 @@ enum Estado{
 
 type CajaIngredienteProps ={
     nombre: String;
-    onPress(x:Estado): void;
+    cambioEstado(x:Estado): void;
     sourceFoto: ImageSourcePropType;
     colorInterno: Color;
     colorExterno: Color;
@@ -54,7 +54,7 @@ const CajaIngrediente= (props:CajaIngredienteProps) =>{
                     setEstado(Estado.VACIO);
                     setFotoCheck(vacio);
                 }
-                props.onPress(estado);}
+                props.cambioEstado(estado);}
             }>
 
             <View style={{backgroundColor:props.colorInterno,        
@@ -66,7 +66,7 @@ const CajaIngrediente= (props:CajaIngredienteProps) =>{
                 justifyContent:"space-around"
                 }}>
                 
-                <Image source={props.sourceFoto} style={{justifyContent:"flex-start"}} />
+                <Image source={props.sourceFoto} style={{justifyContent:"flex-start",width:46,height:46}} />
 
                 <Text style={{fontSize:24}}> {props.nombre} </Text>
                 

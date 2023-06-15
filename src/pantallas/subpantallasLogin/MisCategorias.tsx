@@ -123,7 +123,7 @@ function MisCategorias(): JSX.Element{
     .then(data=>{
         navigation.navigate("PantallaReceta" as never,
         {tipo: TipoItem.INGREDIENTE,
-            verIngredientes:false,
+            verIngredientes:true,
             permitirEliminacion:false,
             permitirAgregacion:false,
             titulo: "Ingredientes",

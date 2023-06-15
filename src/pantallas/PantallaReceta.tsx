@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import PantallaTipoHome from "../componentes/PantallaTipoHome"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
-import { Autor, Ingrediente, Receta, Tipo, TipoPantalla, TipoParametros, localip } from "../App";
+import { Autor, Ingrediente, Receta, RecipeByIngredientDTO, RecipeByIngredientDTOAuxiliar, Tipo, TipoPantalla, TipoParametros, localip } from "../App";
 import BarraDeBusqueda from "../componentes/BarraDeBusqueda";
 import BotonFiltrar from "../componentes/BotonFiltrar";
 import BotonOrdenar from "../componentes/BotonOrdenar";
@@ -34,6 +34,8 @@ export default function PantallaReceta() : JSX.Element{
     const [cargoPantalla,setCargoPantalla]=useState(true);
     const [botonAgregacion,setBotonAgregacion]=useState(<View></View>);
     const [seteado,setSeteado]=useState(false);
+    const [listaSelecciones,setListaSelecciones]=useState<RecipeByIngredientDTOAuxiliar[]>([]);
+    const [cargueIngredientes,setCargueIngredientes]=useState(false);
 
     let listaBotones: JSX.Element[]  = [];
 
@@ -122,167 +124,252 @@ export default function PantallaReceta() : JSX.Element{
       
     }
 
-    //route.params.contenido siempre es undefined, hay que ver como arreglarlo
-    if(route.params.tipo==TipoItem.AUTOR && typeof route.params.tipo != 'undefined'){
-        console.log("-------------------if1-----------------------");
-        const contenidoMapeado: Autor[]= [];
-        
-        route.params.contenido.forEach((item: any) => (
-            contenidoMapeado.push(
-            {
-                "idUsuario":item.idUsuario,
-                "mail":item.mail,
-                "nickname": item.nickname,
-                "habilitado":item.habilitado,
-                "nombre":item.nombre,
-                "avatar": item.avatar,
-                "tipo_usuario": item.tipo_usuario
+    async function handleFetchRecetasPorIngredientes(){
+
+        const listaResultante: RecipeByIngredientDTO[]= [];
+        listaSelecciones.forEach( (item) => {
+            if(item.quiero==0){
+                listaResultante.push(
+                    {
+                        id:item.id,
+                        quiero:true
+                    }
+                )
             }
-        )));
-
-        console.log(contenidoMapeado);
-        listaBotones=contenidoMapeado.map((item, i) => (
-        <Chef
-            nombre={item.nombre}
-            imagen={{uri: item.avatar}}
-            onPress={() => handleFetchRecetasAutor(item.idUsuario,item.nombre)}
-            ancho={360}
-            alto={130}
-            color={"#FFFDFD"}
-            key={i}
-        />));
-    }
-    else if(route.params.tipo==TipoItem.RECETA && typeof route.params.tipo != 'undefined'){
-        console.log("-------------------if2-----------------------");
-        const contenidoMapeado: Receta[]= [];
-
-        if(route.params.permitirAgregacion && !seteado){
-            setSeteado(true);
-        }
-
-        route.params.contenido.forEach((item: any) => (
-            contenidoMapeado.push(
-            {
-                idReceta:item.idReceta,
-                usuario:item.idUsuario,
-                nombre:item.nombre,
-                descripcion:item.descripcion,
-                fotos:item.fotos,
-                porciones:item.porciones,
-                cantidadPersonas:item.cantidadPersonas,
-                tipo: item.tipo
+            else if(item.quiero==1){
+                listaResultante.push(
+                    {
+                        id:item.id,
+                        quiero:false
+                    }
+                )
             }
-        )));
-
-        
-        listaBotones=contenidoMapeado.map((item, i) => (
-            
-        <TarjetaReceta
-            key={i}
-            nombre={item.nombre}
-            cantPorciones={item.porciones}
-            tiempo={60}
-            sourceFoto={{uri:item.fotos[0].urlFoto}}
-            color={"#FFFDFD"}
-            onPress={() => handleReceta(item)}
-            ancho={380}
-            alto={83.06}
-          />
-            ));
-    }
-    else if(route.params.tipo==TipoItem.TIPO && typeof route.params.tipo != 'undefined'){
-        console.log("-------------------if3-----------------------");
-        const contenidoMapeado: Tipo[] =[];
-        if(noCambieElTitulo){
-            if(route.params.titulo==""){
-                setTituloSacable(<View></View>);
-            }
-            setNoCambieElTitulo(false);
-        }
-        route.params.contenido.forEach((item: any) => {
-            contenidoMapeado.push({
-                idTipo: item.idTipo,
-                descripcion:item.descripcion,
-                urlFoto: item.foto
-            })
         })
-        listaBotones=contenidoMapeado.map((item,i) =>(
-            <Chef
-            nombre={item.descripcion}
-            imagen={{uri: item.urlFoto}}
-            onPress={() => handleFetchTipoReceta(item.idTipo,item.descripcion)}
-            ancho={360}
-            alto={130}
-            color={"#FFFDFD"}
-            key={i}
-        />
-        ));
-
-    }
-    else if(route.params.tipo==TipoItem.INGREDIENTE && typeof route.params.tipo != 'undefined'){
-        console.log("-------------------if4-----------------------");
-        const contenidoMapeado: Ingrediente[]= [];
-        console.log(route.params.contenido);
-        route.params.contenido.forEach((item: any) => (
-            contenidoMapeado.push(
-            {
-                idIngrediente:item.idIngrediente,
-                nombre:item.nombre
-            }
-        )));
-
-        listaBotones=contenidoMapeado.map((item,i) =>(
-            <CajaIngrediente
-                nombre={item.nombre}
-                sourceFoto={{ uri: 'https://cdn.discordapp.com/attachments/1086019817926045728/1114650034965860443/dinner_1.png' }}
-                onPress={() => {
-                    console.log("Apretaste ingrediente " + item.nombre);
-                } } 
-                ancho={320}
-                colorInterno="#FFFFFF"
-                colorExterno="#FFFFFF"
-                key={item.idIngrediente} 
-                paddingTop={0} 
-                paddingBottom={0} 
-                paddingHorizontal={0} 
-           />
-        ));
-    }
-    else if(route.params.tipo==TipoItem.RECETANOMBRE && typeof route.params.tipo != 'undefined' ){
-        console.log("-------------------if5-----------------------");
-        const contenidoMapeado: Tipo[]= [];
-        if(noCambieElTitulo){
-            if(route.params.titulo==""){
-                setTituloSacable(<View></View>);
-            }
-            setNoCambieElTitulo(false);
-        }
-        console.log(route.params.contenido);
-        route.params.contenido.forEach((item: any) => (
-            contenidoMapeado.push(
-            {
-                idTipo: item.idTipo,
-                descripcion:item.descripcion,
-                urlFoto: item.foto
-                
-            }
-        )));
-
         
-        listaBotones=contenidoMapeado.map((item, i) => (
+        console.log("ACA VA EL PRINT");
+        listaResultante.forEach((item) => {
+            console.log("ITEM: "+item.id+" QUIERO? "+ item.quiero);
+        })
 
-            <Chef 
-            nombre={item.descripcion} 
-            imagen={{uri:item.urlFoto}} 
-            onPress={function (): void 
-                {handleFetchRecetaPorNombre(item.descripcion)   } 
-            } 
-            ancho={360} 
-            alto={130} 
-            color={"#FFFFFF"}            
+        await fetch(urlBase+"/recipeByIngredient",{
+            method:"POST",
+            headers:{"Content-type": "application/json; charset=UTF-8"},
+            body:JSON.stringify(listaResultante)
+        }).then((r) => r.json()).then( (data) => {
+            navigation.navigate("PantallaRecetaClon" as never,
+            {tipo: TipoItem.RECETA,
+                verIngredientes:false,
+                permitirEliminacion:false,
+                permitirAgregacion:false,
+                titulo: "Recetas por ingrediente",
+                contenido: data
+            } as never)}
+        )
+    }
+
+    
+        //route.params.contenido siempre es undefined, hay que ver como arreglarlo
+        if(route.params.tipo==TipoItem.AUTOR && typeof route.params.tipo != 'undefined'){
+            console.log("-------------------if1-----------------------");
+            const contenidoMapeado: Autor[]= [];
+            
+            route.params.contenido.forEach((item: any) => (
+                contenidoMapeado.push(
+                {
+                    "idUsuario":item.idUsuario,
+                    "mail":item.mail,
+                    "nickname": item.nickname,
+                    "habilitado":item.habilitado,
+                    "nombre":item.nombre,
+                    "avatar": item.avatar,
+                    "tipo_usuario": item.tipo_usuario
+                }
+            )));
+
+            console.log(contenidoMapeado);
+            listaBotones=contenidoMapeado.map((item, i) => (
+            <Chef
+                nombre={item.nombre}
+                imagen={{uri: item.avatar}}
+                onPress={() => handleFetchRecetasAutor(item.idUsuario,item.nombre)}
+                ancho={360}
+                alto={130}
+                color={"#FFFDFD"}
+                key={i}
+            />));
+        }
+        else if(route.params.tipo==TipoItem.RECETA && typeof route.params.tipo != 'undefined'){
+            console.log("-------------------if2-----------------------");
+            const contenidoMapeado: Receta[]= [];
+
+            if(route.params.permitirAgregacion && !seteado){
+                setSeteado(true);
+            }
+
+            route.params.contenido.forEach((item: any) => (
+                contenidoMapeado.push(
+                {
+                    idReceta:item.idReceta,
+                    usuario:item.idUsuario,
+                    nombre:item.nombre,
+                    descripcion:item.descripcion,
+                    fotos:item.fotos,
+                    porciones:item.porciones,
+                    cantidadPersonas:item.cantidadPersonas,
+                    tipo: item.tipo
+                }
+            )));
+
+            
+            listaBotones=contenidoMapeado.map((item, i) => (
+                
+            <TarjetaReceta
+                key={i}
+                nombre={item.nombre}
+                cantPorciones={item.porciones}
+                tiempo={60}
+                sourceFoto={{uri:item.fotos[0].urlFoto}}
+                color={"#FFFDFD"}
+                onPress={() => handleReceta(item)}
+                ancho={380}
+                alto={83.06}
+            />
+                ));
+        }
+        else if(route.params.tipo==TipoItem.TIPO && typeof route.params.tipo != 'undefined'){
+            console.log("-------------------if3-----------------------");
+            const contenidoMapeado: Tipo[] =[];
+            if(noCambieElTitulo){
+                if(route.params.titulo==""){
+                    setTituloSacable(<View></View>);
+                }
+                setNoCambieElTitulo(false);
+            }
+            route.params.contenido.forEach((item: any) => {
+                contenidoMapeado.push({
+                    idTipo: item.idTipo,
+                    descripcion:item.descripcion,
+                    urlFoto: item.foto
+                })
+            })
+            listaBotones=contenidoMapeado.map((item,i) =>(
+                <Chef
+                nombre={item.descripcion}
+                imagen={{uri: item.urlFoto}}
+                onPress={() => handleFetchTipoReceta(item.idTipo,item.descripcion)}
+                ancho={360}
+                alto={130}
+                color={"#FFFDFD"}
+                key={i}
             />
             ));
-    }
+
+        }
+        else if(route.params.tipo==TipoItem.INGREDIENTE && typeof route.params.tipo != 'undefined'){
+
+            const contenidoMapeado: Ingrediente[]= [];
+
+            route.params.contenido.forEach((item: any) => (
+                contenidoMapeado.push(
+                {
+                    idIngrediente:item.idIngrediente,
+                    nombre:item.nombre,
+                    urlFoto:item.urlFoto
+                }
+            )));
+
+            if(!cargueIngredientes){
+                console.log("ENTRO ACA ENTRO ACA ENTRO ACA");
+                const listaNueva: RecipeByIngredientDTOAuxiliar[]=[];
+                route.params.contenido.forEach((item:any) => (
+                    listaNueva.push({
+                        id:item.idIngrediente,
+                        quiero:2
+                    }
+                    )
+                ))
+                setListaSelecciones(listaNueva);
+                setCargueIngredientes(true);
+
+            }
+            console.log(listaSelecciones);
+            console.log("----------------------------imprimo-------------------------")
+            listaBotones=contenidoMapeado.map((item,i) =>(
+                <CajaIngrediente
+                    nombre={item.nombre}
+                    sourceFoto={{uri:item.urlFoto}}
+                    cambioEstado={(x) => {
+                        listaSelecciones.forEach((itema) => {
+                            if(item.idIngrediente==itema.id){
+                                itema.quiero=x;
+                                return 0;
+                            }
+                        })
+                        listaSelecciones.forEach((item) => {
+                            console.log(" ");
+                            console.log("---------------------");
+                            console.log("ID ITEM: "+item.id);
+                            console.log("ESTADO ITEM "+item.quiero);
+                            console.log("---------------------");
+                            console.log(" ");
+                        })
+                        if(x==2){
+                            console.log("VACIO");
+                        }
+                        else if(x==1){
+                            console.log("NO QUIERO");
+                        }
+                        else if(x==0){
+                            console.log("QUIERO");
+                        }
+                    }}
+                    ancho={320}
+                    colorInterno="#FFFFFF"
+                    colorExterno="#FFFFFF"
+                    key={item.idIngrediente} 
+                    paddingTop={0} 
+                    paddingBottom={0} 
+                    paddingHorizontal={0} 
+            />
+            ));
+        }
+        else if(route.params.tipo==TipoItem.RECETANOMBRE && typeof route.params.tipo != 'undefined' ){
+            console.log("-------------------if5-----------------------");
+            const contenidoMapeado: Tipo[]= [];
+            if(noCambieElTitulo){
+                if(route.params.titulo==""){
+                    setTituloSacable(<View></View>);
+                }
+                setNoCambieElTitulo(false);
+            }
+            console.log(route.params.contenido);
+            route.params.contenido.forEach((item: any) => (
+                contenidoMapeado.push(
+                {
+                    idTipo: item.idTipo,
+                    descripcion:item.descripcion,
+                    urlFoto: item.foto
+                    
+                }
+            )));
+
+            
+            listaBotones=contenidoMapeado.map((item, i) => (
+
+                <Chef 
+                nombre={item.descripcion} 
+                imagen={{uri:item.urlFoto}} 
+                onPress={function (): void 
+                    {handleFetchRecetaPorNombre(item.descripcion)   } 
+                } 
+                ancho={360} 
+                alto={130} 
+                color={"#FFFFFF"}            
+                />
+                ));
+        }
+    
+
 
     
     
@@ -301,12 +388,20 @@ export default function PantallaReceta() : JSX.Element{
                     </ScrollView>
                     {(route.params.permitirAgregacion)?
                     <View style={{backgroundColor:'white',width:'100%', position:'absolute', height:65, bottom:0,alignSelf:'center',zIndex:80}}>
-                        {/*EN ESTE TOUCHABLEOPACITY VA EL ONPRESS PARA IR A AGREGAR}*/}
-                        <TouchableOpacity style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:'100%',width:335,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
+                        <TouchableOpacity onPress={() => navigation.navigate("CrearReceta" as never)} style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:'100%',width:335,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
                             <Text style={{alignSelf:"center",fontSize:20,borderRadius:25, justifyContent:"center"}}>AGREGAR</Text>
                         </TouchableOpacity>
                     </View>
                     :null}  
+                    {route.params.verIngredientes?
+                    
+                    <View style={{backgroundColor:'white',width:'100%', position:'absolute', height:65, bottom:0,alignSelf:'center',zIndex:80}}>
+                        <TouchableOpacity onPress={() => handleFetchRecetasPorIngredientes()} style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:'100%',width:335,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
+                            <Text style={{alignSelf:"center",fontSize:20,borderRadius:25, justifyContent:"center"}}>Buscar</Text>
+                        </TouchableOpacity>
+                    </View>
+                    
+                    :null}
                 </View>
         }/>
         )}

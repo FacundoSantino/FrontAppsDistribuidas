@@ -29,6 +29,8 @@ import Ingredientes from './componentes/Ingredientes';
 import Cruz from './assets/cruz.png';import Comentarios from './pantallas/Comentarios';
 import Pasos from './pantallas/Pasos';
 import PantallaRecetaClon from './pantallas/PantallaRecetaClon';
+import crearReceta from './pantallas/CrearReceta';
+import crearRecetaPasos from './pantallas/CrearRecetaPasos';
 export var localip = "192.168.0.9"
 export enum TipoItem{
   RECETA,
@@ -41,6 +43,11 @@ export enum TipoItem{
 export interface RecipeByIngredientDTO{
   id:number,
   quiero:boolean
+}
+
+export interface RecipeByIngredientDTOAuxiliar{
+  id:number,
+  quiero:number
 }
 
 export type TipoParametros = {
@@ -141,7 +148,8 @@ export interface Receta {
 
 export interface Ingrediente{
   idIngrediente:number,
-  nombre:String
+  nombre:String,
+  urlFoto:string
 }
 
 export interface Utilizado{
@@ -188,6 +196,8 @@ function App(): JSX.Element {
         <Stack.Screen name="Comentarios" component={Comentarios}/>
         <Stack.Screen name="PantallaRecetaClon" component={PantallaRecetaClon}/>
         <Stack.Screen name="Pasos" component={Pasos}/>
+        <Stack.Screen name="CrearReceta" component={crearReceta}/>
+        <Stack.Screen name="CrearRecetaPaso" component={crearRecetaPasos}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
