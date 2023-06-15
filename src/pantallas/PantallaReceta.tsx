@@ -37,9 +37,34 @@ export default function PantallaReceta() : JSX.Element{
 
     let listaBotones: JSX.Element[]  = [];
 
-    function handleFetchTipoReceta(idTipo: number): void {
-        console.log("Fetch recetas del tipo "+idTipo);
+    async function handleFetchTipoReceta(idTipo: number,nombre:string) {
+        await fetch(urlBase+"/recipeType/"+idTipo).then((r) => r.json()).then((data) => {
+        navigation.navigate("PantallaRecetaClon" as never,
+            {tipo: TipoItem.RECETA,
+                verIngredientes:false,
+                permitirEliminacion:false,
+                permitirAgregacion:false,
+                titulo: "Recetas de "+nombre,
+                contenido: data
+            } as never);
+    })}
+    
+
+    async function handleFetchRecetaPorNombre(nombre:string){
+        await fetch(urlBase+"/getRecipesByName?nombre="+nombre).then((r) => r.json()).then((data) => {
+            console.log("DATOS");
+            console.log(data);
+            navigation.navigate("PantallaRecetaClon" as never,
+            {tipo: TipoItem.RECETA,
+                verIngredientes:false,
+                permitirEliminacion:false,
+                permitirAgregacion:false,
+                titulo: "Recetas de "+nombre,
+                contenido: data
+            } as never);
+        })
     }
+    
 
     const pasosFetch= async (idReceta: number) => {
         try{
@@ -185,7 +210,7 @@ export default function PantallaReceta() : JSX.Element{
             <Chef
             nombre={item.descripcion}
             imagen={{uri: item.urlFoto}}
-            onPress={() => console.log("Apretaste el nombre "+item.descripcion)}
+            onPress={() => handleFetchTipoReceta(item.idTipo,item.descripcion)}
             ancho={360}
             alto={130}
             color={"#FFFDFD"}
@@ -250,7 +275,7 @@ export default function PantallaReceta() : JSX.Element{
             nombre={item.descripcion} 
             imagen={{uri:item.urlFoto}} 
             onPress={function (): void 
-                {console.log("Apretaste el boton de las recetas de nombre "+ item.descripcion)   } 
+                {handleFetchRecetaPorNombre(item.descripcion)   } 
             } 
             ancho={360} 
             alto={130} 
