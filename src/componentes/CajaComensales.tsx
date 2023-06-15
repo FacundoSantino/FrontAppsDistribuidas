@@ -20,7 +20,7 @@ export default function CajaComensales(props:CajaComensalesProps): JSX.Element{
                     <Image source={fotoComensales}/>
                 </View>
                 <View style={{display:"flex",marginLeft:20,justifyContent:"center", }}>
-                    <TouchableOpacity onPress={() => {val>=1?setVal(val-1):null;props.onChange(val);}}><Text style={{fontSize: 25, fontWeight: 'bold'}}>-</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={() => {val>=2?setVal(val-1):null;props.onChange(val);}}><Text style={{fontSize: 25, fontWeight: 'bold'}}>-</Text></TouchableOpacity>
                 </View>
                 <View>
                     <Text>{!Number.isNaN(val)?val:1}</Text>

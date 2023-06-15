@@ -276,6 +276,7 @@ export default function PantallaReceta() : JSX.Element{
                     </ScrollView>
                     {(route.params.permitirAgregacion)?
                     <View style={{backgroundColor:'white',width:'100%', position:'absolute', height:65, bottom:0,alignSelf:'center',zIndex:80}}>
+                        {/*EN ESTE TOUCHABLEOPACITY VA EL ONPRESS PARA IR A AGREGAR}*/}
                         <TouchableOpacity style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:'100%',width:335,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
                             <Text style={{alignSelf:"center",fontSize:20,borderRadius:25, justifyContent:"center"}}>AGREGAR</Text>
                         </TouchableOpacity>
