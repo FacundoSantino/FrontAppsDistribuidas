@@ -18,7 +18,7 @@ const CajaIngredientesRecetas= forwardRef((props:CajaIngredientesRecetasProps, r
     useImperativeHandle(ref, () => ({
         actualizarValor: (proporcion:number) => {
             // Usamos el valor original para calcular el nuevo valor
-            setVal((valorOriginal.current * proporcion).toFixed(2));
+            setVal((valorOriginal.current * proporcion).toFixed(0));
         }
     }));
     return(

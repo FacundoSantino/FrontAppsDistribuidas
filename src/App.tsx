@@ -29,7 +29,7 @@ import Ingredientes from './componentes/Ingredientes';
 import Cruz from './assets/cruz.png';import Comentarios from './pantallas/Comentarios';
 import Pasos from './pantallas/Pasos';
 import PantallaRecetaClon from './pantallas/PantallaRecetaClon';
-export var localip = "192.168.1.37"
+export var localip = "192.168.0.9"
 export enum TipoItem{
   RECETA,
   TIPO,

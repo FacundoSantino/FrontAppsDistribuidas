@@ -89,7 +89,11 @@ export default function Ingredientes() :JSX.Element {
         const indice = coleccion.findIndex(item => item.key === key);
         coleccion.forEach((item, index) => {
             if (item.key != indice){
-                const nuevoValor = item.cantidadOriginal * proporcion; // Usar la cantidad original aquí
+                console.log("INGREDIENTE: "+item.itemData.idIngrediente.nombre);
+                console.log("Cantidad original: " +item.cantidadOriginal);
+                console.log("Proporcion: "+proporcion)
+                const nuevoValor = proporcion;
+                console.log("RESULTADO: "+nuevoValor);
                 ingredientRefs.current[index]?.current?.actualizarValor(nuevoValor);
             }
         });
