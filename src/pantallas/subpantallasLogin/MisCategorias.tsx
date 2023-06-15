@@ -21,7 +21,6 @@ import fotoIngrediente from '../../assets/harvest.png';
 
 function MisCategorias(): JSX.Element{
     const navigation = useNavigation();
-    const [isModalVisible, setModalVisible] = useState(false);
     const urlBase="http://"+localip+":8080/api/rest/morfar";
     const urlFetchUsuarios=urlBase+"/getUsers";
     const urlFetchTodasLasRecetas=urlBase+"/getAllRecipes"
@@ -224,16 +223,6 @@ function MisCategorias(): JSX.Element{
                                 paddingBottom={20}  
                                 ancho={360}
                                 paddingHorizontal={13}/>
-                            <Modal 
-                            isVisible = {isModalVisible}
-                            animationIn="jello"
-                            animationInTiming = {4000}
-                            >
-                                <Text style={{color:'white', alignSelf:'center'}}>
-                                    Modal Test
-                                </Text>
-                                <Button title="CERRAR" onPress={toggleModal}></Button>
-                            </Modal>
                             <TarjetaCategoria 
                                 nombre={"NOMBRE"} 
                                 onPress={async () => {handleNombre()} } 

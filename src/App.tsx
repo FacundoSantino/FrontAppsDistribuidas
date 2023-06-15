@@ -38,6 +38,11 @@ export enum TipoItem{
   INGREDIENTE
 }
 
+export interface RecipeByIngredientDTO{
+  id:number,
+  quiero:boolean
+}
+
 export type TipoParametros = {
   PantallaReceta: {  
     tipo: TipoItem,
