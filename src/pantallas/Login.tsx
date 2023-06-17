@@ -56,6 +56,14 @@ function Login(): JSX.Element{
         <Text style={styles.buttonText}>{title}</Text>
       </TouchableOpacity>
     );
+    
+    const storeData = async (value: string) => {
+      try{
+        await AsyncStorage.setItem('login',value);
+      } catch(e){
+        console.log(e);
+      }
+    }
 
     const isInternetReachable = async () => {
       try {
@@ -99,6 +107,9 @@ function Login(): JSX.Element{
         .then(async data => {
           setError("");
           if (data == 200) {
+
+            storeData(usuario);
+
             navigation.navigate("Home" as never,{user:usuario} as never);
           } else {
             if(data == 0){

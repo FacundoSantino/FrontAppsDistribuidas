@@ -33,10 +33,21 @@ function Home(): JSX.Element{
     const [nombre,setNombre] = useState("");
     const [password,setPassword] = useState("");
     const [avatar,setAvatar] = useState("");
+    const getData = async () =>{
+        try{
+            const value = await AsyncStorage.getItem('login');
+            if (value !== null){
+                console.log(value + "| DESDE STORAGE LOCAL");
+            }
+        } catch(e){
+            console.log(e);
+        }
+    }
     const getHomeData = async () => {
         try {
         const response = await fetch('http://' + localip + ':8080/api/rest/morfar/getHomeCommonInfo');
         const json = await response.json();
+        
         return json;
         } catch (err) {
         console.log(err);
@@ -50,7 +61,8 @@ function Home(): JSX.Element{
         .then((d) => setUserData(d))
         .finally(()=>setCargado(true));
         //NombreDefault
-    },[])
+        getData();
+    },[]);
     
     const handleCarrouselData = () => {
         getHomeData()

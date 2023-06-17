@@ -1,13 +1,19 @@
 import { View, Text, ScrollView, TouchableOpacity, Image} from "react-native";
 import PantallaTipoHome from "../componentes/PantallaTipoHome";
-import Modal from "react-native-modal";
+import Modal from "react-native-modal";             
 import fotoCruz from "../assets/cruz.png";
 import { useState } from "react";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+
 
 
 
 export default function CrearRecetaPasos(){
-    const [levantada, setLevantada] = useState(true);
+    const navigation=useNavigation();
+    function irAIngredientesPasos(){
+        navigation.navigate("CrearRecetaIngredientes" as never)
+    }
+    const [levantada, setLevantada] = useState(false);
     return(
         <PantallaTipoHome contenido={
             <View style={{display:'flex',flexDirection:'column',justifyContent:'space-around',alignContent:'center',minHeight:300,width:380}}>
@@ -18,13 +24,12 @@ export default function CrearRecetaPasos(){
                         </TouchableOpacity>
                 </View>
                 <View style={{backgroundColor:'white',width:'100%', height:5, bottom:0,alignSelf:'center',zIndex:80,marginTop:150}}>
-                        <TouchableOpacity style={{display:"flex", backgroundColor:'#F0AF23',height:'100%',width:200,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
+                        <TouchableOpacity onPress={()=>irAIngredientesPasos()} style={{display:"flex", backgroundColor:'#F0AF23',height:'100%',width:200,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
                             <Text style={{alignSelf:"center",fontSize:20,borderRadius:25, justifyContent:"center"}}>Siguiente</Text>
                         </TouchableOpacity>
                 </View>
 
                 <Modal isVisible = {levantada}>
-                    
                     <View style={{display:'flex',flexDirection:'column',width:370,height:400,backgroundColor:'#FCB826',borderRadius:20,alignItems:'center',justifyContent:'space-around'}}>
                         <TouchableOpacity onPress={() => setLevantada(false)}>
                             <Image source={fotoCruz} style={{width:30,height:30, position:'absolute',left:-180,top:0}}/>

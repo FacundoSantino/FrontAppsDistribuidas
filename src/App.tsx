@@ -31,7 +31,8 @@ import Pasos from './pantallas/Pasos';
 import PantallaRecetaClon from './pantallas/PantallaRecetaClon';
 import crearReceta from './pantallas/CrearReceta';
 import crearRecetaPasos from './pantallas/CrearRecetaPasos';
-export var localip = "192.168.0.9"
+import crearRecetaIngredientes from './pantallas/CrearRecetaIngredientes';
+export var localip = "192.168.0.12"
 export enum TipoItem{
   RECETA,
   TIPO,
@@ -198,6 +199,7 @@ function App(): JSX.Element {
         <Stack.Screen name="Pasos" component={Pasos}/>
         <Stack.Screen name="CrearReceta" component={crearReceta}/>
         <Stack.Screen name="CrearRecetaPaso" component={crearRecetaPasos}/>
+        <Stack.Screen name="CrearRecetaIngredientes" component={crearRecetaIngredientes}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
