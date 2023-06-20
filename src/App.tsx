@@ -32,7 +32,7 @@ import PantallaRecetaClon from './pantallas/PantallaRecetaClon';
 import crearReceta from './pantallas/CrearReceta';
 import crearRecetaPasos from './pantallas/CrearRecetaPasos';
 import crearRecetaIngredientes from './pantallas/CrearRecetaIngredientes';
-export var localip = "192.168.0.12"
+export var localip = "192.168.100.6"
 export enum TipoItem{
   RECETA,
   TIPO,

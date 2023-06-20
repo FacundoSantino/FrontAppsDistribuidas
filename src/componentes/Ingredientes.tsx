@@ -112,7 +112,7 @@ export default function Ingredientes() :JSX.Element {
                     onChange={(text:number) => {console.log("hola")}}                
                     
                     />
-                    <ScrollView>
+                    <ScrollView style={{height:530}}>
                         {coleccionIngredientes.map((item, index) => {
                             return <React.Fragment key={index}>{item}</React.Fragment>;
                         })}
@@ -125,7 +125,7 @@ export default function Ingredientes() :JSX.Element {
                         <TouchableOpacity style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:'100%',width:335,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
                             <Text style={{alignSelf:"center",fontSize:20,borderRadius:25, justifyContent:"center"}}>AGREGAR A MI LISTA</Text>
                         </TouchableOpacity>
-                </View>
+                    </View>
                 </View>
                 
             }/>   

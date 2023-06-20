@@ -1,23 +1,23 @@
 import { Image, StyleSheet, Text, View } from "react-native";
-import fotoComensales from "../assets/comensales.png";
+import fotoPorciones from "../assets/porciones.png";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useState } from "react";
 import estiloApp from "../estilos/estiloApp";
 
-type CajaComensalesProps ={
-    cantidadComensales:number,
+type CajaPorcionesProps ={
+    cantidadPorciones:number,
     onChange(text:number): void
 }
 
-export default function CajaComensales(props:CajaComensalesProps): JSX.Element{
+export default function CajaPorciones(props:CajaPorcionesProps): JSX.Element{
 
-    const [val, setVal] = useState(props.cantidadComensales);
-    const [valAnterior,setValAnterior]=useState(props.cantidadComensales);
+    const [val, setVal] = useState(props.cantidadPorciones);
+    const [valAnterior,setValAnterior]=useState(props.cantidadPorciones);
     
     return(
-            <View style={[styles.flexRow,{borderWidth:2,borderRadius:45,justifyContent:"space-around", width: "50%", alignSelf:'center',marginBottom:20,marginTop:5}]}>
+            <View style={[styles.flexRow,{borderWidth:2,borderRadius:45,justifyContent:"space-around", width: "50%", alignSelf:'center',marginBottom:20,marginTop:5,height:50}]}>
                 <View style={{width:"10%", marginLeft:-15}}>
-                    <Image source={fotoComensales}/>
+                    <Image source={fotoPorciones} style={{width:35,height:35,marginVertical:2,marginLeft:7}}/>
                 </View>
                 <View style={{display:"flex",marginLeft:20,justifyContent:"center", }}>
                     <TouchableOpacity onPress={() => {val>=2?setVal(val-1):null;val>=2?props.onChange(val-1):null}}><Text style={{fontSize: 25, fontWeight: 'bold'}}>-</Text></TouchableOpacity>

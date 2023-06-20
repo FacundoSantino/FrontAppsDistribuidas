@@ -184,7 +184,6 @@ export default function Receta(): JSX.Element {
                             <Image source={IconoCruz} style={{width:20,height:20,marginLeft:10}}/>
                         </TouchableOpacity>
                         </View>
-
                         <Text style={{textAlign:'center',fontWeight:'bold', fontSize:17,height:110,marginTop:40}}>Su valoración ha sido enviada exitosamente y está esperando la moderación</Text>
                     </View>
                 </Modal>

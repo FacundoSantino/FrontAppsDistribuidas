@@ -383,11 +383,11 @@ export default function PantallaReceta() : JSX.Element{
                         <BotonFiltrar/>
                         <BotonOrdenar/>
                     </View>
-                    <ScrollView style= {{marginTop:8, height:'75%'}} contentContainerStyle={{justifyContent:"center"}}>
+                    <ScrollView style= {{marginTop:8, height:'65%'}} contentContainerStyle={{justifyContent:"center"}}>
                         {listaBotones}           
                     </ScrollView>
                     {(route.params.permitirAgregacion)?
-                    <View style={{backgroundColor:'white',width:'100%', position:'absolute', height:65, bottom:0,alignSelf:'center',zIndex:80}}>
+                    <View style={{backgroundColor:'white',width:'100%', position:'relative', height:65, bottom:0,alignSelf:'center',zIndex:80}}>
                         <TouchableOpacity onPress={() => navigation.navigate("CrearReceta" as never)} style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:'100%',width:335,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
                             <Text style={{alignSelf:"center",fontSize:20,borderRadius:25, justifyContent:"center"}}>AGREGAR</Text>
                         </TouchableOpacity>
@@ -395,7 +395,7 @@ export default function PantallaReceta() : JSX.Element{
                     :null}  
                     {route.params.verIngredientes?
                     
-                    <View style={{backgroundColor:'white',width:'100%', position:'absolute', height:65, bottom:0,alignSelf:'center',zIndex:80}}>
+                    <View style={{backgroundColor:'white',width:'100%', position:"relative", height:65, bottom:0,alignSelf:'center',zIndex:80}}>
                         <TouchableOpacity onPress={() => handleFetchRecetasPorIngredientes()} style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:'100%',width:335,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
                             <Text style={{alignSelf:"center",fontSize:20,borderRadius:25, justifyContent:"center"}}>Buscar</Text>
                         </TouchableOpacity>
