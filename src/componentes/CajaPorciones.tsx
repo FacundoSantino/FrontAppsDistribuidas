@@ -15,7 +15,7 @@ export default function CajaPorciones(props:CajaPorcionesProps): JSX.Element{
     const [valAnterior,setValAnterior]=useState(props.cantidadPorciones);
     
     return(
-            <View style={[styles.flexRow,{borderWidth:2,borderRadius:45,justifyContent:"space-around", width: "50%", alignSelf:'center',marginBottom:20,marginTop:5,height:50}]}>
+            <View style={[styles.flexRow,{borderWidth:2,borderRadius:45,justifyContent:"space-around", width: "50%", alignSelf:'center',marginBottom:10,marginTop:5,height:50}]}>
                 <View style={{width:"10%", marginLeft:-15}}>
                     <Image source={fotoPorciones} style={{width:35,height:35,marginVertical:2,marginLeft:7}}/>
                 </View>

@@ -10,7 +10,7 @@ type cajaPasoProps={
 
 export default function CajaPaso(props:cajaPasoProps) : JSX.Element {
     return(
-        <View style={[styles.flexRow,{display:"flex",alignContent:"center",borderWidth:2,borderRadius:45,justifyContent:"space-around", minHeight:50, width: "90%", alignSelf:'center',marginBottom:20,marginTop:5,height:"auto"}]}>
+        <View style={[styles.flexRow,{display:"flex",alignContent:"center",borderWidth:2,borderRadius:45,justifyContent:"space-around", minHeight:50, width: "90%", alignSelf:'center',marginBottom:5,marginTop:5,height:"auto"}]}>
 
             <Text>{props.numeroPaso+"."}</Text>
 

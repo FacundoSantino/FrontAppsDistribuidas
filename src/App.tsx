@@ -32,7 +32,9 @@ import PantallaRecetaClon from './pantallas/PantallaRecetaClon';
 import crearReceta from './pantallas/CrearReceta';
 import crearRecetaPasos from './pantallas/CrearRecetaPasos';
 import crearRecetaIngredientes from './pantallas/CrearRecetaIngredientes';
-export var localip = "192.168.100.6"
+import { Cloudinary } from "@cloudinary/url-gen";
+import CrearRecetaImagenes from './pantallas/CrearRecetaImagenes';
+export var localip = "192.168.0.9"
 export enum TipoItem{
   RECETA,
   TIPO,
@@ -40,6 +42,12 @@ export enum TipoItem{
   AUTOR,
   INGREDIENTE
 }
+
+export const cld = new Cloudinary({
+  cloud: {
+      cloudName: 'dyqoli0xg'
+  }
+});
 
 export interface RecipeByIngredientDTO{
   id:number,
@@ -200,6 +208,7 @@ function App(): JSX.Element {
         <Stack.Screen name="CrearReceta" component={crearReceta}/>
         <Stack.Screen name="CrearRecetaPaso" component={crearRecetaPasos}/>
         <Stack.Screen name="CrearRecetaIngredientes" component={crearRecetaIngredientes}/>
+        <Stack.Screen name="CrearRecetaImagenes" component={CrearRecetaImagenes}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
