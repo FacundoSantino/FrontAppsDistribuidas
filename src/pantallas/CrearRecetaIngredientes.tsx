@@ -1,20 +1,22 @@
 
-import { useState, useEffect} from 'react';
+import { useState} from 'react';
 import PantallaTipoHome from '../componentes/PantallaTipoHome';
 import {View, Text, TouchableOpacity, Image, ScrollView, TextInput, StyleSheet} from "react-native";
 import Modal from "react-native-modal"; 
 import fotoCruz from "../assets/cruz.png";
-import CajaIngrediente from '../componentes/CajaIngrediente';
-import CajaIngredientesRecetas from '../componentes/CajaIngredienteRecetas';
-import { localip } from '../App';
+import { TipoParametros, localip } from '../App';
 import {Picker} from '@react-native-picker/picker';
 import estiloApp from '../estilos/estiloApp';
-import CajaComensales from '../componentes/CajaComensales';
 import CajaPaso from '../componentes/CajaPaso';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import IconoCruz from"../assets/cruz.png";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+type CrearRecetaIngredientesRouteProps= RouteProp<TipoParametros, "CrearRecetaIngredientes">;
 
 export default function CrearRecetaIngredientes(){
     const [levantada, setLevantada] = useState(false);
+    const route=useRoute<CrearRecetaIngredientesRouteProps>();
     const [ingredientes,setIngredientes]=useState<{idIngrediente:number,nombre:string,urlFoto:string}[]>([]);
     const [unidades,setUnidades]=useState<{idUnidad:number,descripcion:string}[]>([]);
     const [loaded,setLoaded]=useState(false);
@@ -24,15 +26,25 @@ export default function CrearRecetaIngredientes(){
     const [ingredienteSeleccionado,setIngredienteSeleccionado]=useState<{idIngrediente:number,nombre:string,urlFoto:string}>();
     const [unidadSeleccionada,setUnidadSeleccionada]=useState<{idUnidad:number,descripcion:string}>();
     const [cantidadSeleccionada,setCantidadSeleccionada]=useState<number>();
-    const [contador,setContador]=useState<number>(0);
     const [listaIngredientes, setListaIngredientes]= useState<{idIngrediente:number,idUnidad:number,cantidad:number,observaciones:string,nombreIngrediente:string,nombreUnidad:string,identificador:number}[]>([]);
-    
+    const [levantadoFaltanCosas, setLevantadoFaltanCosas]=useState(false);
+    const [contador,setContador]=useState<number>(listaIngredientes.length);
     const navigation=useNavigation();
 
     const agregarIngrediente = (ingrediente:{idIngrediente:number,nombre:string,urlFoto:string},unidad:{idUnidad:number,descripcion:string},cantidad:number) => {
         listaIngredientes.push({idIngrediente:ingrediente.idIngrediente,idUnidad:unidad.idUnidad,cantidad:cantidad,observaciones:"",nombreIngrediente:ingrediente.nombre,nombreUnidad:unidad.descripcion,identificador:contador});
         setContador(contador+1);
+        guardarCambio();
         setLevantada(false);
+    }
+
+    function navegar () {
+        if(listaIngredientes.length<1){
+            setLevantadoFaltanCosas(true);
+        }
+        else{
+            navigation.navigate("CrearRecetaImagenes" as never,{crearRecetaProps:route.params.crearRecetaProps,listaPasos:route.params.listaPasos,listaIngredientes:listaIngredientes} as never);
+        }
     }
 
     const ingredientesFetch= async () => {
@@ -81,9 +93,22 @@ export default function CrearRecetaIngredientes(){
         
         await unidadesFetch().then(data=>setUnidades(data));
     }
+
+    const chequearIngredientes= async () => {
+        const ingredientesSP=await AsyncStorage.getItem("listaIngredientes");
+        if(ingredientesSP!=null){
+            setListaIngredientes(JSON.parse(ingredientesSP));
+            setContador(JSON.parse(ingredientesSP).length);
+        }
+    }
+    
+
+    const guardarCambio= async () => {
+        AsyncStorage.setItem("listaIngredientes",JSON.stringify(listaIngredientes));
+    }
     
     if(!loaded){
-        cargarCosas().finally(() => setLoaded(true));
+        cargarCosas().then(() => chequearIngredientes()).finally(() => setLoaded(true));
        
     }
 
@@ -91,22 +116,33 @@ export default function CrearRecetaIngredientes(){
         return(
             <PantallaTipoHome contenido={
                 <View style={{display:'flex',flexDirection:'column',justifyContent:'space-around',alignContent:'center'}}>
+                    <Modal isVisible={levantadoFaltanCosas}>
+                        <View style={{display:'flex',flexDirection:'column',width:370,height:200,backgroundColor:'#FCB826',borderRadius:20}}>
+                            <TouchableOpacity onPress={() => setLevantadoFaltanCosas(false)} style={{display:'flex',justifyContent:'center',alignItems:'flex-start',height:30,width:340}}>
+                                <Image source={IconoCruz} style={{width:20,height:20,marginLeft:10}}/>
+                            </TouchableOpacity>
+                            <View style={{display:'flex',flexDirection:'column',width:370,height:150,justifyContent:'center',alignItems:'center'}}>
+                                <Text style={{fontSize:20,color:'black'}}>Faltan cosas!</Text>
+                                <Text style={{fontSize:16,color:'black',width:300,textAlign:'center'}}>Tenés que agregar mínimo 1 ingrediente</Text>
+                            </View>
+                        </View>
+                    </Modal>
                     <Text style={{color:"#808080", fontSize:12,alignSelf:"flex-end"}}>3/4</Text>
                     <Text style={{fontWeight:'bold',fontSize:40,color:'black',textAlign:'center',marginBottom:30}}>Ingredientes</Text>
                     <TouchableOpacity onPress={() => setLevantada(true)} style={{borderWidth:2,display:"flex", backgroundColor:'#F0AF23',height:50,width:200,minHeight:50,alignSelf:"center", justifyContent:'center',marginBottom:30, borderRadius: 20}}>
                         <Text style={{alignSelf:"center",fontSize:20,borderRadius:25, justifyContent:"center"}}>Agregar ingrediente</Text>
                     </TouchableOpacity>
                     <ScrollView contentContainerStyle={{alignItems:'center'}}  style={{borderWidth:2,borderColor:'black',borderRadius:20,height:500 ,width:350,alignSelf:'center',marginBottom:20}}>
-                    {listaIngredientes.map((item,i) => (<CajaPaso key={i} onPress={() => {setListaIngredientes(listaIngredientes.filter((itemb) => item.identificador!=itemb.identificador));}} numeroPaso={i+1} descripcion={item.cantidad+" "+item.nombreUnidad+" de "+item.nombreIngrediente} />))}
+                    {listaIngredientes.map((item,i) => (<CajaPaso key={i} onPress={() => setListaIngredientes(listaIngredientes.filter((itemb) => item.identificador!=itemb.identificador))} numeroPaso={i+1} descripcion={item.cantidad+" "+item.nombreUnidad+" de "+item.nombreIngrediente} />))}
                     </ScrollView>
 
-                    <TouchableOpacity onPress={() => {navigation.navigate("CrearRecetaImagenes" as never)}} style={{borderWidth:2,display:"flex", backgroundColor:'#F0AF23',height:50,width:200,minHeight:50,alignSelf:"center", justifyContent:'center',marginBottom:30, borderRadius: 20}}>
+                    <TouchableOpacity onPress={() => navegar() } style={{borderWidth:2,display:"flex", backgroundColor:'#F0AF23',height:50,width:200,minHeight:50,alignSelf:"center", justifyContent:'center',marginBottom:30, borderRadius: 20}}>
                         <Text style={{alignSelf:"center",fontSize:20,borderRadius:25, justifyContent:"center"}}>Siguiente</Text>
                     </TouchableOpacity>
                     
                     <Modal isVisible = {levantada}>
                         
-                        <View style={{display:'flex',flexDirection:'column',width:370,height:'55%',backgroundColor:'#FCB826',borderRadius:25,alignItems:'center',justifyContent:'center'}}>
+                        <View style={{display:'flex',flexDirection:'column',width:370,height:445,backgroundColor:'#FCB826',borderRadius:25,alignItems:'center',justifyContent:'center'}}>
                             <TouchableOpacity onPress={() => setLevantada(!levantada)}>
                                 <Image source={fotoCruz} style={{width:30,height:30, position:'relative',left:-165,top:20}}/>
                             </TouchableOpacity>

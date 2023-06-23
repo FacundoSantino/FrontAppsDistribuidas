@@ -30,7 +30,7 @@ import Cruz from './assets/cruz.png';import Comentarios from './pantallas/Coment
 import Pasos from './pantallas/Pasos';
 import PantallaRecetaClon from './pantallas/PantallaRecetaClon';
 import crearReceta from './pantallas/CrearReceta';
-import crearRecetaPasos from './pantallas/CrearRecetaPasos';
+import crearRecetaPasos, { PasoCaja } from './pantallas/CrearRecetaPasos';
 import crearRecetaIngredientes from './pantallas/CrearRecetaIngredientes';
 import { Cloudinary } from "@cloudinary/url-gen";
 import CrearRecetaImagenes from './pantallas/CrearRecetaImagenes';
@@ -97,6 +97,31 @@ export type TipoParametros = {
     titulo: String,
     contenido: Autor[] | Receta[] | Tipo[] ,
     ingredientes?: Ingrediente[]
+  }
+  ,
+  CrearRecetaPasos:{
+    nombreReceta:string,
+    descripcionReceta:string,
+    comensales:number,
+    porciones:number,
+    idTipoReceta:number
+  },
+  CrearRecetaIngredientes:{
+    crearRecetaProps:{nombreReceta:string,
+      descripcionReceta:string,
+      comensales:number,
+      porciones:number,
+      idTipoReceta:number},
+    listaPasos:PasoCaja[]
+  },
+  CrearRecetaImagenes:{
+    crearRecetaProps:{nombreReceta:string,
+      descripcionReceta:string,
+      comensales:number,
+      porciones:number,
+      idTipoReceta:number,}
+    listaPasos:PasoCaja[],
+    listaIngredientes:{idIngrediente:number,idUnidad:number,cantidad:number,observaciones:string,nombreIngrediente:string,nombreUnidad:string,identificador:number}[]
   }
 }
 
@@ -206,7 +231,7 @@ function App(): JSX.Element {
         <Stack.Screen name="PantallaRecetaClon" component={PantallaRecetaClon}/>
         <Stack.Screen name="Pasos" component={Pasos}/>
         <Stack.Screen name="CrearReceta" component={crearReceta}/>
-        <Stack.Screen name="CrearRecetaPaso" component={crearRecetaPasos}/>
+        <Stack.Screen name="CrearRecetaPasos" component={crearRecetaPasos}/>
         <Stack.Screen name="CrearRecetaIngredientes" component={crearRecetaIngredientes}/>
         <Stack.Screen name="CrearRecetaImagenes" component={CrearRecetaImagenes}/>
       </Stack.Navigator>
