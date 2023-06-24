@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Image,
   StyleSheet,
@@ -56,14 +56,34 @@ function Login(): JSX.Element{
         <Text style={styles.buttonText}>{title}</Text>
       </TouchableOpacity>
     );
-    
-    const storeData = async (value: string) => {
+    const getUserAndPass = async ()=>{
       try{
-        await AsyncStorage.setItem('login',value);
+        const value = await AsyncStorage.getItem('user');
+        const value2 = await AsyncStorage.getItem('password');
+        
+        if (value !== null && value2 !== null && (value != "" && value2 != "")){
+          setUsuario(value);
+          setContra(value2);
+          navigation.navigate("Home" as never,{user:value} as never);
+        }
+      } catch(e){
+          console.log(e);
+      }
+    }
+    const storeData = async (key:string, value: string) => {
+      try{
+        await AsyncStorage.setItem(key,value);
       } catch(e){
         console.log(e);
       }
     }
+      useEffect(()=>{
+        console.log("asd");
+        getUserAndPass()
+
+      },[])
+
+    
 
     const isInternetReachable = async () => {
       try {
@@ -107,9 +127,10 @@ function Login(): JSX.Element{
         .then(async data => {
           setError("");
           if (data == 200) {
-
-            storeData(usuario);
-
+            if(checked){
+              storeData("user",usuario);
+              storeData("password",contra);
+            }
             navigation.navigate("Home" as never,{user:usuario} as never);
           } else {
             if(data == 0){
@@ -117,24 +138,23 @@ function Login(): JSX.Element{
             }
             else{
               if (data == 400){
-                setError("El usuario o la contraseña son incorrectos.")
+                setError("El usuario o la contraseña son incorrectos.   ")
               }
             }
           }
         }).catch(error => console.log(error));
     };
-
+    
     return(
-        
       <PantallaTipoLogin contenido={
         <View style={styles.container}>
         <View style={styles.inputTextLogin}>
           <Image source={IconoUsuario} style={styles.iconoLogin} />
-          <TextInput defaultValue='Juanito' value={usuario} onChange={e => setUsuario(e.nativeEvent.text)} placeholder="Ingrese su usuario" style={styles.contentInput}></TextInput>
+          <TextInput value={usuario} onChange={e => setUsuario(e.nativeEvent.text)} placeholder="Ingrese su usuario" style={styles.contentInput}></TextInput>
         </View>
         <View style={styles.inputTextLogin}>
           <Image source={IconoContrasenia} style={styles.iconoLogin} />
-          <TextInput defaultValue="123" value={contra} placeholder="Ingrese su contraseña" onChange={e => setContra(e.nativeEvent.text)} secureTextEntry={true} style={styles.contentInput}></TextInput>
+          <TextInput value={contra} placeholder="Ingrese su contraseña" onChange={e => setContra(e.nativeEvent.text)} secureTextEntry={true} style={styles.contentInput}></TextInput>
         </View>
         <Text style={styles.textoErrorLogin}>{error}</Text>
         <View style={styles.containerCheckBox}>

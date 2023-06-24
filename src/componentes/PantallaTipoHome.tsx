@@ -7,6 +7,7 @@ import estiloApp from "../estilos/estiloApp";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import volver from "../assets/turn-back.png";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 type PantallaTipoHomeProps ={
     contenido: JSX.Element;
 }
@@ -14,6 +15,13 @@ type PantallaTipoHomeProps ={
 const PantallaTipoHome=(props:PantallaTipoHomeProps) =>{
     const [levantado, setLevantado] = useState(false);
     const navigation = useNavigation();
+    const storeData = async (key:string, value: string) => {
+        try{
+          await AsyncStorage.setItem(key,value);
+        } catch(e){
+          console.log(e);
+        }
+      }
     return(
     <View>
         <View style={style.bgHeaderPrincipal}>
@@ -38,6 +46,17 @@ const PantallaTipoHome=(props:PantallaTipoHomeProps) =>{
                 >
                     <Image source={volver} style={{width:30, height:30, marginLeft:30, marginTop:10}}></Image>
                     <Text style={{alignSelf:'center', position:'absolute', top:16}}>VOLVER A LA HOME</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{backgroundColor:'white', width:'90%', height: 50,alignSelf:'center',borderRadius:15,marginTop:30}}
+                onPress={()=>{
+                    storeData("user","");
+                    storeData("password","");
+                    setLevantado(!levantado);
+                    navigation.navigate('Login' as never);
+                }}
+                >
+                    <Image source={volver} style={{width:30, height:30, marginLeft:30, marginTop:10}}></Image>
+                    <Text style={{alignSelf:'center', position:'absolute', top:16}}>CERRAR SESIÓN</Text>
                 </TouchableOpacity>
                 
                 <TouchableOpacity onPress={()=>setLevantado(!levantado)} style={[{alignSelf:'center',position:'absolute',bottom:50}]} >

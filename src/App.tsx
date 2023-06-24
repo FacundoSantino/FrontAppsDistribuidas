@@ -178,7 +178,8 @@ export interface Receta {
   fotos:Foto[],
   porciones:number,
   cantidadPersonas:number,
-  tipo: Tipo
+  tipo: Tipo,
+  fechaCreacion: String
 }
 
 export interface Ingrediente{

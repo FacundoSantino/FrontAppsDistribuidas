@@ -53,8 +53,9 @@ const estiloApp = StyleSheet.create({
         paddingRight:20,
         borderRadius:45,
         borderColor:'#D0D0D0',
-        borderWidth:1,
+        borderWidth:1.5,
         marginTop:20,
+        borderColor:'black'
     },
 
     elemento:{

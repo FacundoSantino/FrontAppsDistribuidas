@@ -56,8 +56,8 @@ const estiloLogin = StyleSheet.create ({
   },
   textoErrorLogin:{
     color:"red",
-    alignSelf:"flex-end",
-    left:-20,
+    alignSelf:"center",
+    marginLeft:5,
     fontSize:15,
     top:100,
   },

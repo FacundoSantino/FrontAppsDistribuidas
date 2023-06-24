@@ -129,11 +129,10 @@ function Home(): JSX.Element{
 
       })
     }
-      console.log(userData.nombre);
     return( 
         <PantallaTipoHome contenido={
             <View style={style.flexColumn}>
-                <View>
+                <View style = {{paddingLeft:2}}>
                     {(cargado)?
                     <Text style={{alignSelf:'center'}}>¡Bienvenido nuevamente {userData.nombre}!</Text>
                     :null}

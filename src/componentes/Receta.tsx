@@ -54,8 +54,8 @@ export default function Receta(): JSX.Element {
             if(typeof route.params.contenido != 'undefined' && typeof route.params.pasos != 'undefined'){
                 route.params.contenido.fotos.forEach((d: Foto,i:number) => {
                     p.push({
-                    "title": "titulo",
-                    "body": "body",
+                    "title": "",
+                    "body": "",
                     "imgUrl": d.urlFoto,
                     key:i
                     });

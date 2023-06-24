@@ -9,8 +9,14 @@ const CarouselCardItem = ({ item, index }) => {
     <View style={styles.container} key={index}>
       <Image
         source={{ uri: item.imgUrl }}
-        style={styles.image}
+        style={(item.title != "" && item.body != "" ? styles.image : styles.image2)}
       />
+      <View>
+        <Text style={{fontSize:20,fontWeight:'bold',alignSelf:'center'}}>{item.title} </Text>
+        <Text style={{alignSelf:'center',fontWeight:'bold'}}>
+          {(item.body.length > 40) ? (item.body).substring(0,40) + "..." : item.body}
+        </Text>
+      </View>
     </View>
   )
 }
@@ -21,7 +27,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 8,
     width: 350,
-    height:200,
+    height:205,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -33,7 +39,12 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 350,
-    height: 170,
+    height: 150,
+    borderRadius:8,
+  },
+  image2:{
+    width: 350,
+    height: 205,
     borderRadius:8,
   },
   header: {

@@ -12,6 +12,12 @@ import TarjetaReceta from "../componentes/TarjetaReceta";
 import { useEffect, useState } from "react";
 import CajaIngrediente from "../componentes/CajaIngrediente";
 import FotoOrdenar from '../assets/ordenar.png'
+import Modal from "react-native-modal";
+import IconoCruz from '../assets/cruz.png';
+import FAntiguoNuevo from '../assets/Group_39.png';
+import FNuevoAntiguo from '../assets/Group_38.png';
+import AtoZ from '../assets/from-a-to-z.png';
+import ZtoA from '../assets/sort-alphabetically-down-from-z-to-a.png';
 
 //Variantes: 
 //Items de tipos, Items de recetas. 
@@ -37,6 +43,11 @@ export default function PantallaReceta() : JSX.Element{
     const [listaSelecciones,setListaSelecciones]=useState<RecipeByIngredientDTOAuxiliar[]>([]);
     const [cargueIngredientes,setCargueIngredientes]=useState(false);
     const [ordenar,setOrdenar] = useState(false);
+    const [ordenarTextoMenorMayor,setTextoOrdenarMenorMayor] = useState(false);
+    const [ordenarTextoMayorMenor,setTextoOrdenarMayorMenor] = useState(false);
+    const [ordenarFechaMayorMenor,setFechaOrdenarMayorMenor] = useState(false);
+    const [ordenarFechaMenorMayor,setFechaOrdenarMenorMayor] = useState(false);
+    const [levantada, setLevantada] = useState(false);
     let listaBotones: JSX.Element[]  = [];
 
     async function handleFetchTipoReceta(idTipo: number,nombre:string) {
@@ -205,7 +216,10 @@ export default function PantallaReceta() : JSX.Element{
             if(route.params.permitirAgregacion && !seteado){
                 setSeteado(true);
             }
-
+            route.params.contenido.forEach((i:any) =>{
+                console.log("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+                console.log(i);
+            })
             route.params.contenido.forEach((item: any) => (
                 contenidoMapeado.push(
                 {
@@ -216,22 +230,23 @@ export default function PantallaReceta() : JSX.Element{
                     fotos:item.fotos,
                     porciones:item.porciones,
                     cantidadPersonas:item.cantidadPersonas,
-                    tipo: item.tipo
+                    tipo: item.tipo,
+                    fechaCreacion: item.fechaCreacion
                 }
             )));
-
             
             listaBotones=contenidoMapeado.map((item, i) => (
                 
             <TarjetaReceta
                 key={i}
                 nombre={item.nombre}
+                fecha={item.fechaCreacion}
                 cantPorciones={item.porciones}
                 tiempo={60}
                 sourceFoto={{uri:item.fotos[0].urlFoto}}
                 color={"#FFFDFD"}
                 onPress={() => handleReceta(item)}
-                ancho={380}
+                ancho={378}
                 alto={83.06}
             />
                 ));
@@ -268,7 +283,7 @@ export default function PantallaReceta() : JSX.Element{
         else if(route.params.tipo==TipoItem.INGREDIENTE && typeof route.params.tipo != 'undefined'){
 
             const contenidoMapeado: Ingrediente[]= [];
-
+            
             route.params.contenido.forEach((item: any) => (
                 contenidoMapeado.push(
                 {
@@ -369,12 +384,7 @@ export default function PantallaReceta() : JSX.Element{
                 ));
         }
     
-
-
-    
-    
     if(cargoPantalla){
-        
         return( 
             <PantallaTipoHome contenido={
                 <View>
@@ -384,16 +394,20 @@ export default function PantallaReceta() : JSX.Element{
                         {/* <BotonFiltrar/> */}
                         {/* <BotonOrdenar /> */}
                         <TouchableOpacity style={[{backgroundColor:"#FCB826",borderRadius:15, height:30, width:95},styles.flexRow]}
-                        onPress={()=>{setOrdenar(!ordenar)}}
-                        >
+                        onPress={()=>{setLevantada(!levantada)}}>
                             <Image style={{width:19,height:19, marginRight:5}} source={FotoOrdenar}/>
                             <Text>Ordenar</Text>
                         </TouchableOpacity>
                     </View>
-                    <ScrollView style= {{marginTop:8, height:'75%'}} contentContainerStyle={{justifyContent:"center",marginLeft:10}}>
-                        {ordenar ? listaBotones.sort((a, b) => a.props.nombre.localeCompare(b.props.nombre))
-                        : listaBotones
+                    <ScrollView style= {{marginTop:8, height:'75%'}} contentContainerStyle={{justifyContent:"center"}}>
+                        {(ordenar && ordenarTextoMayorMenor) ? listaBotones.sort((a, b) => a.props.nombre.localeCompare(b.props.nombre)) : 
+                        (ordenar && ordenarTextoMenorMayor) ? listaBotones.sort((a, b) => a.props.nombre.localeCompare(b.props.nombre)).reverse() : 
+                        (ordenar && ordenarFechaMayorMenor) ? listaBotones.sort((a, b) => a.props.fecha.localeCompare(b.props.fecha)) :
+                        (ordenar && ordenarFechaMenorMayor) ? listaBotones.sort((a, b) => a.props.fecha.localeCompare(b.props.fecha)).reverse() :
+                        listaBotones
                         }
+                        {/* {(ordenar && ordenarFechaMenorMayor) ? listaBotones.sort((a, b) => a.props.nombre.localeCompare(b.props.nombre)) : null} */}
+                        {/* {(!ordenar && !ordenarTextoMayorMenor && !ordenarFechaMenorMayor) ? listaBotones : null} */}
                     </ScrollView>
                     {(route.params.permitirAgregacion)?
                     <View style={{backgroundColor:'white',width:'100%', position:'relative', height:65, bottom:0,alignSelf:'center',zIndex:80}}>
@@ -411,9 +425,91 @@ export default function PantallaReceta() : JSX.Element{
                     </View>
                     
                     :null}
+                <Modal isVisible={levantada}>
+                    <View style={{backgroundColor:"orange", height:350,borderRadius:20,display:'flex',flexDirection:'column',justifyContent:'space-around'}}>
+                        <TouchableOpacity style={{display:'flex',justifyContent:'center',alignItems:'flex-start',height:30,width:340}} onPress={()=>setLevantada(!levantada)}>
+                         <Image source={IconoCruz} style={{width:20,height:20,marginLeft:10}}/>
+                        </TouchableOpacity>
+                        <Text style={{alignSelf:'center',fontSize:25,fontWeight:"bold",color:'black'}}>Ordenar por:</Text>
+                        <View style={{display:'flex',flexDirection:'row',width:370,justifyContent:'center'}}> 
+                            <TouchableOpacity  style={{marginTop:3,display:"flex", backgroundColor:'white',width:70,alignSelf:"center", justifyContent:'center', borderRadius: 10,height:50,borderWidth:2,marginRight:30}}
+                                onPress={()=>{
+                                    
+                                    setTextoOrdenarMayorMenor(true);
+                                    setTextoOrdenarMenorMayor(false);
+                                    setFechaOrdenarMayorMenor(false);
+                                    setFechaOrdenarMenorMayor(false);
+                                    setLevantada(!levantada);
+                                    setOrdenar(true);
+                                }}
+                            >
+                                    <Image source={AtoZ} style={{width:30,height:30,alignSelf:'center'}}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity  style={{marginTop:3,display:"flex", backgroundColor:'white',width:70,alignSelf:"center", justifyContent:'center', borderRadius: 10,height:50,borderWidth:2}}
+                                onPress={()=>{
+                                    
+                                    setTextoOrdenarMayorMenor(false);
+                                    setTextoOrdenarMenorMayor(true);
+                                    setFechaOrdenarMayorMenor(false);
+                                    setFechaOrdenarMenorMayor(false);
+                                    setLevantada(!levantada);
+                                    setOrdenar(true);
+                                }}
+                            >
+                                    <Image source={ZtoA} style={{width:30,height:30,alignSelf:'center'}}/>
+                            </TouchableOpacity>
+                        </View>
+                        
+                        <View style={{display:'flex',flexDirection:'row',width:370,justifyContent:'center'}}>
+                            <TouchableOpacity  style={{marginTop:3,display:"flex", backgroundColor:'white',width:70,alignSelf:"center", justifyContent:'center', borderRadius: 10,height:50,borderWidth:2,marginRight:30}}
+                                onPress={()=>{
+                                    
+                                    setTextoOrdenarMayorMenor(false);
+                                    setTextoOrdenarMenorMayor(false);
+                                    setFechaOrdenarMayorMenor(false);
+                                    setFechaOrdenarMenorMayor(true);
+                                    setLevantada(!levantada);
+                                    setOrdenar(true);
+                                }}
+                            >
+                                    <Image source={FAntiguoNuevo} style={{width:40,height:40,alignSelf:'center'}}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity  style={{marginTop:3,display:"flex", backgroundColor:'white',width:70,alignSelf:"center", justifyContent:'center', borderRadius: 10,height:50,borderWidth:2}}
+                                onPress={()=>{
+                                    
+                                    setTextoOrdenarMayorMenor(false);
+                                    setTextoOrdenarMenorMayor(false);
+                                    setFechaOrdenarMayorMenor(true);
+                                    setFechaOrdenarMenorMayor(false);
+                                    setLevantada(!levantada);
+                                    setOrdenar(true);
+                                }}
+                            >
+                                    <Image source={FNuevoAntiguo} style={{width:40,height:40,alignSelf:'center'}}/>
+                            </TouchableOpacity>
+                        </View>
+                        <TouchableOpacity  style={{marginTop:3,display:"flex", backgroundColor:'white',width:100,alignSelf:"center", justifyContent:'center', borderRadius: 20,height:50,borderWidth:2}}
+                            onPress={()=>{
+                                    
+                                setTextoOrdenarMayorMenor(false);
+                                setTextoOrdenarMenorMayor(false);
+                                setFechaOrdenarMayorMenor(false);
+                                setFechaOrdenarMenorMayor(false);
+                                setLevantada(!levantada);
+                                setOrdenar(false);
+                            }}
+                        >
+                                <Text style={{alignSelf:"center",fontSize:15,borderRadius:25, justifyContent:"center"}}> LIMPIAR </Text>
+                        </TouchableOpacity>
+                    </View>
+                </Modal>
                 </View>
+                
         }/>
-        )}
+        )
+        
+    
+    }
     else{
         return(
             <Text> Cargando... </Text>
