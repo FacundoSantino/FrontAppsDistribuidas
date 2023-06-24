@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import PantallaTipoHome from "../componentes/PantallaTipoHome"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { Autor, Ingrediente, Receta, RecipeByIngredientDTO, RecipeByIngredientDTOAuxiliar, Tipo, TipoPantalla, TipoParametros, localip } from "../App";
@@ -11,7 +11,7 @@ import Chef from "../componentes/Chef";
 import TarjetaReceta from "../componentes/TarjetaReceta";
 import { useEffect, useState } from "react";
 import CajaIngrediente from "../componentes/CajaIngrediente";
-
+import FotoOrdenar from '../assets/ordenar.png'
 
 //Variantes: 
 //Items de tipos, Items de recetas. 
@@ -36,7 +36,7 @@ export default function PantallaReceta() : JSX.Element{
     const [seteado,setSeteado]=useState(false);
     const [listaSelecciones,setListaSelecciones]=useState<RecipeByIngredientDTOAuxiliar[]>([]);
     const [cargueIngredientes,setCargueIngredientes]=useState(false);
-
+    const [ordenar,setOrdenar] = useState(false);
     let listaBotones: JSX.Element[]  = [];
 
     async function handleFetchTipoReceta(idTipo: number,nombre:string) {
@@ -374,17 +374,26 @@ export default function PantallaReceta() : JSX.Element{
     
     
     if(cargoPantalla){
+        
         return( 
             <PantallaTipoHome contenido={
                 <View>
                     {tituloSacable}
                     <BarraDeBusqueda/>
                     <View style={[styles.flexRow,{marginTop:20}]}>
-                        <BotonFiltrar/>
-                        <BotonOrdenar/>
+                        {/* <BotonFiltrar/> */}
+                        {/* <BotonOrdenar /> */}
+                        <TouchableOpacity style={[{backgroundColor:"#FCB826",borderRadius:15, height:30, width:95},styles.flexRow]}
+                        onPress={()=>{setOrdenar(!ordenar)}}
+                        >
+                            <Image style={{width:19,height:19, marginRight:5}} source={FotoOrdenar}/>
+                            <Text>Ordenar</Text>
+                        </TouchableOpacity>
                     </View>
-                    <ScrollView style= {{marginTop:8, height:'65%'}} contentContainerStyle={{justifyContent:"center"}}>
-                        {listaBotones}           
+                    <ScrollView style= {{marginTop:8, height:'75%'}} contentContainerStyle={{justifyContent:"center",marginLeft:10}}>
+                        {ordenar ? listaBotones.sort((a, b) => a.props.nombre.localeCompare(b.props.nombre))
+                        : listaBotones
+                        }
                     </ScrollView>
                     {(route.params.permitirAgregacion)?
                     <View style={{backgroundColor:'white',width:'100%', position:'relative', height:65, bottom:0,alignSelf:'center',zIndex:80}}>

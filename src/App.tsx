@@ -34,7 +34,8 @@ import crearRecetaPasos, { PasoCaja } from './pantallas/CrearRecetaPasos';
 import crearRecetaIngredientes from './pantallas/CrearRecetaIngredientes';
 import { Cloudinary } from "@cloudinary/url-gen";
 import CrearRecetaImagenes from './pantallas/CrearRecetaImagenes';
-export var localip = "192.168.0.9"
+import BusquedaRecetas from './pantallas/BusquedaRecetas';
+export var localip = "192.168.1.37"
 export enum TipoItem{
   RECETA,
   TIPO,
@@ -234,6 +235,7 @@ function App(): JSX.Element {
         <Stack.Screen name="CrearRecetaPasos" component={crearRecetaPasos}/>
         <Stack.Screen name="CrearRecetaIngredientes" component={crearRecetaIngredientes}/>
         <Stack.Screen name="CrearRecetaImagenes" component={CrearRecetaImagenes}/>
+        <Stack.Screen name="BusquedaRecetas" component={BusquedaRecetas}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

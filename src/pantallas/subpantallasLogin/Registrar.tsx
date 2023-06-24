@@ -126,14 +126,14 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
   const handleRegister = async () => {
     //fetch del usuario, si da 200 es true si no false
 
-    const existeUsuario=usuarioFetch(registerDTO.user);
+    const existeUsuario=await usuarioFetch(registerDTO.user);
     
 
     //fetch del mail, si da 200 es true, si no false
 
-    const existeMail=mailFetch(registerDTO.mail);
+    const existeMail=await mailFetch(registerDTO.mail);
 
-    
+ 
     if(!existeMail && !existeUsuario){
       registerFetch()
         .then(async data => {

@@ -82,7 +82,7 @@ export default function CrearReceta(){
 
     const opcionVaciaTipo = () => {
         if(tipoSeleccionado==undefined){
-            return (<Picker.Item label='' enabled={false}/>);
+            return (<Picker.Item label='Elija el tipo' enabled={false}/>);
         }
         else{
             return(null);

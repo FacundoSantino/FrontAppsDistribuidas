@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import PantallaTipoHome from "./PantallaTipoHome";
 import estiloApp from "../estilos/estiloApp";
 import CarouselCards from "../CarouselCards";
@@ -33,8 +33,9 @@ export default function Receta(): JSX.Element {
     const [enviada, setEnviada] = useState(false);
     const route=useRoute<RecetaRouteProps>();
     const navigation=useNavigation();
-
-
+    const [valoracion,setValoracion] = useState(0);
+    const [contador ,setContador] = useState(valoracion);
+    const [estrellas, setEstrellas] = useState<Object[]>([]);
     const ingredientesFetch= async () => {
         try{
             const respuesta= await fetch(urlFetchIngredientes+route.params.contenido.idReceta);
@@ -60,6 +61,14 @@ export default function Receta(): JSX.Element {
                     });
                 });
                 setProcesado(p);
+                let lista = [
+                    <Image source={fotoEstrellaLlena} style={{width:25,height:25}}/>,
+                    <Image source={fotoEstrellaLlena} style={{width:25,height:25}}/>,
+                    <Image source={fotoEstrellaLlena} style={{width:25,height:25}}/>,
+                    <Image source={fotoEstrellaLlena} style={{width:25,height:25}}/>,
+                    <Image source={fotoEstrellaLlena} style={{width:25,height:25}}/>
+                ];
+                setEstrellas(lista);
         };
             setCargoPantalla(true);});
     },[]
@@ -159,15 +168,26 @@ export default function Receta(): JSX.Element {
                             <Image source={IconoCruz} style={{width:20,height:20,marginLeft:10}}/>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={()=>{console.log("hola")}} style={{display:'flex',flexDirection:'row',justifyContent:'center',alignItems:'center',height:30,width:340}}>
-                            <Image source={fotoEstrellaVacia} style={{width:25,height:25}}/>
-                            <Image source={fotoEstrellaVacia} style={{width:25,height:25}}/>
-                            <Image source={fotoEstrellaVacia} style={{width:25,height:25}}/>
-                            <Image source={fotoEstrellaVacia} style={{width:25,height:25}}/>
-                            <Image source={fotoEstrellaVacia} style={{width:25,height:25}}/>
+                        {estrellas.map((estrella, index) => {
+                            if (contador > 0) {
+                            setContador(contador - 1);
+                            return (
+                                <Image key={index} source={fotoEstrellaLlena} style={{ width: 25, height: 25 }} />
+                            );
+                            } else {
+                            return (
+                                <Image key={index} source={fotoEstrellaVacia} style={{ width: 25, height: 25 }} />
+                            );
+                            }
+                        })}
+                            
                         </TouchableOpacity>
                         <Text style={{textAlign:'center',fontWeight:'bold', fontSize:17}}>Valora la receta!</Text>
 
                         <ScrollView style={{borderRadius:10,minHeight:10,height:100,backgroundColor:'white', maxHeight:130, width:350,borderColor:'black',borderWidth:2.3}}>
+                        <TextInput >
+
+                        </TextInput>
                         </ScrollView>
                         <TouchableOpacity onPress={() => {setLevantada(!levantada); setEnviada(!enviada); }} style={{marginTop:3,display:"flex", backgroundColor:'white',width:100,alignSelf:"center", justifyContent:'center', borderRadius: 20,height:35}}>
                             <Text style={{alignSelf:"center",fontSize:15,borderRadius:25, justifyContent:"center"}}>Enviar</Text>
