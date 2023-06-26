@@ -54,23 +54,18 @@ export default function CrearReceta(){
         const idTipoReceta=await AsyncStorage.getItem("idTipoReceta");
         
         if(nombre!=null){
-            console.log("1");
             setNombreReceta(nombre);
         }
         if(descripcion!=null){
-            console.log("2");
             setDescripcionReceta(descripcion);
         }
         if(comensalesL!=null){
-            console.log("3");
             setComensales(parseInt(comensalesL));
         }
         if(porcionesL!=null){
-            console.log("4");
             setPorciones(parseInt(porcionesL));
         }
         if(idTipoReceta!=null){
-            console.log("5");
             setTipoSeleccionado(parseInt(idTipoReceta));
         }
         

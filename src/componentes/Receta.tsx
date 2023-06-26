@@ -97,7 +97,7 @@ export default function Receta(): JSX.Element {
     }
     
     function irAPasos(): void {
-        navigation.navigate("Pasos" as never);
+        navigation.navigate("Pasos" as never,{idReceta:route.params.contenido.idReceta} as never);
     }
     
     const handleModal = (estado: boolean) =>{

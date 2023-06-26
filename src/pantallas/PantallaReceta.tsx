@@ -58,6 +58,7 @@ export default function PantallaReceta() : JSX.Element{
                 permitirEliminacion:false,
                 permitirAgregacion:false,
                 titulo: "Recetas de "+nombre,
+                esFavoritos:false,
                 contenido: data
             } as never);
     })}
@@ -73,6 +74,7 @@ export default function PantallaReceta() : JSX.Element{
                 permitirEliminacion:false,
                 permitirAgregacion:false,
                 titulo: "Recetas de "+nombre,
+                esFavoritos:false,
                 contenido: data
             } as never);
         })
@@ -127,6 +129,7 @@ export default function PantallaReceta() : JSX.Element{
                     permitirEliminacion:false,
                     permitirAgregacion:false,
                     titulo: "Recetas de "+nombreUsuario,
+                    esFavoritos:false,
                     contenido: data
                 } as never);
             }
@@ -173,6 +176,7 @@ export default function PantallaReceta() : JSX.Element{
                 permitirEliminacion:false,
                 permitirAgregacion:false,
                 titulo: "Recetas por ingrediente",
+                esFavoritos:false,
                 contenido: data
             } as never)}
         )
@@ -243,7 +247,7 @@ export default function PantallaReceta() : JSX.Element{
                 fecha={item.fechaCreacion}
                 cantPorciones={item.porciones}
                 tiempo={60}
-                sourceFoto={{uri:item.fotos[0].urlFoto}}
+                sourceFoto={{uri:item?.fotos[0]?.urlFoto}}
                 color={"#FFFDFD"}
                 onPress={() => handleReceta(item)}
                 ancho={378}
@@ -399,7 +403,7 @@ export default function PantallaReceta() : JSX.Element{
                             <Text>Ordenar</Text>
                         </TouchableOpacity>
                     </View>
-                    <ScrollView style= {{marginTop:8, height:'75%'}} contentContainerStyle={{justifyContent:"center"}}>
+                    <ScrollView style= {{marginTop:8, height:500}} contentContainerStyle={{justifyContent:"center"}}>
                         {(ordenar && ordenarTextoMayorMenor) ? listaBotones.sort((a, b) => a.props.nombre.localeCompare(b.props.nombre)) : 
                         (ordenar && ordenarTextoMenorMayor) ? listaBotones.sort((a, b) => a.props.nombre.localeCompare(b.props.nombre)).reverse() : 
                         (ordenar && ordenarFechaMayorMenor) ? listaBotones.sort((a, b) => a.props.fecha.localeCompare(b.props.fecha)) :
@@ -410,7 +414,7 @@ export default function PantallaReceta() : JSX.Element{
                         {/* {(!ordenar && !ordenarTextoMayorMenor && !ordenarFechaMenorMayor) ? listaBotones : null} */}
                     </ScrollView>
                     {(route.params.permitirAgregacion)?
-                    <View style={{backgroundColor:'white',width:'100%', position:'relative', height:65, bottom:0,alignSelf:'center',zIndex:80}}>
+                    <View style={{backgroundColor:'white',width:'100%', position:'relative', height:65, bottom:0,alignSelf:'center'}}>
                         <TouchableOpacity onPress={() => navigation.navigate("CrearReceta" as never)} style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:'100%',width:335,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
                             <Text style={{alignSelf:"center",fontSize:20,borderRadius:25, justifyContent:"center"}}>AGREGAR</Text>
                         </TouchableOpacity>

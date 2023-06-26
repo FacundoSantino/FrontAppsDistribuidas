@@ -157,7 +157,7 @@ export default function PantallaRecetaClon() : JSX.Element{
             nombre={item.nombre}
             cantPorciones={item.porciones}
             tiempo={60}
-            sourceFoto={{uri:item.fotos[0].urlFoto}}
+            sourceFoto={{uri:item?.fotos[0]?.urlFoto}}
             color={"#FFFDFD"}
             onPress={() => handleReceta(item)}
             ancho={380}

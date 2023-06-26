@@ -35,7 +35,7 @@ import crearRecetaIngredientes from './pantallas/CrearRecetaIngredientes';
 import { Cloudinary } from "@cloudinary/url-gen";
 import CrearRecetaImagenes from './pantallas/CrearRecetaImagenes';
 import BusquedaRecetas from './pantallas/BusquedaRecetas';
-export var localip = "192.168.1.37"
+export var localip = "192.168.0.9"
 export enum TipoItem{
   RECETA,
   TIPO,
@@ -68,7 +68,8 @@ export type TipoParametros = {
     permitirAgregacion: Boolean,
     titulo: String,
     contenido: Autor[] | Receta[] | Tipo[] ,
-    ingredientes?: Ingrediente[]
+    ingredientes?: Ingrediente[],
+    esFavoritos: Boolean
   },
   Receta:{
     tipoPantalla:TipoPantalla,
@@ -87,6 +88,9 @@ export type TipoParametros = {
   Contra:{
     user:String
   },
+  Pasos:{
+    idReceta:number
+  }
   Comentarios:{
     idReceta:number
   },
@@ -97,7 +101,8 @@ export type TipoParametros = {
     permitirAgregacion: Boolean,
     titulo: String,
     contenido: Autor[] | Receta[] | Tipo[] ,
-    ingredientes?: Ingrediente[]
+    ingredientes?: Ingrediente[],
+    esFavoritos: Boolean
   }
   ,
   CrearRecetaPasos:{

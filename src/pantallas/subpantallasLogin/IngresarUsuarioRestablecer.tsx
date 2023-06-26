@@ -26,6 +26,9 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
   const [user, setUser] = useState("");
   const [error,setError] = useState("");
   const [levantada, setLevantada] = useState(false);
+
+  const urlBase="http://"+localip+":8080/api/rest/morfar";
+  const urlEnviarCodigo=urlBase+"/enviarCodigo/";
   
   const interpolateColor = animatedValue.interpolate({
     inputRange: [0, 1],
@@ -42,6 +45,17 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
       },
     ],
   };
+  const fetchEnviarCodigo= async () => {
+    try{
+      const response = await fetch(urlEnviarCodigo+user);
+      const data=await response.json();
+      console.log("CODIGO GENERADO Y ENVIADO:");
+      console.log(await data);
+    }
+    catch{
+
+    }
+  }
   const CustomButton = ({ onPress, title, color }: { onPress: () => void; title: string; color: string }) => (
     <TouchableOpacity onPress={onPress} style={[styles.button, { backgroundColor: color }]}>
       <Text style={styles.buttonText}>{title}</Text>
@@ -58,6 +72,7 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
       .then(async verdadero => {
         setError("");
         if (verdadero) {
+          fetchEnviarCodigo();
           navigation.navigate("Codigo" as never,{user:user} as never );
         } else {
           setLevantada(true);

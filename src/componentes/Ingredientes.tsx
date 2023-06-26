@@ -14,15 +14,50 @@ type IngredientesProps= RouteProp<TipoParametros, "Ingredientes">;
 
 export default function Ingredientes() :JSX.Element {
     const route=useRoute<IngredientesProps>();
-    const[cargoPantalla,setCargoPantalla]=useState(false);
     const [coleccionIngredientes,setColeccionIngredientes]=useState<Element[]>([]);
     const[loaded,setLoaded]=useState(false);
     const [data,setData]=useState<Utilizado[]>([]);
     let coleccion: { key: number, itemData: Utilizado, cantidadOriginal: number }[] = [];
     const urlFetchUtilizados="http://"+localip+":8080/api/rest/morfar/utilizadosReceta/";
-    const listaReferencias : MutableRefObject<any>[]=[];
-    const [items,setItems] = useState<any>([]);
     const ingredientRefs = useRef<(MutableRefObject<{ actualizarValor: (proporcion: number) => void }> | null)[]>([]);
+
+    
+    const agregarAsync= async () => {
+        
+        /*const recetas=await AsyncStorage.getItem("modificadas");
+        if(await recetas!=null){
+            const recetasJ=JSON.parse(await recetas);
+            if(recetasJ.length==10){
+                //Agregar modal que avise que las moficiadas están llenas y pregunte si quiere borrar una
+            }
+            else{
+                //recetasJ.push(coleccionIngredientes);
+                await AsyncStorage.setItem("modificadasUtilizados",recetasJ.stringify());
+            }
+        }*/
+        
+    }
+
+    /*
+
+    <ForwardRef onChange={[Function onChange]}
+     utilizado={
+        {"cantidad": 4, 
+     "idIngrediente": {"idIngrediente": 1, "nombre": "Huevo", "urlFoto": null}, 
+     "idUtilizado": 1, 
+     "observaciones": "Huevos grandes", 
+     "receta": {"cantidadPersonas": 4, "descripcion": "Una deliciosa tortilla de patatas",
+            "fechaCreacion": null, 
+            "foto": "https://recetas.example.com/tortilla.jpg", 
+            "fotos": [Array], 
+            "idReceta": 1, 
+            "idTipo": [Object], 
+            "idUsuario": [Object], 
+            "nombre": "Tortilla de patatas", 
+            "porciones": 1}, 
+      "unidad": {"descripcion": "Unidad", "idUnidad": 1}, "valorFijo": 4}} valorFijo={4} />
+
+    */
 
     if(!loaded){
         fetch(urlFetchUtilizados+route.params.idReceta)
@@ -121,8 +156,8 @@ export default function Ingredientes() :JSX.Element {
 
 
 
-                    <View style={{backgroundColor:'white',width:'100%', position:'absolute', height:5, bottom:0,alignSelf:'center',zIndex:80}}>
-                        <TouchableOpacity style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:'100%',width:335,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
+                    <View style={{backgroundColor:'white',width:'100%', position:'absolute', height:50, bottom:0,alignSelf:'center',zIndex:80}}>
+                        <TouchableOpacity onPress={()=> agregarAsync()} style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:'100%',width:335,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
                             <Text style={{alignSelf:"center",fontSize:20,borderRadius:25, justifyContent:"center"}}>AGREGAR A MI LISTA</Text>
                         </TouchableOpacity>
                     </View>

@@ -56,6 +56,18 @@ function Login(): JSX.Element{
         <Text style={styles.buttonText}>{title}</Text>
       </TouchableOpacity>
     );
+    const urlBase="http://"+localip+":8080/api/rest/morfar";
+    const urlIdUsuario=urlBase+"/getUsers/";
+
+    const fetchIdUsuario=async (usuario:string) => {
+      const response=await fetch(urlIdUsuario+usuario);
+      const data=await response.json();
+      const idUsuario=await data.idUsuario;
+      await AsyncStorage.setItem("idUsuario",await idUsuario.toString());
+      console.log("SETEO ID USUARIO "+await idUsuario);
+    }
+
+
     const getUserAndPass = async ()=>{
       try{
         const value = await AsyncStorage.getItem('user');
@@ -64,7 +76,10 @@ function Login(): JSX.Element{
         if (value !== null && value2 !== null && (value != "" && value2 != "")){
           setUsuario(value);
           setContra(value2);
+          setChecked(true);
           navigation.navigate("Home" as never,{user:value} as never);
+        }else{
+          setChecked(false);
         }
       } catch(e){
           console.log(e);
@@ -127,6 +142,7 @@ function Login(): JSX.Element{
         .then(async data => {
           setError("");
           if (data == 200) {
+            fetchIdUsuario(usuario);
             if(checked){
               storeData("user",usuario);
               storeData("password",contra);

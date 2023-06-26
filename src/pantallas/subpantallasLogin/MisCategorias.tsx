@@ -25,10 +25,7 @@ function MisCategorias(): JSX.Element{
     const urlFetchUsuarios=urlBase+"/getUsers";
     const urlFetchTodasLasRecetas=urlBase+"/getAllRecipes"
     
-    
-    const toggleModal = () => {
-        setModalVisible(!isModalVisible);
-      };
+
     const autoresFetch= async () =>{
         console.log("intentando fetch");
         try{
@@ -53,6 +50,7 @@ function MisCategorias(): JSX.Element{
                                     verIngredientes:false,
                                     permitirEliminacion:false,
                                     permitirAgregacion:false,
+                                    esFavoritos:false,
                                     titulo: "Recetas por Autor",
                                     contenido: data
                                 } as never)
@@ -81,6 +79,7 @@ function MisCategorias(): JSX.Element{
                 verIngredientes:false,
                 permitirEliminacion:false,
                 permitirAgregacion:false,
+                esFavoritos:false,
                 titulo: "Todas las Recetas",
                 contenido: data
             } as never);
@@ -97,6 +96,7 @@ function MisCategorias(): JSX.Element{
             verIngredientes:false,
             permitirEliminacion:false,
             permitirAgregacion:false,
+            esFavoritos:false,
             titulo: "",
             contenido: data
         } as never)
@@ -127,6 +127,7 @@ function MisCategorias(): JSX.Element{
             permitirEliminacion:false,
             permitirAgregacion:false,
             titulo: "Ingredientes",
+            esFavoritos:false,
             contenido: data
         } as never)
     });
@@ -155,7 +156,9 @@ function MisCategorias(): JSX.Element{
                 permitirEliminacion:false,
                 permitirAgregacion:false,
                 titulo: "",
+                esFavoritos:false,
                 contenido: datos
+
             } as never)
             
         }
