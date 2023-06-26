@@ -14,6 +14,7 @@ import React from "react";
 import Modal from "react-native-modal";
 import Lupa from '../assets/lupa.png';
 import IconoCruz from '../assets/cruz.png';
+import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 
 
 //http://localhost:8080/api/rest/morfar/ingredients/1
@@ -31,11 +32,16 @@ export default function Receta(): JSX.Element {
     const [ingredientes,setIngredientes]=useState([]);
     const [levantada, setLevantada] = useState(false);
     const [enviada, setEnviada] = useState(false);
+    const [favorita,setFavorita]=useState(false);
     const route=useRoute<RecetaRouteProps>();
     const navigation=useNavigation();
     const [valoracion,setValoracion] = useState(0);
     const [contador ,setContador] = useState(valoracion);
     const [estrellas, setEstrellas] = useState<Object[]>([]);
+    const urlEsFavorita=urlBase+"/esFavorita";
+    const urlAgregarFavorita=urlBase+"/addFavRecipe";
+    const urlBorrarFavorita=urlBase+"/borrarFavorita";
+
     const ingredientesFetch= async () => {
         try{
             const respuesta= await fetch(urlFetchIngredientes+route.params.contenido.idReceta);
@@ -49,7 +55,22 @@ export default function Receta(): JSX.Element {
     }
 
     React.useEffect( () =>{
-        ingredientesFetch().then((data) => setIngredientes(data)).finally(() => {
+        ingredientesFetch().then((data) => setIngredientes(data)).then( async () => {
+            console.log("HOLAHOLAHOLA");
+            try{
+                console.log("URL FETCH "+ urlEsFavorita+"/"+route.params.contenido.idReceta+"/"+await useAsyncStorage("idUsuario").getItem())
+                const response= await fetch(urlEsFavorita+"/"+route.params.contenido.idReceta+"/"+await useAsyncStorage("idUsuario").getItem());
+                if(response.status==200){
+                    console.log("LA ESTRELLA DEBERIA ESTAR LLENA");
+                    setFotoEstrella(fotoEstrellaLlena);
+                    setFavorita(true);
+                }
+                
+            }
+            catch(error){
+                console.log(error);
+            }
+        }).finally(() => {
             console.log(route.params.contenido.fotos);
             if(typeof route.params.contenido != 'undefined' && typeof route.params.pasos != 'undefined'){
                 route.params.contenido.fotos.forEach((d: Foto,i:number) => {
@@ -73,13 +94,44 @@ export default function Receta(): JSX.Element {
             setCargoPantalla(true);});
     },[]
     )
+
+    const fetchEliminarFavorito = async () => {
+        try{
+            await fetch(urlBorrarFavorita+"/"+route.params.contenido.idReceta+"/"+await useAsyncStorage("idUsuario").getItem(),{
+                method:"DELETE",
+                headers:{
+                    "Content-Type":"application/json; charset=UTF-8"
+                }
+            })
+        }
+        catch(error){
+            console.log(error);
+        }
+    }
+    const fetchAgregarFavorito = async () => {
+        try{
+            await fetch(urlAgregarFavorita,{
+                body: JSON.stringify( {
+                    "idUser":await useAsyncStorage("idUsuario").getItem(),
+                    "idRecipe": route.params.contenido.idReceta
+                }),
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json; charset=UTF-8"
+                }
+            })
+        }
+        catch(error){
+            console.log(error);
+        }
+    }
+
     const handlePressEstrella = () => {
-        if(levantada || enviada){
-            setFotoEstrella(fotoEstrellaVacia);
+        if(favorita){
+            fetchEliminarFavorito().finally(() => {setFavorita(false);setFotoEstrella(fotoEstrellaVacia)});
         }
         else{
-            setFotoEstrella(fotoEstrellaLlena);
-            setLevantada(!levantada);
+            fetchAgregarFavorito().finally(() => {setFavorita(true);setFotoEstrella(fotoEstrellaLlena)});
         }
     }
 
@@ -104,8 +156,6 @@ export default function Receta(): JSX.Element {
         console.log(estado);
     }
     if(cargoPantalla){
-    
-    console.log(levantada);
     return(
         <PantallaTipoHome contenido={
 
@@ -128,19 +178,6 @@ export default function Receta(): JSX.Element {
                         {route.params.contenido.descripcion}
                     </Text>
                 </ScrollView>
-
-                {/* <Text style={{textAlign:'center',color:'black',fontSize:15}}>Pasos:</Text>
-
-                <ScrollView style={{borderRadius:10,minHeight:10,height:"auto", maxHeight:90, width:390,borderColor:'black',borderWidth:2.3}}>
-
-                    {route.params.pasos.map((paso,i) => (
-                                <Text key={i}>
-                                    {paso.nroPaso+". "+paso.texto}
-                                </Text>
-                            )
-                        )
-                    }
-                </ScrollView> */}
                 
                 <View style={{backgroundColor:'white',width:'100%', height:30, bottom:0,alignSelf:'center',zIndex:50,marginTop:20,marginBottom:50}}>
                         <TouchableOpacity onPress={() => irAPasos()} style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:'100%',width:200,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
