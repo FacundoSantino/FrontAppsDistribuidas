@@ -15,6 +15,7 @@ import { createNavigatorFactory, useNavigation } from '@react-navigation/native'
 import TarjetaCategoria from "../../componentes/TarjetaCategoria";
 import CarouselCards from "../../CarouselCards";
 import PantallaTipoHome from "../../componentes/PantallaTipoHome";
+import BarraDeBusqueda from "../../componentes/BarraDeBusqueda";
 
 
 function misRecetas(): JSX.Element{
@@ -23,10 +24,7 @@ function misRecetas(): JSX.Element{
         <PantallaTipoHome contenido={
         <View>
             
-                    <View style={[style.cajaBusqueda, style.flexRow]}>
-                        <Image source={lupa} style={style.elemento} />
-                        <TextInput style={style.elemento} placeholder="Ingresá tu busqueda..." />
-                    </View>
+                    <BarraDeBusqueda/>
                         <TarjetaCategoria 
                             nombre={"RECETAS FAVORITAS"} 
                             onPress={() => navigation.navigate("MisRecetas" as never)}

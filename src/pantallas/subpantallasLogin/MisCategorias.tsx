@@ -23,7 +23,7 @@ function MisCategorias(): JSX.Element{
     const navigation = useNavigation();
     const urlBase="http://"+localip+":8080/api/rest/morfar";
     const urlFetchUsuarios=urlBase+"/getUsers";
-    const urlFetchTodasLasRecetas=urlBase+"/getAllRecipes"
+    const urlFetchTodasLasRecetas=urlBase+"/getAllRecipes";
     
 
     const autoresFetch= async () =>{

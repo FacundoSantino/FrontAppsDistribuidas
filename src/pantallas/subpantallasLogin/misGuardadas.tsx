@@ -15,7 +15,7 @@ import { createNavigatorFactory, useNavigation } from '@react-navigation/native'
 import BarraDeBusqueda from "../../componentes/BarraDeBusqueda";
 import PantallaTipoHome from "../../componentes/PantallaTipoHome";
 import { TipoItem, localip } from "../../App";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage";
 
 
 function MisGuardadas(): JSX.Element{
@@ -35,6 +35,23 @@ function MisGuardadas(): JSX.Element{
             console.log(error);
         }
     }
+    
+    const irAModificadas= async () => {
+        const listaRecetasSinProcesar=await useAsyncStorage("recetasModificadas").getItem()
+        if(listaRecetasSinProcesar!=null){
+            const listaRecetas=JSON.parse(listaRecetasSinProcesar);
+            navigation.navigate("PantallaReceta" as never, {tipo: TipoItem.RECETA,
+            verIngredientes:false,
+            permitirEliminacion:false,
+            permitirAgregacion:false,
+            esFavoritos:true,
+            titulo:"Recetas modificadas",
+            contenido:listaRecetas})
+        }
+        else{
+            await useAsyncStorage("recetasModificadas").setItem("[]");
+        }
+    }
 
     const irAFavoritas = async ()=> {
         fetchRecetasFavoritas().then((data) => navigation.navigate("PantallaReceta" as never,{tipo: TipoItem.RECETA,
@@ -42,7 +59,7 @@ function MisGuardadas(): JSX.Element{
             permitirEliminacion:false,
             permitirAgregacion:false,
             esFavoritos:true,
-            titulo: "",
+            titulo: "Recetas favoritas",
             contenido: data
         } as never));
     }
@@ -64,7 +81,7 @@ function MisGuardadas(): JSX.Element{
                             />
                         <TarjetaCategoria 
                             nombre={"RECETAS MODIFICADAS"} 
-                            onPress={() => navigation.navigate("RecetasModificadas" as never)}
+                            onPress={() => irAModificadas()}
                             sourceFoto={fotoMiLista} 
                             colorInterno={"#FCB826"} 
                             colorExterno={"#FFFDFD"} 

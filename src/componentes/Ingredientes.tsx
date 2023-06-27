@@ -7,6 +7,7 @@ import React from "react";
 import CajaIngredientesRecetas from "./CajaIngredienteRecetas";
 import CajaComensales from "./CajaComensales";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 
 
 type IngredientesProps= RouteProp<TipoParametros, "Ingredientes">;
@@ -20,44 +21,40 @@ export default function Ingredientes() :JSX.Element {
     let coleccion: { key: number, itemData: Utilizado, cantidadOriginal: number }[] = [];
     const urlFetchUtilizados="http://"+localip+":8080/api/rest/morfar/utilizadosReceta/";
     const ingredientRefs = useRef<(MutableRefObject<{ actualizarValor: (proporcion: number) => void }> | null)[]>([]);
-
-    
+    const comensalRef= useRef<(MutableRefObject<{actualizarValor:(proporcion:number) => void}> |null )>();
+    let comensales = 1;
     const agregarAsync= async () => {
-        
-        /*const recetas=await AsyncStorage.getItem("modificadas");
-        if(await recetas!=null){
-            const recetasJ=JSON.parse(await recetas);
-            if(recetasJ.length==10){
-                //Agregar modal que avise que las moficiadas están llenas y pregunte si quiere borrar una
+
+        const recetasModificadasAux=await useAsyncStorage("recetasModificadas").getItem();
+        //2 casos posibles
+        //1. ya existe en modificadas la receta
+        //2. no existe
+        // si 1. pregunto si agregar o reemplazar, independientemente del espacio y si no hay espacio, pregunto si reemplazar y cual
+        //si 2 pregunto si agregar si es que no hay espacio
+
+        data.forEach(item => {
+            console.log(item.cantidad+" de "+item.idIngrediente.nombre);
+        })
+
+        if(recetasModificadasAux!=null){
+            const recetasModificadas=JSON.parse(recetasModificadasAux);
+            if(recetasModificadas.length<10){
+                //hay lugar
+
             }
             else{
-                //recetasJ.push(coleccionIngredientes);
-                await AsyncStorage.setItem("modificadasUtilizados",recetasJ.stringify());
+                //no hay lugar
+
             }
-        }*/
-        
+
+        }
+        else{
+            //hago lista vacia y agrego receta
+        }
+                
     }
 
-    /*
 
-    <ForwardRef onChange={[Function onChange]}
-     utilizado={
-        {"cantidad": 4, 
-     "idIngrediente": {"idIngrediente": 1, "nombre": "Huevo", "urlFoto": null}, 
-     "idUtilizado": 1, 
-     "observaciones": "Huevos grandes", 
-     "receta": {"cantidadPersonas": 4, "descripcion": "Una deliciosa tortilla de patatas",
-            "fechaCreacion": null, 
-            "foto": "https://recetas.example.com/tortilla.jpg", 
-            "fotos": [Array], 
-            "idReceta": 1, 
-            "idTipo": [Object], 
-            "idUsuario": [Object], 
-            "nombre": "Tortilla de patatas", 
-            "porciones": 1}, 
-      "unidad": {"descripcion": "Unidad", "idUnidad": 1}, "valorFijo": 4}} valorFijo={4} />
-
-    */
 
     if(!loaded){
         fetch(urlFetchUtilizados+route.params.idReceta)
@@ -106,6 +103,7 @@ export default function Ingredientes() :JSX.Element {
                                 const factor = cantidad/item.itemData.valorFijo;
                                 console.log("Factor: "+factor);
                                 actualizarCantidades(factor, item.key);
+                                
                             }
                         }}
                     />
@@ -122,16 +120,33 @@ export default function Ingredientes() :JSX.Element {
     
     function actualizarCantidades(proporcion: number, key:number) {
         const indice = coleccion.findIndex(item => item.key === key);
-        coleccion.forEach((item, index) => {
-            if (item.key != indice){
-                console.log("INGREDIENTE: "+item.itemData.idIngrediente.nombre);
-                console.log("Cantidad original: " +item.cantidadOriginal);
-                console.log("Proporcion: "+proporcion)
-                const nuevoValor = proporcion;
-                console.log("RESULTADO: "+nuevoValor);
-                ingredientRefs.current[index]?.current?.actualizarValor(nuevoValor);
-            }
-        });
+        console.log("INDICE "+indice);
+        if(indice==-1){
+            console.log("Tamaño coleccion "+coleccionIngredientes.length);
+            coleccion.forEach((item, index) => {
+                if (item.key != indice){
+                    console.log("INGREDIENTE: "+item.itemData.idIngrediente.nombre);
+                    console.log("Cantidad original: " +item.cantidadOriginal);
+                    console.log("Proporcion: "+proporcion)
+                    const nuevoValor = proporcion;
+                    console.log("RESULTADO: "+nuevoValor);
+                    ingredientRefs.current[index]?.current?.actualizarValor(nuevoValor);
+                }
+            });
+        }
+        else{
+            comensalRef.current?.current?.actualizarValor(proporcion);
+            coleccion.forEach((item, index) => {
+                if (item.key != indice){
+                    console.log("INGREDIENTE: "+item.itemData.idIngrediente.nombre);
+                    console.log("Cantidad original: " +item.cantidadOriginal);
+                    console.log("Proporcion: "+proporcion)
+                    const nuevoValor = proporcion;
+                    console.log("RESULTADO: "+nuevoValor);
+                    ingredientRefs.current[index]?.current?.actualizarValor(nuevoValor);
+                }
+            });
+        }
     }
 
     if(loaded){
@@ -143,8 +158,15 @@ export default function Ingredientes() :JSX.Element {
                     <Text style={{textAlign:'center',fontWeight:'bold',fontSize:30}}> {route.params.nombreReceta} </Text>
                     <Text style={{textAlign:'center',color:'black',fontSize:15}} > Ingredientes </Text>
                     <CajaComensales
-                    cantidadComensales={1}
-                    onChange={(text:number) => {console.log("hola")}}                
+                    ref={comensalRef}
+                    cantidadComensales={comensales}
+                    onChange={(texto:number) => {
+                        const cantidad = texto;
+                        if (!isNaN(cantidad)) {
+                            const factor = cantidad/comensales
+                            console.log("Factor: "+factor);
+                            actualizarCantidades(factor, -1);
+                        }}}                
                     
                     />
                     <ScrollView style={{height:530}}>
