@@ -131,7 +131,7 @@ export default function CrearRecetaImagenes() {
     }
 
     const reseteoLocales = async () => {
-      //await AsyncStorage.multiRemove(["nombreReceta","descripcionReceta","comensales","porciones","idTipoReceta","listaPasos","listaIngredientes","listaImagens"])
+      await AsyncStorage.multiRemove(["nombreReceta","descripcionReceta","comensales","porciones","idTipoReceta","listaPasos","listaIngredientes","listaImagens"])
     }
 
     const subirReceta = async () => {

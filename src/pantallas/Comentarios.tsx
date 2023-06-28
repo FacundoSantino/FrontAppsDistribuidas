@@ -19,6 +19,16 @@ export default function Comentarios(){
     const[levantada,setLevantada]=useState(false);
     const[enviada,setEnviada]=useState(false);
     const [procesado, setProcesado] = useState<String[]>([]);
+    const [estrellaUno,setEstrellaUno]=useState(fotoEstrellaVacia);
+    const [estrellaDos,setEstrellaDos]=useState(fotoEstrellaVacia);
+    const [estrellaTres,setEstrellaTres]=useState(fotoEstrellaVacia);
+    const [estrellaCuatro,setEstrellaCuatro]=useState(fotoEstrellaVacia);
+    const [estrellaCinco,setEstrellaCinco]=useState(fotoEstrellaVacia);
+    const [calificado,setCalificado]=useState(0);
+
+
+
+
 
     const [comentarios,setComentarios]=useState([]);
 
@@ -34,6 +44,52 @@ export default function Comentarios(){
             console.log(err);
         }
     
+    }
+
+    const calificacion = (num:number) => {
+        if(num>=1){
+            setEstrellaUno(fotoEstrellaLlena);
+                
+        if(num>=2){
+            setEstrellaDos(fotoEstrellaLlena);
+        
+        if(num>=3){
+            setEstrellaTres(fotoEstrellaLlena);
+        
+        if(num>=4){
+            setEstrellaCuatro(fotoEstrellaLlena);
+        
+        if(num==5){
+            setEstrellaCinco(fotoEstrellaLlena);
+        }
+        else{
+            setEstrellaCinco(fotoEstrellaVacia);
+        }
+        }
+    else{
+        setEstrellaCuatro(fotoEstrellaVacia);
+        setEstrellaCinco(fotoEstrellaVacia);
+    }}
+    else{
+        setEstrellaTres(fotoEstrellaVacia);
+        setEstrellaCuatro(fotoEstrellaVacia);
+        setEstrellaCinco(fotoEstrellaVacia);
+    }}
+    else{
+        setEstrellaDos(fotoEstrellaVacia);
+        setEstrellaTres(fotoEstrellaVacia);
+        setEstrellaCuatro(fotoEstrellaVacia);
+        setEstrellaCinco(fotoEstrellaVacia);
+    }
+    }
+        else{
+            setEstrellaUno(fotoEstrellaVacia);
+            setEstrellaDos(fotoEstrellaVacia);
+            setEstrellaTres(fotoEstrellaVacia);
+            setEstrellaCuatro(fotoEstrellaVacia);
+            setEstrellaCinco(fotoEstrellaVacia);
+        }
+        setCalificado(num);
     }
     
 
@@ -68,21 +124,28 @@ export default function Comentarios(){
                         </Text>
                     </TouchableOpacity>
                     <Modal isVisible = {levantada}>
-                    <TouchableOpacity onPress={() => setLevantada(!levantada)} style={{display:'flex',justifyContent:'center',alignItems:'flex-start',height:30,width:340}}>
-                        <Image source={IconoCruz} style={{width:20,height:20,marginLeft:10,marginTop:30}}/>
-                    </TouchableOpacity>
-                    <View style={{display:'flex',flexDirection:'column',width:370,height:300,backgroundColor:'#FCB826',borderRadius:20,alignItems:'center',justifyContent:'space-around'}}>
+                    <View style={{display:'flex',flexDirection:'column',width:370,height:300,backgroundColor:'#d49a1e',borderRadius:20,alignItems:'center',justifyContent:'space-around'}}>
                         <TouchableOpacity onPress={()=>setLevantada(!levantada)} style={{display:'flex',justifyContent:'center',alignItems:'flex-start',height:30,width:340}}>
-                            <Image source={IconoCruz} style={{width:20,height:20,marginLeft:10}}/>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={()=>{console.log("hola")}} style={{display:'flex',flexDirection:'row',justifyContent:'center',alignItems:'center',height:30,width:340}}>
-                            
-                            <Image source={fotoEstrellaVacia} style={{width:25,height:25}}/>
-                            <Image source={fotoEstrellaVacia} style={{width:25,height:25}}/>
-                            <Image source={fotoEstrellaVacia} style={{width:25,height:25}}/>
-                            <Image source={fotoEstrellaVacia} style={{width:25,height:25}}/>
-                            <Image source={fotoEstrellaVacia} style={{width:25,height:25}}/>
-                        </TouchableOpacity>
+                                <Image source={IconoCruz} style={{width:20,height:20,marginLeft:10}}/>
+                            </TouchableOpacity>
+                       <View style={{display:"flex",flexDirection:"row", justifyContent:"center",width:300}}>
+                            <TouchableOpacity onPress={()=>{calificacion(1)}} style={{display:'flex',flexDirection:'row',justifyContent:'center',alignItems:'center',height:30,width:50}}>
+                                <Image source={estrellaUno} style={{width:25,height:25}}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={()=>{calificacion(2)}} style={{display:'flex',flexDirection:'row',justifyContent:'center',alignItems:'center',height:30,width:50}}>
+                                <Image source={estrellaDos} style={{width:25,height:25}}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={()=>{calificacion(3)}} style={{display:'flex',flexDirection:'row',justifyContent:'center',alignItems:'center',height:30,width:50}}>
+                                <Image source={estrellaTres} style={{width:25,height:25}}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={()=>{calificacion(4)}} style={{display:'flex',flexDirection:'row',justifyContent:'center',alignItems:'center',height:30,width:50}}>
+                                <Image source={estrellaCuatro} style={{width:25,height:25}}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={()=>{calificacion(5)}} style={{display:'flex',flexDirection:'row',justifyContent:'center',alignItems:'center',height:30,width:50}}>
+                                <Image source={estrellaCinco} style={{width:25,height:25}}/>
+                            </TouchableOpacity>
+                        </View>
+                        
                         <Text style={{textAlign:'center',fontWeight:'bold', fontSize:17}}>Valora la receta!</Text>
 
                         <ScrollView style={{borderRadius:10,minHeight:10,height:100,backgroundColor:'white', maxHeight:130, width:350,borderColor:'black',borderWidth:2.3}}>

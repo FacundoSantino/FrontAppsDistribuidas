@@ -1,14 +1,12 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import PantallaTipoHome from "../componentes/PantallaTipoHome";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Paso, TipoParametros, localip } from "../App";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Video from 'react-native-video';
-import VideoPlayer from 'react-native-video-controls';
 import Modal from "react-native-modal/dist/modal";
 type PasosRouteProps= RouteProp<TipoParametros, "Pasos">;
+import VideoPlayer from 'react-native-video-controls';
 
 
 export default function Pasos(props:PasosRouteProps): JSX.Element{
@@ -39,7 +37,6 @@ export default function Pasos(props:PasosRouteProps): JSX.Element{
     }
 
     const fotoMultimedia = () : JSX.Element => {
-        console.log("ENTRA ACA LA CONCHA DE TU MADRE JUANITO");
         console.log(pasoActual);
         console.log(pasoActual?.multimedia);
         if(typeof pasoActual!="undefined"){
@@ -50,7 +47,7 @@ export default function Pasos(props:PasosRouteProps): JSX.Element{
                     console.log("foto");
                     console.log(pasoActual?.multimedia.urlContenido);
                     return(
-                        <Image style={{position:'absolute', bottom: 160 , width:350,height:350}} source={{uri:pasoActual.multimedia.urlContenido}}/> 
+                        <Image style={{position:'absolute', bottom: 160 , width:350,height:350,borderWidth:2,borderRadius:45}} source={{uri:pasoActual.multimedia.urlContenido}}/> 
                     );
                 }        
                 else{
@@ -96,16 +93,16 @@ export default function Pasos(props:PasosRouteProps): JSX.Element{
 
                     <View style={{display:'flex',flexDirection:'column',justifyContent:'space-around',alignItems:'center'}}>
                         <Text style={{fontSize:25,color:'black',fontWeight:'bold',marginBottom:10}}>Paso {indice+1}</Text>
-                        <View style={{borderRadius:20,borderColor:'black',borderWidth:2,width:300,height:70,marginBottom:10}}>
-                            <Text style={{fontSize:20}}>
-                                {pasoActual?.texto}
+                        <ScrollView style={{borderRadius:20,borderColor:'black',borderWidth:2,minWidth:350,minHeight:100,maxHeight:100,marginBottom:10}}>
+                            <Text style={{fontSize:20,alignSelf:'center',width:320,color:'black'}}>
+                              {pasoActual?.texto} 
                             </Text>
-                        </View>
-                        <Text style={{fontSize:18,color:'black'}}>Multimedia</Text>
+                        </ScrollView>
+                        <Text style={{fontSize:18,color:'black',fontWeight:'bold'}}>Multimedia</Text>
 
                         {fotoMultimedia()}
 
-                        <View style={{backgroundColor:'white',width:'100%', height:50, bottom:0,alignSelf:'center',zIndex:50,marginTop:500}}>
+                        <View style={{backgroundColor:'white',width:'100%', height:50, bottom:0,alignSelf:'center',zIndex:50,marginTop:480}}>
                                 <TouchableOpacity onPress={() => siguientePaso()} style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:'100%',width:200,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
                                     <Text style={{alignSelf:"center",fontSize:15,borderRadius:25, justifyContent:"center",position:'absolute'}}>Siguiente</Text>
                                 </TouchableOpacity>

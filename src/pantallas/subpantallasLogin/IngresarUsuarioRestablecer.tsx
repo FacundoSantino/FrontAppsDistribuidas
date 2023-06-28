@@ -26,9 +26,10 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
   const [user, setUser] = useState("");
   const [error,setError] = useState("");
   const [levantada, setLevantada] = useState(false);
+  const [codigo,setCodigo]=useState("");
 
   const urlBase="http://"+localip+":8080/api/rest/morfar";
-  const urlEnviarCodigo=urlBase+"/enviarCodigo/";
+  const urlEnviarCodigo=urlBase+"/getCodigoVerificacion/";
   
   const interpolateColor = animatedValue.interpolate({
     inputRange: [0, 1],
@@ -50,10 +51,11 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
       const response = await fetch(urlEnviarCodigo+user);
       const data=await response.json();
       console.log("CODIGO GENERADO Y ENVIADO:");
+      setCodigo(await data);
       console.log(await data);
     }
-    catch{
-
+    catch(error){
+      console.log(error);
     }
   }
   const CustomButton = ({ onPress, title, color }: { onPress: () => void; title: string; color: string }) => (
