@@ -51,8 +51,8 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
       const response = await fetch(urlEnviarCodigo+user);
       const data=await response.json();
       console.log("CODIGO GENERADO Y ENVIADO:");
-      setCodigo(await data);
       console.log(await data);
+      navigation.navigate("Codigo" as never,{user:user,codigo:await data} as never );
     }
     catch(error){
       console.log(error);
@@ -75,7 +75,6 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
         setError("");
         if (verdadero) {
           fetchEnviarCodigo();
-          navigation.navigate("Codigo" as never,{user:user} as never );
         } else {
           setLevantada(true);
           setError("El mail o el usuario no existe.")

@@ -22,7 +22,7 @@ export default function Ingredientes() :JSX.Element {
     const urlFetchUtilizados="http://"+localip+":8080/api/rest/morfar/utilizadosReceta/";
     const ingredientRefs = useRef<(MutableRefObject<{ actualizarValor: (proporcion: number) => void }> | null)[]>([]);
     const comensalRef= useRef<(MutableRefObject<{actualizarValor:(proporcion:number) => void}> |null )>();
-    let comensales = 1;
+    var comensales = 1;
     const agregarAsync= async () => {
 
         const recetasModificadasAux=await useAsyncStorage("recetasModificadas").getItem();
@@ -87,13 +87,17 @@ export default function Ingredientes() :JSX.Element {
             setData(contenidoMapeado);
         })
         .then(() => {
-            let lista = coleccion.map((item, index) => {
+            
+            let lista: Element[] =[];
+            
+            lista.push(coleccion.map((item, index) => {
                 // Crear una nueva referencia para este ingrediente
-                ingredientRefs.current[index] = {current: { actualizarValor: () => {} }};
+                const num=index+1;
+                ingredientRefs.current[num] = {current: { actualizarValor: () => {} }};
         
                 return (
                     <CajaIngredientesRecetas
-                        ref={ingredientRefs.current[index]}
+                        ref={ingredientRefs.current[num]}
                         utilizado={item.itemData}
                         valorFijo={item.itemData.cantidad}
                         key={item.key}
@@ -102,52 +106,62 @@ export default function Ingredientes() :JSX.Element {
                             if (!isNaN(cantidad)) {
                                 const factor = cantidad/item.itemData.valorFijo;
                                 console.log("Factor: "+factor);
-                                actualizarCantidades(factor, item.key);
-                                
+                                actualizarCantidades(factor, item.key+1);
                             }
                         }}
                     />
                 );
-            });
+            }));
+            let lista2:Element[]=[];
+            lista2.push(comensalesElemento());
+            
+            lista2.push(lista);
         
-            setColeccionIngredientes(lista);
+            setColeccionIngredientes(lista2);
         })
         .finally(()=> setLoaded(true)); 
         
         
     }
+    
 
+    function comensalesElemento() {
+        ingredientRefs.current[0] = {current: { actualizarValor: () => {} }};
+        return(
+            
+                    <CajaComensales
+                    ref={ingredientRefs.current[0]}
+                    cantidadComensales={comensales}
+                    key={0}
+                    onChange={(texto:number) => {
+                        
+                        const cantidad = texto;
+                        if (!isNaN(cantidad)) {
+                            const factor = cantidad/comensales
+                            console.log("Factor: "+factor);
+                            actualizarCantidades(factor, -1);
+                        }}}                
+                    
+                    />
+            
+                    );
+                    
+    }
     
     function actualizarCantidades(proporcion: number, key:number) {
-        const indice = coleccion.findIndex(item => item.key === key);
-        console.log("INDICE "+indice);
-        if(indice==-1){
-            console.log("Tamaño coleccion "+coleccionIngredientes.length);
+            const indice = coleccion.findIndex(item => item.key === key);
+            console.log("_________________________________________");
+            console.log("indice "+indice);
             coleccion.forEach((item, index) => {
+                console.log(item.key+" "+item.itemData?.idIngrediente.nombre);
                 if (item.key != indice){
-                    console.log("INGREDIENTE: "+item.itemData.idIngrediente.nombre);
-                    console.log("Cantidad original: " +item.cantidadOriginal);
-                    console.log("Proporcion: "+proporcion)
-                    const nuevoValor = proporcion;
-                    console.log("RESULTADO: "+nuevoValor);
-                    ingredientRefs.current[index]?.current?.actualizarValor(nuevoValor);
-                }
-            });
-        }
-        else{
-            comensalRef.current?.current?.actualizarValor(proporcion);
-            coleccion.forEach((item, index) => {
-                if (item.key != indice){
-                    console.log("INGREDIENTE: "+item.itemData.idIngrediente.nombre);
-                    console.log("Cantidad original: " +item.cantidadOriginal);
-                    console.log("Proporcion: "+proporcion)
-                    const nuevoValor = proporcion;
-                    console.log("RESULTADO: "+nuevoValor);
-                    ingredientRefs.current[index]?.current?.actualizarValor(nuevoValor);
-                }
-            });
-        }
-    }
+                    console.log("debería actualizarse");
+                    ingredientRefs.current[index]?.current?.actualizarValor(proporcion);
+                }});
+            }
+            
+        
+    
 
     if(loaded){
 
@@ -157,18 +171,7 @@ export default function Ingredientes() :JSX.Element {
                 <View>
                     <Text style={{textAlign:'center',fontWeight:'bold',fontSize:30}}> {route.params.nombreReceta} </Text>
                     <Text style={{textAlign:'center',color:'black',fontSize:15}} > Ingredientes </Text>
-                    <CajaComensales
-                    ref={comensalRef}
-                    cantidadComensales={comensales}
-                    onChange={(texto:number) => {
-                        const cantidad = texto;
-                        if (!isNaN(cantidad)) {
-                            const factor = cantidad/comensales
-                            console.log("Factor: "+factor);
-                            actualizarCantidades(factor, -1);
-                        }}}                
                     
-                    />
                     <ScrollView style={{height:530}}>
                         {coleccionIngredientes.map((item, index) => {
                             return <React.Fragment key={index}>{item}</React.Fragment>;

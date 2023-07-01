@@ -18,15 +18,18 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import LogoSol from "../../assets/Logo_Sol_Bueno.png";
 import PantallaTipoLogin from '../../componentes/PantallaTipoLogin';
 import { TipoParametros } from '../../App';
+
 interface LoginInicialProps {
   funcionDireccion: (direccion : string) => void;
 }
-type ContraProps = RouteProp<TipoParametros,'Contra'>;
+type ContraProps = RouteProp<TipoParametros,'Codigo'>;
+
 export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
   const navigation = useNavigation();
   const route = useRoute<ContraProps>();
   const [checked, setChecked] = useState(false);
   const animatedValue = useRef(new Animated.Value(0)).current;
+  const [num,setNumero]=useState<number>();
   const interpolateColor = animatedValue.interpolate({
     inputRange: [0, 1],
     outputRange: ['#517fa4', '#00aced'],
@@ -42,6 +45,14 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
       },
     ],
   };
+  const manejarChequeo = () => {
+    if(num==route.params.codigo){
+      navigation.navigate("RestablecerContrasenia" as never, {user: route.params.user} as never)
+    }
+    else{
+      console.log("El codigo esta mal");
+    }
+  }
   const CustomButton = ({ onPress, title, color }: { onPress: () => void; title: string; color: string }) => (
     <TouchableOpacity onPress={onPress} style={[styles.button, { backgroundColor: color }]}>
       <Text style={styles.buttonText}>{title}</Text>
@@ -54,13 +65,13 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
         <Text style={styles.ingreseUsuarioTitulo}> INGRESE CODIGO DE VERIFICACION ENVIADO A SU MAIL </Text>
         <View style={styles.inputTextLogin}>
             <Image source={IconoUsuario} style={styles.iconoLogin} />
-        <TextInput placeholder="Ingrese su codigo" style={styles.contentInput}></TextInput>
+        <TextInput keyboardType="numeric" maxLength={6} onChangeText={(e) => setNumero(parseInt(e))} placeholder="Ingrese su codigo" style={styles.contentInput}></TextInput>
         </View>
             <View style={styles.buttonViewContainer}>
                 <CustomButton
                 title="Verificar"
                 color="#D69D20"
-                onPress={()=> {navigation.navigate("RestablecerContrasenia" as never, {user: route.params.user} as never)}}
+                onPress={()=> {manejarChequeo()}}
             />
         </View>
 

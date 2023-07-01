@@ -76,19 +76,23 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
     return (await respuesta).status;
   }
   const handleReset = async ()=>{
-    await fetchReset()
-    .then(status =>{
-      if (status == 200){
-        setLevantada(true);
-        setTimeout(()=>{
-          navigation.navigate("Login" as never);
-        },3000);
-        
-      } else{
-        setError("Error al cambiar las contraseñas");
-      }
-    }).catch(()=>setError("Error al cambiar las contraseñas"))
-    
+    if(password===repassword){
+      await fetchReset()
+      .then(status =>{
+        if (status == 200){
+          setLevantada(true);
+          setTimeout(()=>{
+            navigation.navigate("Login" as never);
+          },3000);
+          
+        } else{
+          setError("Error al cambiar las contraseñas");
+        }
+      }).catch(()=>setError("Error al cambiar las contraseñas"))
+    }
+    else{
+      setError("Las contraseñas son distintas")
+    }    
   }
   const CustomButton = ({ onPress, title, color }: { onPress: () => void; title: string; color: string }) => (
     <TouchableOpacity onPress={onPress} style={[styles.button, { backgroundColor: color }]}>
@@ -102,8 +106,8 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
         <Text style={[styles.ingreseUsuarioTitulo,styles.Restablecer]}> RESTABLECER CONTRASEÑA </Text>
         <Text>{error}</Text>
         <View style={styles.inputTextLogin}>
-          <Image source={IconoUsuario} style={styles.iconoLogin} />
-          <TextInput value={password} onChange={(e)=>setPassword(e.nativeEvent.text)} placeholder="Ingresar contraseña" style={styles.contentInput}></TextInput>
+          <Image source={IconoContrasenia} style={styles.iconoLogin} />
+          <TextInput value = {password} onChange={(e)=>setPassword(e.nativeEvent.text)} placeholder="Ingresar contraseña" secureTextEntry={true} style={styles.contentInput}></TextInput>
         </View>
         <View style={styles.inputTextLogin}>
           <Image source={IconoContrasenia} style={styles.iconoLogin} />

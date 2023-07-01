@@ -71,6 +71,10 @@ export type TipoParametros = {
     ingredientes?: Ingrediente[],
     esFavoritos: Boolean
   },
+  Codigo:{
+    user:string,
+    codigo:number
+  },
   Receta:{
     tipoPantalla:TipoPantalla,
     titulo:String,
@@ -83,9 +87,6 @@ export type TipoParametros = {
     nombreReceta:string
   },
   Home : {
-    user:String
-  },
-  Contra:{
     user:String
   },
   Pasos:{
