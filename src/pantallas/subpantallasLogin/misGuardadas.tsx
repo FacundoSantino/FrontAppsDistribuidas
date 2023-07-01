@@ -37,7 +37,9 @@ function MisGuardadas(): JSX.Element{
     }
     
     const irAModificadas= async () => {
-        const listaRecetasSinProcesar=await useAsyncStorage("recetasModificadas").getItem()
+        const listaRecetasSinProcesar=await useAsyncStorage("recetasModificadas").getItem();
+        console.log("###################################################################################################")
+        console.log(listaRecetasSinProcesar);
         if(listaRecetasSinProcesar!=null){
             const listaRecetas=JSON.parse(listaRecetasSinProcesar);
             navigation.navigate("PantallaReceta" as never, {tipo: TipoItem.RECETA,

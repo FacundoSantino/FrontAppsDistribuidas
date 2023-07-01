@@ -1,12 +1,13 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { Utilizado } from "../App";
 import estiloApp from "../estilos/estiloApp";
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { Ref, forwardRef, useImperativeHandle, useRef, useState } from "react";
 
 type CajaIngredientesRecetasProps ={
     utilizado:Utilizado,
     onChange(text:string): void,
-    valorFijo: number
+    valorFijo: number,
+    comensalesRef: React.Ref<unknown>
 }
 
 const CajaIngredientesRecetas= forwardRef((props:CajaIngredientesRecetasProps, ref) : JSX.Element=>{

@@ -7,14 +7,18 @@ import React from "react";
 import CajaIngredientesRecetas from "./CajaIngredienteRecetas";
 import CajaComensales from "./CajaComensales";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { useAsyncStorage } from "@react-native-async-storage/async-storage";
-
+import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage";
+import Modal from "react-native-modal";
 
 type IngredientesProps= RouteProp<TipoParametros, "Ingredientes">;
 
 
 export default function Ingredientes() :JSX.Element {
     const route=useRoute<IngredientesProps>();
+    const addip = "http://"+localip +":8080/api/rest/morfar/getRecipe/"+route.params.idReceta;
+    const addpaso = "http://"+localip +":8080/api/rest/morfar/getPasos/"+route.params.idReceta;
+    const [r,setR]=useState({});
+    const [modalError, setModalError] = useState(false);
     const [coleccionIngredientes,setColeccionIngredientes]=useState<Element[]>([]);
     const[loaded,setLoaded]=useState(false);
     const [data,setData]=useState<Utilizado[]>([]);
@@ -37,21 +41,48 @@ export default function Ingredientes() :JSX.Element {
         })
 
         if(recetasModificadasAux!=null){
-            const recetasModificadas=JSON.parse(recetasModificadasAux);
+            const recetasModificadas=await JSON.parse(await recetasModificadasAux);
             if(recetasModificadas.length<10){
                 //hay lugar
-
+                const respPasos = await fetch(addpaso);
+                const pasos = await respPasos.json();
+                const respuesta = await fetch(addip);
+                const receta = await respuesta.json();
+                const recetaIngredientesPasos = {
+                    receta: receta,
+                    ingredientes: route.params.ingredientes,
+                    pasos: pasos
+                }
+                recetasModificadas.push(receta);
+                const listaSerializada = JSON.stringify(recetasModificadas);
+                await AsyncStorage.setItem("recetasModificadas", listaSerializada);   
             }
             else{
                 //no hay lugar
+                setModalError(true);
+                setTimeout(()=>setModalError(false),4000);
 
             }
 
         }
         else{
             //hago lista vacia y agrego receta
+            const respPasos = await fetch(addpaso);
+            const pasos = await respPasos.json();
+            const respuesta = await fetch(addip);
+            const receta = await respuesta.json();
+            const lista = [];
+            const recetaIngredientesPasos = {
+                receta: receta,
+                ingredientes: route.params.ingredientes,
+                pasos: pasos
+            }
+            lista.push(receta);
+            const listaSerializada = JSON.stringify(lista);
+            await AsyncStorage.setItem("recetasModificadas", listaSerializada);        
+
         }
-                
+            
     }
 
 
@@ -72,7 +103,7 @@ export default function Ingredientes() :JSX.Element {
                 (item:any,i:number) => {
                     contenidoMapeado.push(
                         {
-                        "idUtilizado": item.idUtilizado,
+                            "idUtilizado": item.idUtilizado,
                             "receta": item.idReceta,
                             "idIngrediente": item.idIngrediente,
                             "cantidad": item.cantidad,
@@ -94,6 +125,7 @@ export default function Ingredientes() :JSX.Element {
                 return (
                     <CajaIngredientesRecetas
                         ref={ingredientRefs.current[index]}
+                        comensalesRef = {comensalRef}
                         utilizado={item.itemData}
                         valorFijo={item.itemData.cantidad}
                         key={item.key}
@@ -183,6 +215,13 @@ export default function Ingredientes() :JSX.Element {
                             <Text style={{alignSelf:"center",fontSize:20,borderRadius:25, justifyContent:"center"}}>AGREGAR A MI LISTA</Text>
                         </TouchableOpacity>
                     </View>
+                    <Modal isVisible ={modalError}>
+                        <View style={{display:'flex',flexDirection:'column',width:370,height:400,backgroundColor:'#FCB826',borderRadius:20,alignItems:'center',justifyContent:'space-around'}}>
+                          
+                            <Text style={{fontWeight:'bold',fontSize:15, color:'black'}}> Error al agregar la receta, usted alcanzó el limite de las 10 recetas guardadas.</Text>
+
+                        </View>
+                    </Modal>
                 </View>
                 
             }/>   
