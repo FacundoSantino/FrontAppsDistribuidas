@@ -30,6 +30,7 @@ export default function CrearRecetaIngredientes(){
     const [levantadoFaltanCosas, setLevantadoFaltanCosas]=useState(false);
     const [contador,setContador]=useState<number>(listaIngredientes.length);
     const navigation=useNavigation();
+    const[agregada,setAgregada]=useState(false);
 
     const agregarIngrediente = (ingrediente:{idIngrediente:number,nombre:string,urlFoto:string},unidad:{idUnidad:number,descripcion:string},cantidad:number) => {
         listaIngredientes.push({idIngrediente:ingrediente.idIngrediente,idUnidad:unidad.idUnidad,cantidad:cantidad,observaciones:"",nombreIngrediente:ingrediente.nombre,nombreUnidad:unidad.descripcion,identificador:contador});
@@ -142,7 +143,7 @@ export default function CrearRecetaIngredientes(){
                     
                     <Modal isVisible = {levantada}>
                         
-                        <View style={{display:'flex',flexDirection:'column',width:370,height:445,backgroundColor:'#FCB826',borderRadius:25,alignItems:'center',justifyContent:'center'}}>
+                        <View style={{display:'flex',flexDirection:'column',width:370,height:500,backgroundColor:'#FCB826',borderRadius:25,alignItems:'center',justifyContent:'center'}}>
                             <TouchableOpacity onPress={() => setLevantada(!levantada)}>
                                 <Image source={fotoCruz} style={{width:30,height:30, position:'relative',left:-165,top:20}}/>
                             </TouchableOpacity>
@@ -195,13 +196,34 @@ export default function CrearRecetaIngredientes(){
                                         ))}
                                     </Picker> 
                                 </View>
-                                    
-                                <TouchableOpacity onPress={() => {if(typeof ingredienteSeleccionado!="undefined" && typeof unidadSeleccionada!="undefined" && typeof cantidadSeleccionada!="undefined"){ agregarIngrediente(ingredienteSeleccionado,unidadSeleccionada,cantidadSeleccionada)}}} style={{display:"flex", backgroundColor:'white',height:5,width:120,minHeight:50,alignSelf:"center", position:'absolute', bottom:-100, borderRadius: 20,marginBottom:10 ,borderWidth:2}}>
+                                <TouchableOpacity onPress={()=>setAgregada(true)} style={{display:"flex", backgroundColor:'white',height:3,width:180,minHeight:40,alignSelf:"center", borderRadius: 20,borderWidth:2,alignItems:'center',marginTop:10}}>
+                                            <Text style={{alignSelf:'center',fontSize:17,marginTop:5}}>Crear Ingrediente</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => {if(typeof ingredienteSeleccionado!="undefined" && typeof unidadSeleccionada!="undefined" && typeof cantidadSeleccionada!="undefined"){ agregarIngrediente(ingredienteSeleccionado,unidadSeleccionada,cantidadSeleccionada)}}} style={{display:"flex", backgroundColor:'white',height:5,width:120,minHeight:50,alignSelf:"center", position:'absolute', bottom:-100, borderRadius: 20,borderWidth:2}}>
                                     <Text style={{alignSelf:"center", verticalAlign:"middle", height:'100%',fontSize:17,borderRadius:25}}>Agregar</Text>
                                 </TouchableOpacity>
                                 </View>
                             </View>
-                            
+                        </View>
+                    </Modal>
+
+                    <Modal isVisible={agregada}>
+                        <View style={{display:'flex',flexDirection:'column',width:370,height:400,backgroundColor:'#FCB826',borderRadius:25,alignItems:'center',justifyContent:'space-around'}}>
+                            <TouchableOpacity style={{width:250,borderRadius:30,borderWidth:2,color:'white'}}>
+                                <TextInput></TextInput>
+                            </TouchableOpacity>
+                            <View style={{display:'flex',flexDirection:'row',width:'95%',justifyContent:'space-around'}}>
+                                <TouchableOpacity style={{width:"45%",borderRadius:30,borderWidth:2,color:'white'}}>
+                                    <TextInput></TextInput>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{width:"45%",borderRadius:30,borderWidth:2,color:'white'}}>
+                                    <TextInput></TextInput>
+                                </TouchableOpacity>
+                            </View>
+                            <TouchableOpacity style={{display:"flex", backgroundColor:'white',height:5,width:120,minHeight:50,alignSelf:"center", position:'absolute', bottom:-100, borderRadius: 20,borderWidth:2}}
+                            onPress={()=>setAgregada(!agregada)}>
+                                    <Text style={{alignSelf:"center", verticalAlign:"middle", height:'100%',fontSize:17,borderRadius:25}}>Agregar</Text>
+                            </TouchableOpacity>
                         </View>
                     </Modal>
                 </View>
