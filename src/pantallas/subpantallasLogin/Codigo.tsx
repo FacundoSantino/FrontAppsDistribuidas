@@ -18,7 +18,9 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import LogoSol from "../../assets/Logo_Sol_Bueno.png";
 import PantallaTipoLogin from '../../componentes/PantallaTipoLogin';
 import { TipoParametros } from '../../App';
-
+import Modal from "react-native-modal";
+import IconoCruz from '../../assets/cruz.png';
+import Lupa from '../../assets/lupa.png';
 interface LoginInicialProps {
   funcionDireccion: (direccion : string) => void;
 }
@@ -30,6 +32,7 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
   const [checked, setChecked] = useState(false);
   const animatedValue = useRef(new Animated.Value(0)).current;
   const [num,setNumero]=useState<number>();
+  const [modal,setModal] = useState(false);
   const interpolateColor = animatedValue.interpolate({
     inputRange: [0, 1],
     outputRange: ['#517fa4', '#00aced'],
@@ -50,6 +53,7 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
       navigation.navigate("RestablecerContrasenia" as never, {user: route.params.user} as never)
     }
     else{
+      setModal(true);
       console.log("El codigo esta mal");
     }
   }
@@ -74,6 +78,18 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
                 onPress={()=> {manejarChequeo()}}
             />
         </View>
+        <Modal isVisible = {modal}>
+          <View style={{display:'flex',flexDirection:'column',width:370,height:200,backgroundColor:'#FCB826',borderRadius:20}}>
+            <TouchableOpacity onPress={()=>setModal(false)} style={{display:'flex',justifyContent:'center',alignItems:'flex-start',height:30,width:340}}>
+              <Image source={IconoCruz} style={{width:20,height:20,marginLeft:10}}/>
+            </TouchableOpacity>
+            <View style={{display:'flex',flexDirection:'column',width:370,height:150,justifyContent:'center',alignItems:'center'}}>
+            <Image source={IconoCruz} style={{width:50,height:50}}/>
+              <Text style={{fontSize:20,color:'black'}}>Ups!</Text>
+              <Text style={{fontSize:16,color:'black'}}>El codigo ingresado es incorrecto, por favor intentelo nuevamente.</Text>
+            </View>
+          </View>
+        </Modal>
 
     </View>
     }/>

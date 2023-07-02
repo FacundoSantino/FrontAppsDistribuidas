@@ -19,9 +19,9 @@ function BarraDeBusqueda(): JSX.Element{
                 verIngredientes:false,
                 permitirEliminacion:false,
                 permitirAgregacion:false,
-                titulo: "Recetas de "+texto,
+                titulo: "Buscador Recetas",
                 esFavoritos:false,
-                contenido:await  data
+                contenido:await data
             } as never);
         } catch (error) {
             console.log(error);

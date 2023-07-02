@@ -14,8 +14,9 @@ import { useNavigation } from '@react-navigation/native';
 import PantallaTipoLogin from '../../componentes/PantallaTipoLogin';
 import { localip } from '../../App';
 import IconoCruz from '../../assets/cruz.png';
-import Modal from "react-native-modal";
 import Lupa from '../../assets/lupa.png';
+import Modal from "react-native-modal";
+
 interface LoginInicialProps {
   funcionDireccion: (direccion : string) => void;
 }
