@@ -59,8 +59,6 @@ function Home(): JSX.Element{
     const setuser = async ()=>{
         const id = await AsyncStorage.getItem('user');
         if (id != null){
-            console.log("ACA ESTA WACHO");
-            console.log(id);
             setIdUser(id);
         }
     }
@@ -69,17 +67,16 @@ function Home(): JSX.Element{
         
         setCargado(false);
         handleCarrouselData();
-        if(idUser!=""){
-            fetch("http://"+localip+":8080/api/rest/morfar/getUsers/"+idUser)
-            .then((r) => r.json())
-            .then((d) => setUserData(d))
-            .finally(()=>
-                setCargado(true));
-            //NombreDefault
-            getData();
-        }else{
-            setuser();
-        }
+        setuser();
+        
+        fetch("http://"+localip+":8080/api/rest/morfar/getUsers/"+idUser)
+        .then((r) => r.json())
+        .then((d) => setUserData(d))
+        .finally(()=>
+            setCargado(true));
+        //NombreDefault
+        getData();
+        
     },[]);
     
     const handleCarrouselData = async () => {
@@ -140,7 +137,7 @@ function Home(): JSX.Element{
             
                 
             }
-        );
+        ).catch((e)=>{console.log(e)});;
         
         
       }
@@ -149,7 +146,7 @@ function Home(): JSX.Element{
             "nickname" : route.params.user,
             "nombre" : nombre,
             "password":password,
-            "avatar" : avatar
+            "avatar" : "https://cdn.discordapp.com/attachments/1086019817926045728/1115003665271488614/chef-mujer-trabajadora-avatar_18591-58459.png"
         }
         fetch("http://"+localip+":8080/api/rest/morfar/updateUserAfterRegister",
         {method:'POST',
@@ -163,7 +160,7 @@ function Home(): JSX.Element{
             setCargado(true);
         }
 
-      })
+      }).catch((e)=>{console.log(e)});
     }
     
     return( 
@@ -171,7 +168,7 @@ function Home(): JSX.Element{
             <View style={style.flexColumn}>
                 <View style = {{paddingLeft:2}}>
                     {(cargado)?
-                    <Text style={{alignSelf:'center'}}>¡Bienvenido nuevamente {userData.nombre}!</Text>
+                    <Text style={{alignSelf:'center'}}>¡Bienvenido nuevamente {route.params.user}!</Text>
                     :null}
                     <BarraDeBusqueda/>
                     <TarjetaCategoria 
@@ -224,7 +221,7 @@ function Home(): JSX.Element{
                  
                 <TextInput style={[loginStyle.inputTextLogin]} value={password} placeholder="Ingrese su nueva contraseña" onChange={e => setPassword(e.nativeEvent.text)}></TextInput>
                  
-                <TextInput style={[loginStyle.inputTextLogin,{display:'flex'}]} value={avatar} placeholder="Ingrese su avatar" onChange={e => setAvatar(e.nativeEvent.text)}></TextInput>
+                {/* <TextInput style={[loginStyle.inputTextLogin,{display:'flex'}]} value={avatar} placeholder="Ingrese su avatar" onChange={e => setAvatar(e.nativeEvent.text)}></TextInput> */}
                  <TouchableOpacity style={[{alignSelf:'center',position:'absolute',bottom:50}]}
                  onPress={()=>handleUpdateUser()}
                  >

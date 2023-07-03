@@ -85,7 +85,7 @@ export default function Ingredientes() :JSX.Element {
             console.log("DALE WAACHIN");
             console.log(urlFetchUtilizados+route.params.idReceta);
             console.log(d);
-            data.map((item: Utilizado, i: number) => (
+            data?.map((item: Utilizado, i: number) => (
                 coleccion.push({
                     key: i, itemData: item,
                     cantidadOriginal: item.cantidad
@@ -122,7 +122,7 @@ export default function Ingredientes() :JSX.Element {
         if(aumentar){
             //logica para multiplicar ingredientes
             const listaPrevia :any = [...valorIngredientesFijos];
-            data.map((item,key)=>{
+            data?.map((item,key)=>{
                 listaPrevia[key] = (listaPrevia[key]*(valorComensales+1)/valorComensalesOriginal).toFixed(2);    
             });
             setValorComensales(valorComensales+1)
@@ -131,7 +131,7 @@ export default function Ingredientes() :JSX.Element {
         else if(valorComensales>1){
             //logica para dividir ingredientes
             const listaPrevia :any = [...valorIngredientesFijos];
-            data.map((item,key)=>{
+            data?.map((item,key)=>{
                 listaPrevia[key] = (listaPrevia[key]/((valorComensales-1)/valorComensalesOriginal)).toFixed(2);    
             });
             setValorIngredientes(listaPrevia);
@@ -144,7 +144,7 @@ export default function Ingredientes() :JSX.Element {
         const original = valorIngredientesFijos[id];
         const proporcion = (cantIngrediente)/original;
         if(!isNaN(cantIngrediente)){
-            data.map((item,key)=>{
+            data?.map((item,key)=>{
                 if(key!=id){
                     listaPrevia[key] = (listaPrevia[key]*proporcion).toFixed(1);  
                 }
@@ -184,7 +184,7 @@ export default function Ingredientes() :JSX.Element {
                     </View>
                     
                     <ScrollView style={{height:530}}>
-                        {data.map((item,key) => (
+                        {data?.map((item,key) => (
                             <React.Fragment key={key}>
                                 <View style={{display:"flex",flexDirection: "row",alignItems: "center",justifyContent: "space-around",borderRadius:40,borderColor:"black",height:60, borderWidth: 2, marginBottom:20,marginTop:5}}> 
                                     <Text style={{fontWeight:'bold',fontSize:20,color:'black'}}>{item.idIngrediente.nombre}</Text>

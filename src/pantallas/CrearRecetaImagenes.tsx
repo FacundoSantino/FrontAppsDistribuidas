@@ -169,7 +169,7 @@ export default function CrearRecetaImagenes() {
     }
 
     const reseteoLocales = async () => {
-      //await AsyncStorage.multiRemove(["nombreReceta","descripcionReceta","comensales","porciones","idTipoReceta","listaPasos","listaIngredientes","listaImagens"])
+      await AsyncStorage.multiRemove(["nombreReceta","descripcionReceta","comensales","porciones","idTipoReceta","listaPasos","listaIngredientes","listaImagens"])
     }
 
     const subirReceta = async () => {
@@ -316,7 +316,7 @@ export default function CrearRecetaImagenes() {
         <View style={{display:"flex",flexDirection:"column",justifyContent:"center",alignContent:"center"}}>
           <Image style={{width:300,height:300,marginTop:100,marginLeft:45,justifyContent:"center",alignContent:"center"}} source={iconoSol}/>
           <Text style={{fontSize:20,fontWeight:"bold",marginLeft:145}}>Subiendo...</Text>
-
+          <Text style={{fontSize:20,fontWeight:"bold",marginLeft:75}}>Esto tomara unos minutos</Text>
         </View>
       }/>)
     }

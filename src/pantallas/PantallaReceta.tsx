@@ -186,11 +186,11 @@ export default function PantallaReceta() : JSX.Element{
 
     
         //route.params.contenido siempre es undefined, hay que ver como arreglarlo
-        if(route.params.tipo==TipoItem.AUTOR && typeof route.params.tipo != 'undefined'){
+        if(route?.params?.tipo==TipoItem?.AUTOR && typeof route?.params?.tipo != 'undefined'){
             console.log("-------------------if1-----------------------");
             const contenidoMapeado: Autor[]= [];
             
-            route.params.contenido.forEach((item: any) => (
+            route?.params?.contenido?.forEach((item: any) => (
                 contenidoMapeado.push(
                 {
                     "idUsuario":item.idUsuario,
@@ -238,7 +238,7 @@ export default function PantallaReceta() : JSX.Element{
                 }
             )));
             
-            listaBotones=contenidoMapeado.map((item, i) => (
+            listaBotones=contenidoMapeado?.map((item, i) => (
                 
             <TarjetaReceta
                 key={i}
@@ -253,7 +253,7 @@ export default function PantallaReceta() : JSX.Element{
                 alto={83.06}
             />));
         }
-        else if(route.params.tipo==TipoItem.TIPO && typeof route.params.tipo != 'undefined'){
+        else if(route?.params?.tipo==TipoItem.TIPO && typeof route?.params?.tipo != 'undefined'){
             console.log("-------------------if3-----------------------");
             const contenidoMapeado: Tipo[] =[];
             if(noCambieElTitulo){
@@ -262,7 +262,7 @@ export default function PantallaReceta() : JSX.Element{
                 }
                 setNoCambieElTitulo(false);
             }
-            route.params.contenido.forEach((item: any) => {
+            route?.params?.contenido?.forEach((item: any) => {
                 contenidoMapeado.push({
                     idTipo: item.idTipo,
                     descripcion:item.descripcion,
@@ -282,11 +282,11 @@ export default function PantallaReceta() : JSX.Element{
             ));
 
         }
-        else if(route.params.tipo==TipoItem.INGREDIENTE && typeof route.params.tipo != 'undefined'){
+        else if(route?.params?.tipo==TipoItem.INGREDIENTE && typeof route?.params?.tipo != 'undefined'){
 
             const contenidoMapeado: Ingrediente[]= [];
             
-            route.params.contenido.forEach((item: any) => (
+            route?.params?.contenido?.forEach((item: any) => (
                 contenidoMapeado.push(
                 {
                     idIngrediente:item.idIngrediente,
@@ -360,7 +360,7 @@ export default function PantallaReceta() : JSX.Element{
                 setNoCambieElTitulo(false);
             }
             console.log(route.params.contenido);
-            route.params.contenido.forEach((item: any) => (
+            route?.params?.contenido?.forEach((item: any) => (
                 contenidoMapeado.push(
                 {
                     idTipo: item.idTipo,

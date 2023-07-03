@@ -45,7 +45,7 @@ const CarouselCards: FC<CarouselCardsProps> = ({ procesado,clickeable }) => {
 
   if(clickeable){
     return (
-      <View style={{display:"flex"}}>
+      <View style={{display:"flex",height:320}}>
         
         <Carousel
           layout="stack"
@@ -59,7 +59,7 @@ const CarouselCards: FC<CarouselCardsProps> = ({ procesado,clickeable }) => {
           onSnapToItem={setIndex}
           useScrollView={true}
         />
-        <TouchableOpacity  onPress={() => {irAReceta()}} style={{borderRadius:15,borderColor:"black",borderWidth:1,width:70,alignContent:"center",justifyContent:"center",backgroundColor:"#F0AF23",alignSelf:"center", marginTop:10}}><Text style={{alignSelf:"center"}}>Ir a receta</Text></TouchableOpacity>
+        <TouchableOpacity  onPress={() => {irAReceta()}} style={{borderRadius:15,borderColor:"black",borderWidth:1,width:70,alignContent:"center",justifyContent:"center",backgroundColor:"#F0AF23",alignSelf:"center"}}><Text style={{alignSelf:"center"}}>Ir a receta</Text></TouchableOpacity>
         <Pagination
           
           dotsLength={procesado.length}

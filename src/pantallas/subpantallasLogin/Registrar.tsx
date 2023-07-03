@@ -142,12 +142,17 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
 
     const existeMail=await mailFetch(registerDTO.mail);
 
- 
+
+    
     if(!existeMail && !existeUsuario){
+      const ipmail = urlBase+"mailSuccess/"+mail;
+      console.log("MANDANDO MAIL CARAJO");
+      console.log(ipmail);
       registerFetch()
         .then(async data => {
           setError("");
           if (data == 200) {
+            fetch(ipmail).catch((e)=>{console.log(e)});
             setLevantada(true);
             setTimeout(()=>{
               navigation.navigate("Login" as never);
