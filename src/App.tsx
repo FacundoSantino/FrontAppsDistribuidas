@@ -13,7 +13,7 @@ import MisRecetas from './pantallas/MisRecetas';
 import Codigo from './pantallas/subpantallasLogin/Codigo';
 import IngresarUsuarioRestablecer from './pantallas/subpantallasLogin/IngresarUsuarioRestablecer';
 import RestablecerContrasenia from './pantallas/subpantallasLogin/RestablecerContrasenia';
-import MisGuardadas from './pantallas/subpantallasLogin/MisGuardadas';
+import MisGuardadas from './pantallas/subpantallasLogin/misGuardadas';
 import Registrar from './pantallas/subpantallasLogin/Registrar';
 import MisCategorias from './pantallas/subpantallasLogin/MisCategorias'
 import { NavigationContainer } from '@react-navigation/native';
@@ -36,7 +36,7 @@ import { Cloudinary } from "@cloudinary/url-gen";
 import CrearRecetaImagenes from './pantallas/CrearRecetaImagenes';
 import BusquedaRecetas from './pantallas/BusquedaRecetas';
 import IngredientesLocal from './componentes/IngredientesLocal';
-export var localip = "192.168.1.37";
+export var localip = "192.168.0.9";
 
 export enum TipoItem{
   RECETA,

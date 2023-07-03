@@ -222,11 +222,8 @@ export default function PantallaReceta() : JSX.Element{
             if(route.params.permitirAgregacion && !seteado){
                 setSeteado(true);
             }
-            route.params.contenido.forEach((i:any) =>{
-                console.log("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
-                console.log(i);
-            })
-            route.params.contenido.forEach((item: any) => (
+            
+            route?.params?.contenido?.forEach((item: any) => (
                 contenidoMapeado.push(
                 {
                     idReceta:item.idReceta,
@@ -254,8 +251,7 @@ export default function PantallaReceta() : JSX.Element{
                 onPress={() => handleReceta(item)}
                 ancho={378}
                 alto={83.06}
-            />
-                ));
+            />));
         }
         else if(route.params.tipo==TipoItem.TIPO && typeof route.params.tipo != 'undefined'){
             console.log("-------------------if3-----------------------");

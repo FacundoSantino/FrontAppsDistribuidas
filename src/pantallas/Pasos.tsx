@@ -62,7 +62,7 @@ export default function Pasos(props:PasosRouteProps): JSX.Element{
                     );
                 }
             }
-            return <View><Text>Multimedia es null</Text></View>
+            return <View><Text>No hay multimedia para mostrar</Text></View>
         }
 
 

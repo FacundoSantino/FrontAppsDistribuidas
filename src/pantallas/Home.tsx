@@ -17,16 +17,18 @@ import {RouteProp, createNavigatorFactory, useNavigation, useRoute } from '@reac
 import BarraDeBusqueda from "../componentes/BarraDeBusqueda";
 import { TipoItem, TipoParametros, localip } from "../App";
 import Modal from "react-native-modal";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage, { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import estilosLogin from '../estilos/estiloLogin';
 type HomeProps = RouteProp<TipoParametros,'Home'>;
 function Home(): JSX.Element{
     var p: any[] = [];
+    const [idUser, setIdUser] = useState<String>("");
     const navigation = useNavigation();
     const [dato, setDato] = useState<any[]>([]);
     const [procesado, setProcesado] = useState<String[]>([]);
-    const route = useRoute<HomeProps>()  
-    const urlFetchMisRecetas="http://"+localip+":8080/api/rest/morfar/getMyRecipes/Juanito";
+    const route = useRoute<HomeProps>();
+    console.log(route.params.user);
+    const urlFetchMisRecetas="http://"+localip+":8080/api/rest/morfar/getMyRecipes/";
     const [userData, setUserData] = useState({});
     const [cargado,setCargado] = useState(false);
     //nombre,password,avatar
@@ -37,7 +39,7 @@ function Home(): JSX.Element{
         try{
             const value = await AsyncStorage.getItem('login');
             if (value !== null){
-                console.log(value + "| DESDE STORAGE LOCAL");
+                setIdUser(value);
             }
         } catch(e){
             console.log(e);
@@ -53,18 +55,35 @@ function Home(): JSX.Element{
         console.log(err);
         }
     }
+
+    const setuser = async ()=>{
+        const id = await AsyncStorage.getItem('user');
+        if (id != null){
+            console.log("ACA ESTA WACHO");
+            console.log(id);
+            setIdUser(id);
+        }
+    }
+
     React.useEffect(()=>{
+        
         setCargado(false);
         handleCarrouselData();
-        fetch("http://"+localip+":8080/api/rest/morfar/getUsers/"+route.params.user)
-        .then((r) => r.json())
-        .then((d) => setUserData(d))
-        .finally(()=>setCargado(true));
-        //NombreDefault
-        getData();
+        if(idUser!=""){
+            fetch("http://"+localip+":8080/api/rest/morfar/getUsers/"+idUser)
+            .then((r) => r.json())
+            .then((d) => setUserData(d))
+            .finally(()=>
+                setCargado(true));
+            //NombreDefault
+            getData();
+        }else{
+            setuser();
+        }
     },[]);
     
-    const handleCarrouselData = () => {
+    const handleCarrouselData = async () => {
+        
         getHomeData()
         .then(data => {
             data.forEach((d: any) => {
@@ -81,7 +100,7 @@ function Home(): JSX.Element{
 
     const recetasFetch= async () => {
         try{
-            const respuesta= await fetch(urlFetchMisRecetas);
+            const respuesta= await fetch(urlFetchMisRecetas+idUser);
             const data = await respuesta.json();
             return data;
         }
@@ -93,8 +112,19 @@ function Home(): JSX.Element{
     
       const handleRecetas = async () =>{
         console.log("Manejando recetas");
-        await recetasFetch().then(
-            (data)=>{
+        await recetasFetch().then((data)=>{
+            if(typeof data=="undefined"){
+                navigation.navigate("PantallaReceta" as never, 
+                {tipo: TipoItem.RECETA,
+                    verIngredientes:false,
+                    local:false,
+                    permitirEliminacion:true,
+                    permitirAgregacion:true,
+                    titulo: "Mis recetas",
+                    contenido: []
+                } as never);
+            }
+            else{
                 navigation.navigate("PantallaReceta" as never, 
                 {tipo: TipoItem.RECETA,
                     verIngredientes:false,
@@ -104,6 +134,9 @@ function Home(): JSX.Element{
                     titulo: "Mis recetas",
                     contenido: data
                 } as never);
+            }
+            
+                
             }
         );
         

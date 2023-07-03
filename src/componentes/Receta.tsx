@@ -66,7 +66,8 @@ export default function Receta(): JSX.Element {
         }
         finally{
             setLevantadaEliminar(!levantadaEliminar);
-            navigation.navigate("Home" as never);
+            const idUsuario=await useAsyncStorage("idUsuario").getItem();
+            navigation.navigate("Home" as never,{idUsuario:idUsuario});
         }
     }
 
@@ -118,7 +119,7 @@ export default function Receta(): JSX.Element {
                 headers:{
                     "Content-Type":"application/json; charset=UTF-8"
                 }
-            })
+            });
 
             const favoritas =await useAsyncStorage("listaFavoritas").getItem();
             if(favoritas!=null){
