@@ -90,10 +90,12 @@ function Home(): JSX.Element{
                 p.push({
                 "title": d.nombre,
                 "body": d.descripcion,
-                "imgUrl": d.fotos[0].urlFoto
+                "imgUrl": d.fotos[0].urlFoto,
+                "idReceta":d.idReceta
                 });
             });
             setProcesado(p);
+            console.log(p);
         })
         .catch(error => console.error(error));
     }
@@ -163,6 +165,7 @@ function Home(): JSX.Element{
 
       })
     }
+    
     return( 
         <PantallaTipoHome contenido={
             <View style={style.flexColumn}>
@@ -206,7 +209,7 @@ function Home(): JSX.Element{
                         paddingHorizontal={13}/>
                 </View>
                 <View style={style.carouselContainer}>
-                    {(procesado.length>0)?<CarouselCards procesado={procesado} />:null}
+                    {(procesado.length>0)?<CarouselCards clickeable={true} procesado={procesado} />:null}
                 </View>
                 {(cargado && userData.nombre == 'NombreDefault')?
                 <Modal

@@ -36,6 +36,7 @@ import { Cloudinary } from "@cloudinary/url-gen";
 import CrearRecetaImagenes from './pantallas/CrearRecetaImagenes';
 import BusquedaRecetas from './pantallas/BusquedaRecetas';
 import IngredientesLocal from './componentes/IngredientesLocal';
+import PasosLocal from './pantallas/PasosLocal';
 export var localip = "192.168.0.9";
 
 export enum TipoItem{
@@ -74,6 +75,9 @@ export type TipoParametros = {
     esFavoritos: Boolean,
     local:Boolean
   },
+  PasosLocal:{
+    pasos:Paso[]
+  }
   Codigo:{
     user:string,
     codigo:number
@@ -95,7 +99,8 @@ export type TipoParametros = {
     ingredientes: Ingrediente[],
     receta: Receta,
     infoIngredientes: Utilizado[],
-    nombreReceta:string
+    nombreReceta:string,
+    comensales: string
   },
   Home : {
     user:String
@@ -256,6 +261,7 @@ function App(): JSX.Element {
         <Stack.Screen name="CrearRecetaImagenes" component={CrearRecetaImagenes}/>
         <Stack.Screen name="BusquedaRecetas" component={BusquedaRecetas}/>
         <Stack.Screen name="IngredientesLocal" component={IngredientesLocal}/>
+        <Stack.Screen name="PasosLocal" component={PasosLocal}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

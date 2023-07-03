@@ -94,7 +94,7 @@ export default function LoginSinConexion({ funcionDireccion }: LoginSinConexionP
         
         <Text style={styles.recuperarPass} onPress={async () =>{if(await isInternetReachable()){navigation.navigate("IngresarUsuarioRestablecer" as never)};}}>Restablecer contraseña</Text>
 
-        <View style={styles.botonVisualizarRecetas}>
+        <View style={[styles.botonVisualizarRecetas,{justifyContent:"center"}]}>
         <CustomButton
             title="Visualizar recetas"
             color="#D69D20"

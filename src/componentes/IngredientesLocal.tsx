@@ -22,19 +22,16 @@ export default function IngredientesLocal() :JSX.Element {
     const urlFetchUtilizados="http://"+localip+":8080/api/rest/morfar/utilizadosReceta/";
     const [valorIngredientes, setValorIngredientes] = useState<any[]>([]);
     const [valorIngredientesFijos, setValorIngredientesFijos] = useState<any[]>([]);
-    const [valorComensales,setValorComensales]= useState(0);
+    const [valorComensales,setValorComensales]= useState(route.params.comensales);
     const [valorComensalesOriginal,setValorComensalesOriginal]= useState(0);
     
     if(!loaded){
-        
-        setValorComensales(route.params.receta?.cantidadPersonas);
+        setValorComensales(route.params.comensales  );
         setValorComensalesOriginal(route.params.receta?.cantidadPersonas);
         const ingredientesValor: any[] = [];
-        
         setValorIngredientesFijos(route.params.ingredientes);
         setValorIngredientes(route.params.ingredientes);
         setData(route.params.infoIngredientes);
-        
         setLoaded(true);
     }
     const handleIngredientes = (id: number,cantidad:string) => {
@@ -102,7 +99,7 @@ export default function IngredientesLocal() :JSX.Element {
                     
                     <ScrollView style={{height:530}}>
                         {data.map((item,key) => (
-                            <React.Fragment>
+                            <React.Fragment key={key}>
                                 <View style={{display:"flex",flexDirection: "row",alignItems: "center",justifyContent: "space-around",borderRadius:40,borderColor:"black",height:60, borderWidth: 2, marginBottom:20,marginTop:5}}> 
                                     <Text style={{fontWeight:'bold',fontSize:20,color:'black'}}>{item.idIngrediente.nombre}</Text>
                                     <TextInput 

@@ -8,6 +8,7 @@ import { TipoParametros, localip } from "../App";
 import IconoCruz from"../assets/cruz.png";
 import Modal from "react-native-modal";
 import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage";
+import iconoSol from "../assets/Logo_Sol_Bueno.png";
 
 type CrearRecetaImagenesRouteProps= RouteProp<TipoParametros, "CrearRecetaImagenes">;
 
@@ -23,6 +24,7 @@ export default function CrearRecetaImagenes() {
     const urlBase="http://"+localip+":8080/api/rest/morfar";
     const urlPostReceta=urlBase+"/createRecipe";
     const [loaded,setLoaded]=useState(false);
+    const [subiendoReceta,setSubiendoReceta]=useState(false);
 
 
     const navigation=useNavigation();
@@ -117,6 +119,9 @@ export default function CrearRecetaImagenes() {
         const idUsuariop=await AsyncStorage.getItem("idUsuario");
         console.log("Dale bro subite");
         console.log(await listaPasosFormateada);
+        const arraySinRepetidos = await listaPasosFormateada.filter((objeto, indice, self) => {
+          return self.findIndex((o) => o.nroPaso === objeto.nroPaso) === indice;
+        });
         console.log("DATOS SUBIDA");
         console.log({
           "idUsuario":await idUsuariop,
@@ -124,14 +129,14 @@ export default function CrearRecetaImagenes() {
           "descripcion":route.params.crearRecetaProps.descripcionReceta,
           "comensales":route.params.crearRecetaProps.comensales,
           "porciones":route.params.crearRecetaProps.porciones,
-          "pasos": await listaPasosFormateada,
+          "pasos": await arraySinRepetidos,
           "ingredientes":listaIngredientesFormateada,
           "fotos":listaFotosRecetasProcesada,
           "idTipo":route.params.crearRecetaProps.idTipoReceta
         });
         
         console.log("MULTIMEDIA");
-        console.log(listaPasosFormateada);
+        console.log(arraySinRepetidos);
         const response = await fetch(urlPostReceta,{
           method:"POST",
           body:JSON.stringify(
@@ -141,7 +146,7 @@ export default function CrearRecetaImagenes() {
               "descripcion":route.params.crearRecetaProps.descripcionReceta,
               "comensales":route.params.crearRecetaProps.comensales,
               "porciones":route.params.crearRecetaProps.porciones,
-              "pasos":listaPasosFormateada,
+              "pasos":arraySinRepetidos,
               "ingredientes":listaIngredientesFormateada,
               "fotos":listaFotosRecetasProcesada,
               "idTipo":route.params.crearRecetaProps.idTipoReceta
@@ -168,11 +173,13 @@ export default function CrearRecetaImagenes() {
     }
 
     const subirReceta = async () => {
+
       if (listaFotos.length < 1) {
         await AsyncStorage.getItem('user').then(data => console.log(data));
         setLevantadoFaltanCosas(true);
       } else {
         try {
+          setSubiendoReceta(true);
           await subirFotos();
     
           
@@ -303,6 +310,16 @@ export default function CrearRecetaImagenes() {
       if(!loaded){
         chequearLocal().then(() => setLoaded(true));
       }
+
+    if(subiendoReceta){
+      return(<PantallaTipoHome contenido={
+        <View style={{display:"flex",flexDirection:"column",justifyContent:"center",alignContent:"center"}}>
+          <Image style={{width:300,height:300,marginTop:100,marginLeft:45,justifyContent:"center",alignContent:"center"}} source={iconoSol}/>
+          <Text style={{fontSize:20,fontWeight:"bold",marginLeft:145}}>Subiendo...</Text>
+
+        </View>
+      }/>)
+    }
     
     if(loaded){
     return(

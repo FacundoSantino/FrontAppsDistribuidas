@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 
-import {View, Text, StyleSheet,Image,TextInput,SafeAreaView,ScrollView} from "react-native";
+import {View, Text, StyleSheet,Image,TextInput,SafeAreaView,ScrollView, TouchableOpacity} from "react-native";
 import menuHamburguesaIcono from "../../assets/menuHamburguesaIcono.png";
 import MorfAr from "../../assets/MorfAR.png";
 import lupa from "../../assets/lupa.png";
@@ -37,6 +37,7 @@ function MisGuardadas(): JSX.Element{
                 return JSON.parse(recetaLocal);
             }
             else{
+                await useAsyncStorage("listaFavoritas").setItem("[]");
                 return [];
             }
 
@@ -45,9 +46,7 @@ function MisGuardadas(): JSX.Element{
     
     const irAModificadas= async () => {
         const listaRecetasSinProcesar=await useAsyncStorage("recetasModificadas").getItem();
-        console.log("###################################################################################################")
         console.log(listaRecetasSinProcesar);
-        
         if(listaRecetasSinProcesar!=null){
             const listaRecetas=JSON.parse(listaRecetasSinProcesar);
             const listaRecetasProcesada = listaRecetas.map((item:any)=>item.receta)
@@ -62,6 +61,7 @@ function MisGuardadas(): JSX.Element{
         }
         else{
             await useAsyncStorage("recetasModificadas").setItem("[]");
+            
         }
     }
 
@@ -101,7 +101,8 @@ function MisGuardadas(): JSX.Element{
                             paddingTop={10}
                             paddingBottom={24}  
                             ancho={380}
-                            paddingHorizontal={13}/>
+                            paddingHorizontal={13}/>                      
+                        
                     
                     </View>}/>
     )

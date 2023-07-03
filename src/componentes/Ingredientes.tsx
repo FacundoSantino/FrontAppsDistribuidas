@@ -41,10 +41,14 @@ export default function Ingredientes() :JSX.Element {
                 //hay lugar
                 const respuesta = await fetch(addip);
                 const receta = await respuesta.json();
+                const respuestaPasos=await fetch(addpaso);
+                const pasos=await respuestaPasos.json();
                 const recetaIngredientes = {
                     receta: receta,
                     ingredientes: valorIngredientes,
-                    infoIngredientes: data
+                    infoIngredientes: data,
+                    comensales:valorComensales,
+                    pasos:pasos
                 }
                 recetasModificadas.push(recetaIngredientes);
                 const listaSerializada = JSON.stringify(recetasModificadas);
@@ -65,7 +69,8 @@ export default function Ingredientes() :JSX.Element {
             const recetaIngredientes = {
                 receta: receta,
                 ingredientes: valorIngredientes,
-                infoIngredientes: data
+                infoIngredientes: data,
+                comensales:valorComensales
             }
             lista.push(recetaIngredientes);
             const listaSerializada = JSON.stringify(lista);
@@ -180,7 +185,7 @@ export default function Ingredientes() :JSX.Element {
                     
                     <ScrollView style={{height:530}}>
                         {data.map((item,key) => (
-                            <React.Fragment>
+                            <React.Fragment key={key}>
                                 <View style={{display:"flex",flexDirection: "row",alignItems: "center",justifyContent: "space-around",borderRadius:40,borderColor:"black",height:60, borderWidth: 2, marginBottom:20,marginTop:5}}> 
                                     <Text style={{fontWeight:'bold',fontSize:20,color:'black'}}>{item.idIngrediente.nombre}</Text>
                                     <TextInput 

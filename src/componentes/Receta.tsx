@@ -178,11 +178,6 @@ export default function Receta(): JSX.Element {
         }
     }
 
-    const levantarEnviar = ()=> {
-        setLevantada(!levantada);
-        setEnviada(enviada);
-    }
-
     function irAComentarios() {
         navigation.navigate("Comentarios" as never,{idReceta:route.params.contenido.idReceta} as never);
     }
@@ -201,17 +196,34 @@ export default function Receta(): JSX.Element {
             let ingredientes:number[] = [];
             let recetaLocal = {};
             let infoIngredientesLocal = {};
-            dataprocesada.forEach((element: { receta: { idReceta: number; }; ingredientes: []; infoIngredientes:[];},key: any) => {
+            let comensales=0;
+            let pasos=[];
+            dataprocesada.forEach((element: { receta: { idReceta: number; }; ingredientes: []; infoIngredientes:[]; comensales:number; pasos:[];},key: any) => {
                 if(element.receta.idReceta == route.params.contenido.idReceta){
                     ingredientes = element.ingredientes;
                     recetaLocal = element.receta;
                     infoIngredientesLocal = element.infoIngredientes;
+                    comensales= element.comensales;
+                    pasos=element.pasos;
                 }
             });
-            navigation.navigate("IngredientesLocal" as never,{ingredientes:ingredientes,receta:recetaLocal,infoIngredientes: infoIngredientesLocal,nombreReceta:route.params.contenido.nombre} as never);
+            navigation.navigate("IngredientesLocal" as never,{comensales:comensales,ingredientes:ingredientes,receta:recetaLocal,infoIngredientes: infoIngredientesLocal,nombreReceta:route.params.contenido.nombre} as never);
         }
         
         
+    }
+    async function irAPasosLocal(){
+        const data = await AsyncStorage.getItem("recetasModificadas");
+        if(data!= null){
+            const dataprocesada = await JSON.parse(data);
+            let pasos : any[]=[];
+            dataprocesada.forEach((element: { receta: { idReceta: number; }; ingredientes: []; infoIngredientes:[]; comensales:number; pasos:[];},key: any) => {
+                if(element.receta.idReceta == route.params.contenido.idReceta){
+                    pasos=element.pasos;
+                }
+            });
+            navigation.navigate("PasosLocal" as never,{pasos:pasos} as never);
+        }
     }
     function irAPasos(): void {
         navigation.navigate("Pasos" as never,{idReceta:route.params.contenido.idReceta} as never);
@@ -231,7 +243,7 @@ export default function Receta(): JSX.Element {
                 <Text style={{textAlign:'center',fontWeight:'bold',fontSize:30,color:'black'}}>{route.params.titulo}</Text>
 
                 <View style={style.carouselContainer}>
-                    {(procesado.length>0)?<CarouselCards procesado={procesado} />:null}
+                    {(procesado.length>0)?<CarouselCards clickeable={false} procesado={procesado} />:null}
                 </View>
 
                 <Text style={{textAlign:'center',color:'black',fontSize:18,fontWeight:'bold',marginBottom:5}}>Descripcion:</Text>
@@ -249,7 +261,7 @@ export default function Receta(): JSX.Element {
                 </TouchableOpacity>
                 :null}
                 <View style={{backgroundColor:'white',width:'100%', height:30, bottom:0,alignSelf:'center',zIndex:50,marginBottom:30}}>
-                        <TouchableOpacity onPress={() => irAPasos()} style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:'100%',width:150,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
+                        <TouchableOpacity onPress={() => (route.params.local)? irAPasosLocal(): irAPasos()} style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:'100%',width:150,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
                             <Text style={{alignSelf:"center",fontSize:17,borderRadius:25, justifyContent:"center",fontWeight:'bold',color:'black'}}>Ver pasos</Text>
                         </TouchableOpacity>
                 </View>

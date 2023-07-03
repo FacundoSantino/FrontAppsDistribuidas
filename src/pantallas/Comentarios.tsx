@@ -138,10 +138,10 @@ export default function Comentarios(){
                 <View style={{display:"flex"}}>
                     <Text style={{fontWeight:"bold",fontSize:24,alignSelf:"center",marginBottom:10,color:"black"}}> Comentarios</Text>
                     <ScrollView style={{minHeight:640}}>
-                        {p.map( (item:any, i:number) => (
+                        {(p && p.length > 0)? p.map( (item:any, i:number) => (
                     <CajaComentarios valoracion={item.valoracion} comentario={item.comentario} usuario={item.usuario} key={i}/>
                         )
-                    )}
+                    ):null}
                     </ScrollView>
 
                     <TouchableOpacity style={{display:"flex",backgroundColor:"#FCB826",borderRadius:45, width:200,marginVertical:10,paddingVertical:5,alignSelf:"center",justifyContent:"center",height:41}}

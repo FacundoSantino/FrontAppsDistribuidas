@@ -6,7 +6,7 @@ import estiloApp from "../estilos/estiloApp";
 function Carousel(): JSX.Element{
     return(
     <SafeAreaView style={style.container}>
-      <CarouselCards />
+      <CarouselCards clickeable={false} procesado={[]} />
     </SafeAreaView>
     );
     
