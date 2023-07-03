@@ -60,6 +60,8 @@ export default function PantallaRecetaClon() : JSX.Element{
                 tipoPantalla:TipoPantalla.NOMILISTA,
                 titulo:item.nombre,
                 contenido: item,
+                borrable:route.params.permitirEliminacion,
+                local:route.params.local,
                 pasos: data
             } as never)
         });
@@ -86,6 +88,7 @@ export default function PantallaRecetaClon() : JSX.Element{
                 navigation.navigate("PantallaReceta" as never, 
                 {tipo: TipoItem.RECETA,
                     verIngredientes:false,
+                    local:false,
                     permitirEliminacion:false,
                     permitirAgregacion:false,
                     titulo: "Recetas de "+nombreUsuario,

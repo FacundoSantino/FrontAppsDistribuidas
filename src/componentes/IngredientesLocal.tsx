@@ -10,13 +10,11 @@ import Modal from "react-native-modal";
 import estiloApp from '../estilos/estiloApp';
 import fotoComensales from "../assets/comensales.png";
 import { Float } from "react-native/Libraries/Types/CodegenTypes";
-type IngredientesProps= RouteProp<TipoParametros, "Ingredientes">;
+type IngredientesProps= RouteProp<TipoParametros, "IngredientesLocales">;
 
 
-export default function Ingredientes() :JSX.Element {
+export default function IngredientesLocal() :JSX.Element {
     const route=useRoute<IngredientesProps>();
-    const addip = "http://"+localip +":8080/api/rest/morfar/getRecipe/"+route.params.idReceta;
-    const addpaso = "http://"+localip +":8080/api/rest/morfar/getPasos/"+route.params.idReceta;
     const [modalError, setModalError] = useState(false);
     const[loaded,setLoaded]=useState(false);
     const [data,setData]=useState<Utilizado[]>([]);
@@ -26,112 +24,18 @@ export default function Ingredientes() :JSX.Element {
     const [valorIngredientesFijos, setValorIngredientesFijos] = useState<any[]>([]);
     const [valorComensales,setValorComensales]= useState(0);
     const [valorComensalesOriginal,setValorComensalesOriginal]= useState(0);
-    const agregarAsync= async () => {
-
-        const recetasModificadasAux=await useAsyncStorage("recetasModificadas").getItem();
-        //2 casos posibles
-        //1. ya existe en modificadas la receta
-        //2. no existe
-        // si 1. pregunto si agregar o reemplazar, independientemente del espacio y si no hay espacio, pregunto si reemplazar y cual
-        //si 2 pregunto si agregar si es que no hay espacio
-        //await AsyncStorage.setItem("recetasModificadas","");
-        if(recetasModificadasAux!=null){
-            const recetasModificadas=await JSON.parse(await recetasModificadasAux);
-            if(recetasModificadas.length<10){
-                //hay lugar
-                const respuesta = await fetch(addip);
-                const receta = await respuesta.json();
-                const recetaIngredientes = {
-                    receta: receta,
-                    ingredientes: valorIngredientes,
-                    infoIngredientes: data
-                }
-                recetasModificadas.push(recetaIngredientes);
-                const listaSerializada = JSON.stringify(recetasModificadas);
-                await AsyncStorage.setItem("recetasModificadas", listaSerializada);    
-            }
-            else {
-                //no hay lugar
-                setModalError(true);
-                setTimeout(()=>setModalError(false),4000);
-            }
-
-        }
-        else{
-            //hago lista vacia y agrego receta
-            const respuesta = await fetch(addip);
-            const receta = await respuesta.json();
-            const lista = [];
-            const recetaIngredientes = {
-                receta: receta,
-                ingredientes: valorIngredientes,
-                infoIngredientes: data
-            }
-            lista.push(recetaIngredientes);
-            const listaSerializada = JSON.stringify(lista);
-            await AsyncStorage.setItem("recetasModificadas", listaSerializada);
-        }
-    }
-
-    if(!loaded){
-        fetch(urlFetchUtilizados+route.params.idReceta)
-        .then((r)=>r.json())
-        .then((d)=> {
-            console.log("DALE WAACHIN");
-            console.log(urlFetchUtilizados+route.params.idReceta);
-            console.log(d);
-            data.map((item: Utilizado, i: number) => (
-                coleccion.push({
-                    key: i, itemData: item,
-                    cantidadOriginal: item.cantidad
-                })
-            ));
-            setValorComensales(d[0]?.idReceta?.cantidadPersonas);
-            setValorComensalesOriginal(d[0]?.idReceta?.cantidadPersonas);
-            const contenidoMapeado: Utilizado[] =[];
-            const ingredientesValor: any[] = [];
-            d.forEach(
-                (item:any,i:number) => {
-                    contenidoMapeado.push(
-                        {
-                            "idUtilizado": item.idUtilizado,
-                            "receta": item.idReceta,
-                            "idIngrediente": item.idIngrediente,
-                            "cantidad": item.cantidad,
-                            "unidad": item.idUnidad,
-                            "observaciones": item.observaciones,
-                            "valorFijo" : item.cantidad
-                        }                          
-                    )
-                    ingredientesValor.push(item.cantidad)
-                    }
-            );
-            setValorIngredientesFijos(ingredientesValor);
-            setValorIngredientes(ingredientesValor);
-            setData(contenidoMapeado);
-        })
-        .finally(()=> setLoaded(true)); 
-    }
     
-    const handleComensales = (aumentar:Boolean)=>{
-        if(aumentar){
-            //logica para multiplicar ingredientes
-            const listaPrevia :any = [...valorIngredientesFijos];
-            data.map((item,key)=>{
-                listaPrevia[key] = (listaPrevia[key]*(valorComensales+1)/valorComensalesOriginal).toFixed(2);    
-            });
-            setValorComensales(valorComensales+1)
-            setValorIngredientes(listaPrevia);
-        }
-        else if(valorComensales>1){
-            //logica para dividir ingredientes
-            const listaPrevia :any = [...valorIngredientesFijos];
-            data.map((item,key)=>{
-                listaPrevia[key] = (listaPrevia[key]/((valorComensales-1)/valorComensalesOriginal)).toFixed(2);    
-            });
-            setValorIngredientes(listaPrevia);
-            setValorComensales(valorComensales-1);
-        }
+    if(!loaded){
+        
+        setValorComensales(route.params.receta?.cantidadPersonas);
+        setValorComensalesOriginal(route.params.receta?.cantidadPersonas);
+        const ingredientesValor: any[] = [];
+        
+        setValorIngredientesFijos(route.params.ingredientes);
+        setValorIngredientes(route.params.ingredientes);
+        setData(route.params.infoIngredientes);
+        
+        setLoaded(true);
     }
     const handleIngredientes = (id: number,cantidad:string) => {
         const cantIngrediente: Float= parseFloat(cantidad);
@@ -152,8 +56,26 @@ export default function Ingredientes() :JSX.Element {
             setValorIngredientes(listaPrevia);
         }
     }
-        
-    
+    const handleComensales = (aumentar:Boolean)=>{
+        if(aumentar){
+            //logica para multiplicar ingredientes
+            const listaPrevia :any = [...valorIngredientesFijos];
+            data.map((item,key)=>{
+                listaPrevia[key] = (listaPrevia[key]*(valorComensales+1)/valorComensalesOriginal).toFixed(2);    
+            });
+            setValorComensales(valorComensales+1)
+            setValorIngredientes(listaPrevia);
+        }
+        else if(valorComensales>1){
+            //logica para dividir ingredientes
+            const listaPrevia :any = [...valorIngredientesFijos];
+            data.map((item,key)=>{
+                listaPrevia[key] = (listaPrevia[key]/((valorComensales-1)/valorComensalesOriginal)).toFixed(2);    
+            });
+            setValorIngredientes(listaPrevia);
+            setValorComensales(valorComensales-1);
+        }
+    }
 
     if(loaded){
         return(
@@ -196,14 +118,6 @@ export default function Ingredientes() :JSX.Element {
                         ))}
                     </ScrollView>
 
-
-
-
-                    <View style={{backgroundColor:'white',width:'100%', position:'absolute', height:50, bottom:0,alignSelf:'center',zIndex:80}}>
-                        <TouchableOpacity onPress={()=> agregarAsync()} style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:'100%',width:335,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
-                            <Text style={{alignSelf:"center",fontSize:20,borderRadius:25, justifyContent:"center",color:'black'}}>Agregar a mis modificadas</Text>
-                        </TouchableOpacity>
-                    </View>
                     <Modal isVisible ={modalError}>
                         <View style={{display:'flex',flexDirection:'column',width:370,height:400,backgroundColor:'#FCB826',borderRadius:20,alignItems:'center',justifyContent:'space-around'}}>
                           

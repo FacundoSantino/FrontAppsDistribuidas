@@ -32,7 +32,14 @@ function MisGuardadas(): JSX.Element{
         return data;
         }
         catch (error) {
-            console.log(error);
+            const recetaLocal = await useAsyncStorage("listaFavoritas").getItem();
+            if(recetaLocal!=null){
+                return JSON.parse(recetaLocal);
+            }
+            else{
+                return [];
+            }
+
         }
     }
     
@@ -40,15 +47,18 @@ function MisGuardadas(): JSX.Element{
         const listaRecetasSinProcesar=await useAsyncStorage("recetasModificadas").getItem();
         console.log("###################################################################################################")
         console.log(listaRecetasSinProcesar);
+        
         if(listaRecetasSinProcesar!=null){
             const listaRecetas=JSON.parse(listaRecetasSinProcesar);
+            const listaRecetasProcesada = listaRecetas.map((item:any)=>item.receta)
             navigation.navigate("PantallaReceta" as never, {tipo: TipoItem.RECETA,
             verIngredientes:false,
             permitirEliminacion:false,
             permitirAgregacion:false,
             esFavoritos:true,
+            local:true,
             titulo:"Recetas modificadas",
-            contenido:listaRecetas})
+            contenido:listaRecetasProcesada})
         }
         else{
             await useAsyncStorage("recetasModificadas").setItem("[]");
@@ -61,6 +71,7 @@ function MisGuardadas(): JSX.Element{
             permitirEliminacion:false,
             permitirAgregacion:false,
             esFavoritos:true,
+            local:true,
             titulo: "Recetas favoritas",
             contenido: data
         } as never));

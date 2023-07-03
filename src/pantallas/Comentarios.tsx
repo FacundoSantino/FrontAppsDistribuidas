@@ -11,6 +11,10 @@ import fotoEstrellaLlena from '../assets/estrellaLlena.png';
 import fotoEstrellaVacia from '../assets/estrellaVacia.png';
 type ComentariosProps= RouteProp<TipoParametros, "Comentarios">;
 import Modal from "react-native-modal";
+import { useAsyncStorage } from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+
 
 export default function Comentarios(){
     const [p,setP]=useState<any[]>([]);
@@ -25,8 +29,9 @@ export default function Comentarios(){
     const [estrellaCuatro,setEstrellaCuatro]=useState(fotoEstrellaVacia);
     const [estrellaCinco,setEstrellaCinco]=useState(fotoEstrellaVacia);
     const [calificado,setCalificado]=useState(0);
-
-
+    const [comentarioResenia,setComentarioResenia]=useState("");
+    const envioReseniaIp = "http://"+localip+":8080/api/rest/morfar/getRecipe/review";
+    
 
 
 
@@ -92,7 +97,30 @@ export default function Comentarios(){
         setCalificado(num);
     }
     
+    const fetchEnvioResenia = async () =>
+    {
+        fetch(envioReseniaIp,
+        {
+            method:"POST",
+            
+            headers:{
+                "Content-Type":"application/json; charset=UTF-8",
+                
+            },
+            body: JSON.stringify({
+                "idUsuario": await useAsyncStorage("idUsuario").getItem(),
+                "idReceta":route.params.idReceta,
+                "calificacion":calificado,
+                "comentario":comentarioResenia
+            })
+        }).then((data) => console.log(data));
+    }
 
+    const manejarEnvioResenia =async() => {        
+        fetchEnvioResenia().then(()=>setLevantada(false)).finally(()=>
+        setEnviada(true));
+    }
+    
     if(!cargoPantalla){
         ingredientesFetch().then((data) => setComentarios(data)).then(() => {
             if(typeof route.params.idReceta != 'undefined'){
@@ -149,11 +177,11 @@ export default function Comentarios(){
                         <Text style={{textAlign:'center',fontWeight:'bold', fontSize:17}}>Valora la receta!</Text>
 
                         <ScrollView style={{borderRadius:10,minHeight:10,height:100,backgroundColor:'white', maxHeight:130, width:350,borderColor:'black',borderWidth:2.3}}>
-                        <TextInput >
+                            <TextInput onChangeText={(texto) => setComentarioResenia(texto)} style={{width:350,flexWrap:"wrap"}} multiline>
 
-                        </TextInput>
+                            </TextInput>
                         </ScrollView>
-                        <TouchableOpacity onPress={() => {setTimeout(()=>setEnviada(false),3000); setLevantada(!levantada); setEnviada(!enviada);}} style={{marginTop:3,display:"flex", backgroundColor:'white',width:100,alignSelf:"center", justifyContent:'center', borderRadius: 20,height:35}}>
+                        <TouchableOpacity onPress={() => {manejarEnvioResenia()}} style={{marginTop:3,display:"flex", backgroundColor:'white',width:100,alignSelf:"center", justifyContent:'center', borderRadius: 20,height:35}}>
                             <Text style={{alignSelf:"center",fontSize:15,borderRadius:25, justifyContent:"center"}}>Enviar</Text>
                         </TouchableOpacity>
 

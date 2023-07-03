@@ -66,7 +66,7 @@ export default function Pasos(props:PasosRouteProps): JSX.Element{
         }
 
 
-        return <View><Text>HOLA SOY UNDEFINED</Text></View>
+        return <View><Text>No se encontró multimedia para este paso.</Text></View>
     }
     const siguientePaso= () => {
         if(listasPasos!=undefined){

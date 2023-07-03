@@ -98,12 +98,12 @@ export default function LoginSinConexion({ funcionDireccion }: LoginSinConexionP
         <CustomButton
             title="Visualizar recetas"
             color="#D69D20"
-            onPress={async () =>{{navigation.navigate("misGuardadas" as never)};}}
+            onPress={async () =>{{navigation.navigate("MisGuardadas" as never)};}}
           />
         </View>
 
         <Text style={styles.registrarme} onPress={async () =>{if(await isInternetReachable()){navigation.navigate("Registrar" as never)};}}>REGISTRARME</Text>
-      
+        
       </View>
     }/>
   )

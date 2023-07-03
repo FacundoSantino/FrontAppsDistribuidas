@@ -14,7 +14,7 @@ import React from "react";
 import Modal from "react-native-modal";
 import Lupa from '../assets/lupa.png';
 import IconoCruz from '../assets/cruz.png';
-import { useAsyncStorage } from "@react-native-async-storage/async-storage";
+import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage";
 
 
 //http://localhost:8080/api/rest/morfar/ingredients/1
@@ -33,6 +33,7 @@ export default function Receta(): JSX.Element {
     const [levantada, setLevantada] = useState(false);
     const [enviada, setEnviada] = useState(false);
     const [favorita,setFavorita]=useState(false);
+    const [levantadaEliminar,setLevantadaEliminar]=useState(false);
     const route=useRoute<RecetaRouteProps>();
     const navigation=useNavigation();
     const [valoracion,setValoracion] = useState(0);
@@ -41,6 +42,7 @@ export default function Receta(): JSX.Element {
     const urlEsFavorita=urlBase+"/esFavorita";
     const urlAgregarFavorita=urlBase+"/addFavRecipe";
     const urlBorrarFavorita=urlBase+"/borrarFavorita";
+    const [borrar,setBorrar]=useState(-1);
 
     const ingredientesFetch= async () => {
         try{
@@ -54,8 +56,22 @@ export default function Receta(): JSX.Element {
     
     }
 
+    const borrarReceta = async () => {
+        try {
+            await fetch(urlBase+"/deleteMyRecipes/"+route.params.contenido.idReceta,{
+                method:"DELETE"
+            })
+        } catch (error) {
+            console.log(error);
+        }
+        finally{
+            setLevantadaEliminar(!levantadaEliminar);
+            navigation.navigate("Home" as never);
+        }
+    }
+
     React.useEffect( () =>{
-        ingredientesFetch().then((data) => setIngredientes(data)).then( async () => {
+        ingredientesFetch().then((data) => {setIngredientes(data);console.log("INGREDIENTESSSSSSSSSSSSSSSSSSSSSSS");console.log(data);}).then( async () => {
             console.log("HOLAHOLAHOLA");
             try{
                 console.log("URL FETCH "+ urlEsFavorita+"/"+route.params.contenido.idReceta+"/"+await useAsyncStorage("idUsuario").getItem())
@@ -103,6 +119,19 @@ export default function Receta(): JSX.Element {
                     "Content-Type":"application/json; charset=UTF-8"
                 }
             })
+
+            const favoritas =await useAsyncStorage("listaFavoritas").getItem();
+            if(favoritas!=null){
+                const lista=JSON.parse(favoritas);
+                lista.forEach((item:any,i:number) => {
+                    if(item.idReceta==route.params.contenido.idReceta){
+                        setBorrar(i);
+                    }
+                });
+                lista.splice(borrar, 1);
+                await useAsyncStorage("listaFavoritas").setItem(JSON.stringify(lista));
+                
+            }         
         }
         catch(error){
             console.log(error);
@@ -120,6 +149,19 @@ export default function Receta(): JSX.Element {
                     "Content-Type":"application/json; charset=UTF-8"
                 }
             })
+            const favoritas =await useAsyncStorage("listaFavoritas").getItem();
+            if(favoritas!=null){
+                console.log("AGREGUE FAVORITA");
+                const lista=JSON.parse(favoritas);
+                lista.push(route.params.contenido);
+                await useAsyncStorage("listaFavoritas").setItem(JSON.stringify(lista));
+            }
+            else{
+                console.log("CREE FAVORITAS");
+                const lista=[];
+                lista.push(route.params.contenido);
+                await useAsyncStorage("listaFavoritas").setItem(JSON.stringify(lista));
+            }
         }
         catch(error){
             console.log(error);
@@ -145,48 +187,76 @@ export default function Receta(): JSX.Element {
     }
 
     function irAIngredientes() {
+        console.log("ACA ENTRE")
+        console.log({ingredientes:ingredientes,idReceta:route.params.contenido.idReceta,nombreReceta:route.params.contenido.nombre})
         navigation.navigate("Ingredientes" as never,{ingredientes:ingredientes,idReceta:route.params.contenido.idReceta,nombreReceta:route.params.contenido.nombre} as never);
     }
-    
+    async function irAIngredientesLocal() {
+        
+        //TODO
+        const data = await AsyncStorage.getItem("recetasModificadas");
+        if(data!= null){
+            const dataprocesada = await JSON.parse(data);
+            let ingredientes:number[] = [];
+            let recetaLocal = {};
+            let infoIngredientesLocal = {};
+            dataprocesada.forEach((element: { receta: { idReceta: number; }; ingredientes: []; infoIngredientes:[];},key: any) => {
+                if(element.receta.idReceta == route.params.contenido.idReceta){
+                    ingredientes = element.ingredientes;
+                    recetaLocal = element.receta;
+                    infoIngredientesLocal = element.infoIngredientes;
+                }
+            });
+            navigation.navigate("IngredientesLocal" as never,{ingredientes:ingredientes,receta:recetaLocal,infoIngredientes: infoIngredientesLocal,nombreReceta:route.params.contenido.nombre} as never);
+        }
+        
+        
+    }
     function irAPasos(): void {
         navigation.navigate("Pasos" as never,{idReceta:route.params.contenido.idReceta} as never);
     }
 
     if(cargoPantalla){
+        console.log(route.params.local);
     return(
         <PantallaTipoHome contenido={
 
             <View style={{display:'flex',flexDirection:'column'}}>
                 <View style={[style.flexRow,{justifyContent:"flex-end"}]}>
                     <Image source={fotoCruz}/>
-                    <Text onPress={() => {irAComentarios()}}>COMENTARIOS</Text>
+                    <Text style={{color:'black'}} onPress={() => {irAComentarios()}}>COMENTARIOS</Text>
                     <Image source={fotoEstrella} onPress={() => {handlePressEstrella()}} style={{width:26,height:26,marginLeft:10}}/>
                 </View>
-                <Text style={{textAlign:'center',fontWeight:'bold',fontSize:30}}>{route.params.titulo}</Text>
+                <Text style={{textAlign:'center',fontWeight:'bold',fontSize:30,color:'black'}}>{route.params.titulo}</Text>
 
                 <View style={style.carouselContainer}>
                     {(procesado.length>0)?<CarouselCards procesado={procesado} />:null}
                 </View>
 
-                <Text style={{textAlign:'center',color:'black',fontSize:15}}>Descripcion:</Text>
+                <Text style={{textAlign:'center',color:'black',fontSize:18,fontWeight:'bold',marginBottom:5}}>Descripcion:</Text>
 
-                <ScrollView contentContainerStyle={{alignItems:'center'}} style={{marginBottom:100,borderRadius:10,height:"auto",minHeight:50, maxHeight:100, width:390,borderColor:'black',borderWidth:2.3}}>
-                    <Text >
+                <ScrollView contentContainerStyle={{alignItems:'center'}} style={{marginBottom:40,borderRadius:20,height:"auto",minHeight:80, maxHeight:100, width:390,borderColor:'black',borderWidth:2.3}}>
+                    <Text style={{color:'black'}}>
                         {route.params.contenido.descripcion}
                     </Text>
                 </ScrollView>
                 
-                <View style={{backgroundColor:'white',width:'100%', height:30, bottom:0,alignSelf:'center',zIndex:50,marginTop:20,marginBottom:50}}>
-                        <TouchableOpacity onPress={() => irAPasos()} style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:'100%',width:300,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
-                            <Text style={{alignSelf:"center",fontSize:25,borderRadius:25, justifyContent:"center"}}>Ver pasos</Text>
-                        </TouchableOpacity>
-                </View>
-                <View style={{backgroundColor:'white',width:"100%", height:30, bottom:0,alignSelf:'center',zIndex:50,marginTop:20,marginBottom:90}}>
-                        <TouchableOpacity onPress={() => irAIngredientes()} style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:'100%',width:300,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
-                            <Text style={{alignSelf:"center",fontSize:25,borderRadius:25, justifyContent:"center"}}>Ver ingredientes</Text>
-                        </TouchableOpacity>
-                </View>
                 
+                {route.params?.borrable?
+                <TouchableOpacity onPress={() => setLevantadaEliminar(!levantadaEliminar)} style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:30,width:150,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
+                    <Text style={{alignSelf:"center",fontSize:17,borderRadius:25, justifyContent:"center",fontWeight:'bold',color:'black'}}>Borrar receta</Text>
+                </TouchableOpacity>
+                :null}
+                <View style={{backgroundColor:'white',width:'100%', height:30, bottom:0,alignSelf:'center',zIndex:50,marginBottom:30}}>
+                        <TouchableOpacity onPress={() => irAPasos()} style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:'100%',width:150,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
+                            <Text style={{alignSelf:"center",fontSize:17,borderRadius:25, justifyContent:"center",fontWeight:'bold',color:'black'}}>Ver pasos</Text>
+                        </TouchableOpacity>
+                </View>
+                <View style={{backgroundColor:'white',width:"100%", height:30, bottom:0,alignSelf:'center',zIndex:50,marginTop:10,marginBottom:90}}>
+                        <TouchableOpacity onPress={() => (route.params.local)? irAIngredientesLocal() :  irAIngredientes()} style={{marginTop:6,display:"flex", backgroundColor:'#F0AF23',height:'100%',width:150,minHeight:50,alignSelf:"center", justifyContent:'center', borderRadius: 20}}>
+                            <Text style={{alignSelf:"center",fontSize:17,borderRadius:25, justifyContent:"center",fontWeight:'bold',color:'black'}}>Ver ingredientes</Text>
+                        </TouchableOpacity>
+                </View>
                 <Modal isVisible = {levantada}>
                     <TouchableOpacity onPress={() => setLevantada(!levantada)} style={{display:'flex',justifyContent:'center',alignItems:'flex-start',height:30,width:340}}>
                         <Image source={IconoCruz} style={{width:20,height:20,marginLeft:10,marginTop:30}}/>
@@ -236,7 +306,20 @@ export default function Receta(): JSX.Element {
                     </View>
                 </Modal>
 
-             
+                <Modal isVisible = {levantadaEliminar}>
+                    
+                    <View style={{display:'flex',flexDirection:'column',width:370,height:200,backgroundColor:'#FCB826',borderRadius:20,alignItems:'center',justifyContent:'space-around'}}>
+                        
+                        <Text style={{textAlign:'center',fontWeight:'bold', fontSize:17,height:110,marginTop:20}}>¿Esta seguro de que desea eliminar esta receta?</Text>
+                        <TouchableOpacity onPress={()=>setLevantadaEliminar(!levantadaEliminar)} style={{backgroundColor:"white" ,display:'flex',justifyContent:'center',alignItems:'center',height:30,width:100,borderRadius:15, marginBottom:30}}>
+                            <Text>CANCELAR</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={()=>borrarReceta()} style={{backgroundColor:"white",display:'flex',justifyContent:'center',alignItems:'center',height:30,width:100,borderRadius:15,marginBottom:30}}>
+                            <Text>CONFIRMAR</Text>
+                        </TouchableOpacity>
+                    </View>
+                    
+                </Modal>
 
             </View>
         }/>

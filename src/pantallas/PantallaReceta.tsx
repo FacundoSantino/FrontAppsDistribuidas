@@ -100,6 +100,8 @@ export default function PantallaReceta() : JSX.Element{
                 tipoPantalla:TipoPantalla.NOMILISTA,
                 titulo:item.nombre,
                 contenido: item,
+                borrable:route.params.permitirEliminacion,
+                local:route.params.local,
                 pasos: data
             } as never)
         });
@@ -306,7 +308,7 @@ export default function PantallaReceta() : JSX.Element{
                         quiero:2
                     }
                     )
-                ))
+                ));
                 setListaSelecciones(listaNueva);
                 setCargueIngredientes(true);
 

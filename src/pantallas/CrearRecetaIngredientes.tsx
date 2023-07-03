@@ -11,7 +11,7 @@ import CajaPaso from '../componentes/CajaPaso';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import IconoCruz from"../assets/cruz.png";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { launchImageLibrary } from "react-native-image-picker";
 type CrearRecetaIngredientesRouteProps= RouteProp<TipoParametros, "CrearRecetaIngredientes">;
 
 export default function CrearRecetaIngredientes(){
@@ -95,7 +95,7 @@ export default function CrearRecetaIngredientes(){
         await unidadesFetch().then(data=>setUnidades(data));
     }
 
-    const chequearIngredientes= async () => {
+    const chequearIngredientes = async () => {
         const ingredientesSP=await AsyncStorage.getItem("listaIngredientes");
         if(ingredientesSP!=null){
             setListaIngredientes(JSON.parse(ingredientesSP));
@@ -208,19 +208,16 @@ export default function CrearRecetaIngredientes(){
                     </Modal>
 
                     <Modal isVisible={agregada}>
-                        <View style={{display:'flex',flexDirection:'column',width:370,height:400,backgroundColor:'#FCB826',borderRadius:25,alignItems:'center',justifyContent:'space-around'}}>
-                            <TouchableOpacity style={{width:250,borderRadius:30,borderWidth:2,color:'white'}}>
-                                <TextInput></TextInput>
+                        <View style={{display:'flex',flexDirection:'column',width:370,height:200,backgroundColor:'#FCB826',borderRadius:25,alignItems:'center',justifyContent:'space-around'}}>
+                        <TouchableOpacity onPress={() => setLevantada(!levantada)}>
+                                <Image source={fotoCruz} style={{width:15,height:15, position:'relative',left:-165,top:5}}/>
                             </TouchableOpacity>
-                            <View style={{display:'flex',flexDirection:'row',width:'95%',justifyContent:'space-around'}}>
-                                <TouchableOpacity style={{width:"45%",borderRadius:30,borderWidth:2,color:'white'}}>
-                                    <TextInput></TextInput>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{width:"45%",borderRadius:30,borderWidth:2,color:'white'}}>
-                                    <TextInput></TextInput>
-                                </TouchableOpacity>
-                            </View>
-                            <TouchableOpacity style={{display:"flex", backgroundColor:'white',height:5,width:120,minHeight:50,alignSelf:"center", position:'absolute', bottom:-100, borderRadius: 20,borderWidth:2}}
+                            <Text style={{color:'black',fontSize:14,fontWeight:'bold'}}>Escriba el nombre del ingrediente que desea agregar.</Text>
+                            <TextInput style={{width:"45%",borderRadius:30,borderWidth:2,backgroundColor:'white',marginBottom:50}}></TextInput>
+                            {/* Colocar input para imagenes */}
+                            
+                            <TouchableOpacity 
+                            style={{display:"flex", backgroundColor:'white',height:5,width:100,minHeight:40,alignSelf:"center", position:'absolute', bottom:5, borderRadius: 20,borderWidth:2}}
                             onPress={()=>setAgregada(!agregada)}>
                                     <Text style={{alignSelf:"center", verticalAlign:"middle", height:'100%',fontSize:17,borderRadius:25}}>Agregar</Text>
                             </TouchableOpacity>

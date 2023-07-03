@@ -65,7 +65,7 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
       return false;
     }
   };
-
+  const urlBase = 'http://' + localip + ':8080/api/rest/morfar/';
   const urlRegister = 'http://' + localip + ':8080/api/rest/morfar/register';
   const urlMail = 'http://' + localip + ':8080/api/rest/morfar/getUsers/';
   const urlUsuario = 'http://' + localip + ':8080/api/rest/morfar/getUsers/';
@@ -122,6 +122,15 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
       console.log(err);
     }
   }
+
+  const fetchEnviarExisteMail = async () => {
+    try {
+      
+      fetch(urlBase+"mailExistente/"+mail);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   
   const handleRegister = async () => {
     //fetch del usuario, si da 200 es true si no false
@@ -159,6 +168,7 @@ export default function LoginInicial({ funcionDireccion }: LoginInicialProps) {
       else{
         if(await existeMail){
           setLevantadaMail(true);
+          fetchEnviarExisteMail();
         }
         else if(await existeUsuario){
           //muestro que el usuario ya existe y llamo a sugerencias

@@ -98,7 +98,8 @@ function Home(): JSX.Element{
                 navigation.navigate("PantallaReceta" as never, 
                 {tipo: TipoItem.RECETA,
                     verIngredientes:false,
-                    permitirEliminacion:false,
+                    local:false,
+                    permitirEliminacion:true,
                     permitirAgregacion:true,
                     titulo: "Mis recetas",
                     contenido: data

@@ -35,6 +35,7 @@ import crearRecetaIngredientes from './pantallas/CrearRecetaIngredientes';
 import { Cloudinary } from "@cloudinary/url-gen";
 import CrearRecetaImagenes from './pantallas/CrearRecetaImagenes';
 import BusquedaRecetas from './pantallas/BusquedaRecetas';
+import IngredientesLocal from './componentes/IngredientesLocal';
 export var localip = "192.168.1.37";
 
 export enum TipoItem{
@@ -70,7 +71,8 @@ export type TipoParametros = {
     titulo: String,
     contenido: Autor[] | Receta[] | Tipo[] ,
     ingredientes?: Ingrediente[],
-    esFavoritos: Boolean
+    esFavoritos: Boolean,
+    local:Boolean
   },
   Codigo:{
     user:string,
@@ -80,11 +82,19 @@ export type TipoParametros = {
     tipoPantalla:TipoPantalla,
     titulo:String,
     contenido: Receta,
+    borrable:boolean,
+    local:boolean,
     pasos: Paso[]
   },
   Ingredientes:{
     ingredientes: Ingrediente[],
     idReceta:number,
+    nombreReceta:string
+  },
+  IngredientesLocales:{
+    ingredientes: Ingrediente[],
+    receta: Receta,
+    infoIngredientes: Utilizado[],
     nombreReceta:string
   },
   Home : {
@@ -104,7 +114,8 @@ export type TipoParametros = {
     titulo: String,
     contenido: Autor[] | Receta[] | Tipo[] ,
     ingredientes?: Ingrediente[],
-    esFavoritos: Boolean
+    esFavoritos: Boolean,
+    local:Boolean
   }
   ,
   CrearRecetaPasos:{
@@ -244,6 +255,7 @@ function App(): JSX.Element {
         <Stack.Screen name="CrearRecetaIngredientes" component={crearRecetaIngredientes}/>
         <Stack.Screen name="CrearRecetaImagenes" component={CrearRecetaImagenes}/>
         <Stack.Screen name="BusquedaRecetas" component={BusquedaRecetas}/>
+        <Stack.Screen name="IngredientesLocal" component={IngredientesLocal}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

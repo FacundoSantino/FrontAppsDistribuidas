@@ -47,38 +47,50 @@ export default function CrearRecetaImagenes() {
       await route.params.listaIngredientes.forEach(async (item,i) => {
         await listaIngredientesFormateada.push({idIngrediente:item.idIngrediente,cantidad:item.cantidad,idUnidad:item.idUnidad,observaciones:""})
       })
-      console.log("INGREDIENTES FORMATEADA BRO ///////////////////////////////////////////////////////////")
-      console.log(listaIngredientesFormateada);
-      
+      console.log("Devolviendo true de prepararLista");
+      return true;
     }
 
-    const subirFotos= async()=> {
-
-      console.log("LISTA PASOS");
-      console.log(route.params.listaPasos);
-      console.log("LISTA FOTOS");
-      console.log(listaFotos);
-
-      await route.params.listaPasos.forEach(async (item,i) => {
-        const source=item.source;
-        const descripcion=item.descripcion;
-        const link=await cloudinaryUpload(item.source).then( async (data) => {
-                    console.log("FOTO RECIBIDA");
-          console.log(data.secure_url);
-          await listaPasosFormateada.push({nroPaso:i+1,multimedia:{tipo_contenido:source.type.split("/")[0]==="image"?"foto":"video",extension:source.type.split("/")[1],urlContenido:data.secure_url},texto:descripcion});
-          console.log("pushee algo 1");
-        });
-       
-      });
-      await listaFotos.forEach(async (item,i) => {
-        const link=await cloudinaryUpload(item.foto).then( async (data) => {
+    const subirFotos = async () => {
+      try {
+        console.log("LISTA PASOS");
+        console.log(route.params.listaPasos);
+        console.log("LISTA FOTOS");
+        console.log(listaFotos);
+    
+        const promesasPasos = route.params.listaPasos.map(async (item, i) => {
+          const source = item.source;
+          const descripcion = item.descripcion;
+          const data = await cloudinaryUpload(source);
           console.log("FOTO RECIBIDA");
           console.log(data.secure_url);
-          await listaFotosRecetasProcesada.push({urlFoto:data.secure_url,extension:item.foto.type.split("/")[1]});
+          await listaPasosFormateada.push({
+            nroPaso: i + 1,
+            multimedia: {
+              tipo_contenido: source.type.split("/")[0] === "image" ? "foto" : "video",
+              extension: source.type.split("/")[1],
+              urlContenido: data.secure_url
+            },
+            texto: descripcion
+          });
+          console.log("pushee algo 1");
+        });
+    
+        const promesasFotos = listaFotos.map(async (item, i) => {
+          const data = await cloudinaryUpload(item.foto);
+          console.log("FOTO RECIBIDA");
+          console.log(data.secure_url);
+          await listaFotosRecetasProcesada.push({
+            urlFoto: data.secure_url,
+            extension: item.foto.type.split("/")[1]
+          });
           console.log("pushee algo 2");
-        }); 
-      });
-      
+        });
+    
+        await Promise.all([...promesasPasos, ...promesasFotos]);
+      } catch (error) {
+        console.log("Error en subirFotos:", error);
+      }
     };
 
     const postReceta= async () => {
@@ -128,52 +140,94 @@ export default function CrearRecetaImagenes() {
       catch(error){
         console.log("Error post receta: "+error);
       }
+      finally{
+        return true;
+      }
     }
 
     const reseteoLocales = async () => {
-      await AsyncStorage.multiRemove(["nombreReceta","descripcionReceta","comensales","porciones","idTipoReceta","listaPasos","listaIngredientes","listaImagens"])
+      //await AsyncStorage.multiRemove(["nombreReceta","descripcionReceta","comensales","porciones","idTipoReceta","listaPasos","listaIngredientes","listaImagens"])
     }
 
     const subirReceta = async () => {
-        if(listaFotos.length<1){
-          await AsyncStorage.getItem('user').then(data => console.log(data));
-          setLevantadoFaltanCosas(true);
-        }
-        else{
-          //Subir todas las fotos a cloudinary, conseguir sus links y formatear listas
+                  // console.log(route.params.listaPasos);
+      // await subirFotos()
+      // .finally(async ()=>{
+      //   console.log("ACA VAN ALS LISTAS PROCESADAS");
+      //   console.log(await listaPasosFormateada);
+      //   console.log(await listaFotosRecetasProcesada);
+      // });
+      if (listaFotos.length < 1) {
+        await AsyncStorage.getItem('user').then(data => console.log(data));
+        setLevantadoFaltanCosas(true);
+      } else {
+        try {
           await subirFotos();
-          //Preparar lista a formato
+    
           console.log("ANTES DE SUBIR FOTOS");
           console.log(await listaPasosFormateada);
-          await prepararLista();
+    
+          const promesasPasos = route.params.listaPasos.map(async (item, i) => {
+            const source = item.source;
+            const descripcion = item.descripcion;
+            const data = await cloudinaryUpload(source);
+            console.log("FOTO RECIBIDA");
+            console.log(data.secure_url);
+            await listaPasosFormateada.push({
+              nroPaso: i + 1,
+              multimedia: {
+                tipo_contenido: source.type.split("/")[0] === "image" ? "foto" : "video",
+                extension: source.type.split("/")[1],
+                urlContenido: data.secure_url
+              },
+              texto: descripcion
+            });
+            console.log("pushee algo 1");
+          });
+    
+          await Promise.all([...promesasPasos]);
+    
           console.log("ANTES DE prepararLista");
-          //post
-          console.log(await listaPasosFormateada);
-          await setTimeout(async()=>{
-            await postReceta();
+          const respuestaBool = await prepararLista();
+          if (respuestaBool) {
             console.log("ANTES DE postReceta");
             console.log(await listaPasosFormateada);
-            //reseteo de los local (falta hacerlos todavía)
-            
-            await reseteoLocales();
+    
+            await new Promise(resolve => setTimeout(resolve, route.params.listaPasos.length * 6000));
+    
+            const posteada = await postReceta();
+            if (posteada) {
+              console.log("ANTES DE reseteoLocales");
+              console.log(await listaPasosFormateada);
+    
+              await reseteoLocales();
 
-            await navigation.reset;
-
-            await navigation.navigate("Home" as never);
-          }, route.params.listaPasos.length * 6000);
+            }
+          }
+        } catch (error) {
+          console.log("Error en subirReceta:", error);
         }
-    }
-    const cloudinaryUpload =  (photo : any) => {
+        finally{
+          navigation.navigate("Home" as never);
+        }
+      }
+    };
+    
+    
+    
+    const cloudinaryUpload = async (photo : any) => {
         const data = new FormData()
         data.append('file', photo)
         data.append('upload_preset', 'distribuidasapp')
         data.append("cloud_name", "dyqoli0xg")
-        return fetch("https://api.cloudinary.com/v1_1/dyqoli0xg/auto/upload", {
+        const respuesta = await fetch("https://api.cloudinary.com/v1_1/dyqoli0xg/auto/upload", {
         method: "post",
         body: data
-        }).then(res => res.json());
+        });
+        const datos = await respuesta.json();
+        return datos;
+        }
         
-      }
     
 
     const selectPhotoTapped = () => {
